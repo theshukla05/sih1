@@ -4,21 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bureau of Indian Standards (BIS) | National Standards Body of India</title>
-  
-  <!-- Tailwind CSS -->
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Three.js (r128) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Firebase App & Auth SDK (Compat for reliable browser-embedded iframe execution) -->
+  <!-- Three.js (r128) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Firebase 10 Compat SDKs for robust browser/iframe compatibility -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
@@ -32,30 +33,31 @@
               deep: '#061626',
               royal: '#0F3960',
               gold: '#D4AF37',
-              goldLight: '#F3E5AB',
+              goldLight: '#FBF5D4',
+              goldDark: '#997316',
               saffron: '#FF671F',
               green: '#046A38',
-              slate: '#4A5568',
               surface: '#F8FAFC'
             }
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
-            display: ['Outfit', 'Inter', 'sans-serif']
+            display: ['Outfit', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
           },
           boxShadow: {
             'gov-soft': '0 4px 20px -2px rgba(10, 37, 64, 0.08)',
-            'gov-hover': '0 12px 32px -4px rgba(10, 37, 64, 0.15)',
+            'gov-hover': '0 12px 32px -4px rgba(10, 37, 64, 0.16)',
             'gold-glow': '0 0 25px rgba(212, 175, 55, 0.35)',
-            'seal-float': '0 10px 25px rgba(10, 37, 64, 0.25)'
+            'seal-float': '0 8px 30px rgba(10, 37, 64, 0.22)'
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
-    /* Custom Scrollbar & Regulatory Glass Panels */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -71,15 +73,16 @@
     }
 
     .glass-gov {
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      border: 1px solid rgba(226, 232, 240, 0.9);
     }
 
     .glass-navy {
-      background: rgba(10, 37, 64, 0.92);
-      backdrop-filter: blur(14px);
+      background: rgba(10, 37, 64, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(212, 175, 55, 0.25);
     }
 
@@ -88,52 +91,70 @@
       background: linear-gradient(90deg, #FF671F 0%, #FFFFFF 50%, #046A38 100%);
     }
 
-    /* 3D Canvas fixed backdrop */
+    /* 3D Canvas fixed backdrop layer */
     #canvas-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 10;
-      pointer-events: none; /* Let clicks fall through unless over specific areas */
+      z-index: 5;
+      pointer-events: none;
     }
 
-    /* Micro-mesh pattern */
-    .bg-grid-mesh {
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(10, 37, 64, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(10, 37, 64, 0.03) 1px, transparent 1px);
+    /* High contrast mode helper */
+    body.high-contrast {
+      filter: contrast(125%);
+      background-color: #030a12 !important;
+      color: #ffffff !important;
+    }
+    body.high-contrast .glass-gov {
+      background: #000000 !important;
+      border-color: #ffd700 !important;
+      color: #ffffff !important;
+    }
+    body.high-contrast p, body.high-contrast span {
+      color: #f1f5f9 !important;
+    }
+
+    /* Modal Animation */
+    .modal-enter {
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
   </style>
 </head>
 
-<body class="bg-bis-surface text-slate-800 font-sans antialiased overflow-x-hidden relative selection:bg-bis-gold/20 selection:text-bis-navy">
+<body class="bg-bis-surface text-slate-800 font-sans antialiased overflow-x-hidden relative selection:bg-bis-gold/25 selection:text-bis-navy">
 
-  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
-    <!-- Top Tricolor Thin Banner -->
+  <!-- ================= TOP HEADER & NAVBAR ================= -->
+  <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-300" id="main-header">
+    <!-- Top Tricolor Accent Bar -->
     <div class="flag-accent-bar"></div>
 
-    <!-- Official Portal Top Bar -->
-    <div class="bg-bis-deep text-white text-xs py-1.5 px-4 md:px-8 flex justify-between items-center border-b border-white/10 font-medium">
+    <!-- Official Government Sub-Bar -->
+    <div class="bg-bis-deep text-white text-xs py-1.5 px-4 md:px-8 flex justify-between items-center border-b border-white/10 font-medium select-none">
       <div class="flex items-center space-x-3">
         <span class="inline-flex items-center gap-1.5 text-slate-300">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           भारत सरकार | Government of India
         </span>
         <span class="hidden md:inline text-white/30">|</span>
-        <span class="hidden md:inline text-amber-300/90 font-mono">Ministry of Consumer Affairs, Food & Public Distribution</span>
+        <span class="hidden md:inline text-amber-300/90 font-mono text-[11px]">Department of Consumer Affairs</span>
       </div>
       <div class="flex items-center space-x-4">
-        <button id="contrast-toggle" class="hover:text-amber-300 transition-colors flex items-center gap-1 text-[11px]">
-          <i data-lucide="eye" class="w-3.5 h-3.5"></i> High Contrast
+        <button id="contrast-toggle-btn" class="hover:text-amber-300 transition-colors flex items-center gap-1 text-[11px] focus:outline-none">
+          <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+          <span id="contrast-label">High Contrast</span>
         </button>
         <span class="text-white/30">|</span>
         <div class="flex items-center gap-1 text-[11px]">
           <i data-lucide="globe" class="w-3.5 h-3.5 text-bis-gold"></i>
           <select id="lang-select" class="bg-transparent text-white border-0 focus:ring-0 cursor-pointer text-xs pr-1">
-            <option value="en" class="text-slate-900">English</option>
+            <option value="en" class="text-slate-900">English (National)</option>
             <option value="hi" class="text-slate-900">हिन्दी (Hindi)</option>
           </select>
         </div>
@@ -141,16 +162,15 @@
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="glass-gov shadow-gov-soft border-b border-slate-200/80 px-4 md:px-8 py-3 transition-all duration-300">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <nav class="glass-gov shadow-gov-soft border-b border-slate-200/80 px-4 md:px-8 py-3 transition-all duration-200">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
-        <!-- Emblem & Brand Identity -->
-        <a href="#hero" class="flex items-center gap-3.5 group">
-          <!-- Indian Emblem & BIS Mark representation -->
-          <div class="relative w-10 h-10 rounded-lg bg-bis-navy p-1.5 flex items-center justify-center shadow-md border border-bis-gold/40">
+        <!-- Logo Brand & Seal -->
+        <a href="#hero" class="flex items-center gap-3.5 group shrink-0">
+          <div class="relative w-10 h-10 rounded-xl bg-bis-navy p-1.5 flex items-center justify-center shadow-md border border-bis-gold/50 group-hover:border-bis-gold transition-colors">
+            <!-- BIS Geometric ISI Mark representation -->
             <svg viewBox="0 0 100 100" class="w-full h-full fill-bis-gold" aria-hidden="true">
-              <!-- Geometric stylization of Indian Standards Mark structure -->
-              <rect x="15" y="15" width="70" height="70" rx="8" fill="none" stroke="#D4AF37" stroke-width="8"/>
+              <rect x="15" y="15" width="70" height="70" rx="10" fill="none" stroke="#D4AF37" stroke-width="8"/>
               <path d="M 28 32 L 72 32 M 50 32 L 50 68 M 35 68 L 65 68" stroke="#D4AF37" stroke-width="7" stroke-linecap="round"/>
               <circle cx="50" cy="50" r="8" fill="#D4AF37"/>
             </svg>
@@ -158,7 +178,7 @@
           <div>
             <div class="flex items-center gap-2">
               <span class="font-display font-black text-xl tracking-tight text-bis-navy uppercase">BIS</span>
-              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-bis-gold/15 text-bis-royal border border-bis-gold/30">Statutory Body</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-bis-gold/20 text-bis-royal border border-bis-gold/40">Statutory Body</span>
             </div>
             <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:block">Bureau of Indian Standards</p>
           </div>
@@ -166,88 +186,81 @@
 
         <!-- Desktop Navigation Links -->
         <div class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-700">
-          <a href="#hero" class="px-3 py-1.5 rounded-md hover:text-bis-navy hover:bg-slate-100/70 transition-all">Home</a>
-          <a href="#statutory" class="px-3 py-1.5 rounded-md hover:text-bis-navy hover:bg-slate-100/70 transition-all">Mandate</a>
-          <a href="#schemes" class="px-3 py-1.5 rounded-md hover:text-bis-navy hover:bg-slate-100/70 transition-all">Conformity Assessment</a>
-          <a href="#hallmarking" class="px-3 py-1.5 rounded-md hover:text-bis-navy hover:bg-slate-100/70 transition-all">Hallmarking (HUID)</a>
-          <a href="#pillars" class="px-3 py-1.5 rounded-md hover:text-bis-navy hover:bg-slate-100/70 transition-all">Lab Network</a>
-          <a href="#simulator" class="px-3 py-1.5 rounded-md text-bis-royal font-semibold hover:bg-blue-50 transition-all flex items-center gap-1">
+          <a href="#hero" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Home</a>
+          <a href="#statutory" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">About Mandate</a>
+          <a href="#schemes" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Conformity Schemes</a>
+          <a href="#hallmarking" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Hallmarking</a>
+          <a href="#pillars" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Labs & Standards</a>
+          <a href="#simulator" class="px-3 py-1.5 rounded-lg text-bis-royal font-semibold hover:bg-blue-50 transition-all flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-bis-gold"></span>
-            Verify
+            Verify Code
           </a>
         </div>
 
-        <!-- Fast Verification Direct Actions -->
-        <div class="flex items-center gap-2">
-          <!-- Quick Search -->
-          <div class="relative hidden sm:block">
-            <input type="text" id="header-search-input" placeholder="Search 22,000+ IS Codes..." 
-                   class="w-40 xl:w-52 text-xs bg-slate-100/90 text-slate-800 rounded-lg pl-8 pr-3 py-2 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bis-royal/30 focus:border-bis-royal transition-all placeholder:text-slate-400">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
-          </div>
-
-          <!-- Direct Verification Modal Trigger -->
-          <button onclick="openVerificationModal('isimod')" class="px-3 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 shadow-sm flex items-center gap-1.5 border border-bis-gold/30 hover:shadow-gov-soft">
+        <!-- Fast Actions & Auth Status -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+          <!-- Quick Verify Trigger -->
+          <button id="nav-quick-verify-btn" class="px-3 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg text-xs font-semibold tracking-wide transition-all shadow-sm flex items-center gap-1.5 border border-bis-gold/30 hover:shadow-gov-soft">
             <i data-lucide="shield-check" class="w-4 h-4 text-bis-gold"></i>
             <span class="hidden md:inline">Quick</span> Verify
           </button>
 
-          <!-- Firebase Auth Controls: Logged Out View -->
-          <div id="auth-logged-out" class="flex items-center">
-            <button onclick="openAuthModal('signin')" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm flex items-center gap-1.5 border border-amber-400/40 hover:shadow-gov-soft">
+          <!-- AUTH: Logged Out State Button -->
+          <div id="auth-state-logged-out" class="flex items-center">
+            <button id="open-signin-modal-btn" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm flex items-center gap-1.5 border border-amber-400/50 hover:shadow-gov-soft">
               <i data-lucide="lock" class="w-3.5 h-3.5"></i>
               <span>Officer / Citizen Sign In</span>
             </button>
           </div>
 
-          <!-- Firebase Auth Controls: Logged In View -->
-          <div id="auth-logged-in" class="hidden relative">
-            <button id="user-menu-btn" onclick="toggleUserDropdown()" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-100/90 hover:bg-slate-200/80 border border-slate-300 transition-all text-xs">
-              <div id="user-avatar" class="w-6 h-6 rounded-full bg-bis-navy text-bis-gold flex items-center justify-center font-bold text-[11px] uppercase border border-bis-gold/50">
+          <!-- AUTH: Logged In State Button -->
+          <div id="auth-state-logged-in" class="hidden relative">
+            <button id="user-profile-menu-btn" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-100/90 hover:bg-slate-200 border border-slate-300 transition-all text-xs focus:ring-2 focus:ring-bis-royal">
+              <div id="user-badge-avatar" class="w-6 h-6 rounded-full bg-bis-navy text-bis-gold flex items-center justify-center font-bold text-[11px] uppercase border border-bis-gold/60">
                 U
               </div>
               <div class="text-left hidden sm:block leading-tight">
-                <span id="user-display-name" class="font-bold text-bis-navy block text-[11px] truncate max-w-[110px]">User</span>
-                <span class="text-[9px] text-emerald-600 font-mono font-semibold">● Verified Session</span>
+                <span id="user-badge-name" class="font-bold text-bis-navy block text-[11px] truncate max-w-[120px]">Officer User</span>
+                <span class="text-[9px] text-emerald-600 font-mono font-semibold">● Active Session</span>
               </div>
               <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
             </button>
 
-            <!-- Dropdown Menu -->
-            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 glass-gov rounded-xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2">
-              <div class="px-4 py-2 border-b border-slate-200/80">
-                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Authenticated Identity</p>
-                <p id="user-email-tag" class="text-xs font-medium text-bis-navy truncate mt-0.5">user@example.com</p>
-                <span class="mt-1 inline-block text-[9px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono font-bold">e-BIS Authorized Portal</span>
+            <!-- User Dropdown Menu -->
+            <div id="user-profile-dropdown" class="hidden absolute right-0 mt-2 w-60 glass-gov rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 modal-enter">
+              <div class="px-4 py-2.5 border-b border-slate-200">
+                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Authorized Officer</p>
+                <p id="user-dropdown-email" class="text-xs font-semibold text-bis-navy truncate mt-0.5 font-mono">user@bis.gov.in</p>
+                <span class="mt-1 inline-block text-[9px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">e-BIS Sovereign Role</span>
               </div>
-              <a href="#authenticated-dashboard" onclick="toggleUserDropdown()" class="flex items-center gap-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-bis-navy">
-                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-bis-royal"></i>
+              <a href="#authenticated-dashboard" id="dropdown-dash-link" class="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-bis-navy transition-colors font-medium">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-bis-royal"></i>
                 <span>Compliance Dashboard</span>
               </a>
-              <button onclick="logoutFirebaseUser()" class="w-full text-left flex items-center gap-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50">
-                <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+              <button id="dropdown-signout-btn" class="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 transition-colors font-semibold">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
                 <span>Sign Out of Portal</span>
               </button>
             </div>
           </div>
 
-          <!-- Mobile Hamburger -->
-          <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:text-bis-navy hover:bg-slate-100" aria-label="Toggle Navigation">
+          <!-- Mobile Hamburger Toggle -->
+          <button id="mobile-menu-toggle-btn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:text-bis-navy hover:bg-slate-100" aria-label="Toggle Mobile Navigation">
             <i data-lucide="menu" class="w-5 h-5"></i>
           </button>
         </div>
       </div>
 
-      <!-- Mobile Nav Dropdown -->
-      <div id="mobile-menu" class="hidden lg:hidden pt-3 pb-2 border-t border-slate-200 mt-2 space-y-1">
-        <a href="#hero" class="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Home</a>
-        <a href="#statutory" class="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Statutory Mandate (BIS Act 2016)</a>
-        <a href="#schemes" class="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Conformity Assessment & Schemes</a>
-        <a href="#hallmarking" class="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Hallmarking & 6-Digit HUID</a>
-        <a href="#pillars" class="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Laboratory Network (LIMS)</a>
-        <a href="#simulator" class="block px-3 py-2 text-sm font-semibold text-bis-royal hover:bg-blue-50 rounded-lg">Online Verification Simulator</a>
-        <div id="mobile-auth-section" class="pt-2 border-t border-slate-200">
-          <button onclick="openAuthModal('signin')" id="mobile-signin-btn" class="w-full text-left px-3 py-2 text-sm font-bold text-amber-700 hover:bg-amber-50 rounded-lg flex items-center gap-2">
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-nav-drawer" class="hidden lg:hidden pt-3 pb-2 border-t border-slate-200 mt-2 space-y-1">
+        <a href="#hero" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Home</a>
+        <a href="#statutory" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Statutory Mandate (BIS Act 2016)</a>
+        <a href="#schemes" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Conformity Assessment Schemes</a>
+        <a href="#hallmarking" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Hallmarking & 6-Digit HUID</a>
+        <a href="#pillars" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Laboratory Testing & Standards</a>
+        <a href="#simulator" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-bis-royal hover:bg-blue-50 rounded-lg">Online Verification Simulator</a>
+        <div class="pt-2 border-t border-slate-200">
+          <button id="mobile-auth-btn" class="w-full text-left px-3 py-2 text-sm font-bold text-amber-700 hover:bg-amber-50 rounded-lg flex items-center gap-2">
             <i data-lucide="lock" class="w-4 h-4"></i> Officer / Citizen Sign In
           </button>
         </div>
@@ -255,19 +268,19 @@
     </nav>
   </header>
 
-  <!-- 3D Three.js Canvas Container -->
+  <!-- ================= 3D CANVAS & FLOATING BADGE ================= -->
   <div id="canvas-container">
     <canvas id="webgl-canvas" class="w-full h-full block"></canvas>
   </div>
 
-  <!-- Docked Verified 3D Seal Target Indicator (Top Right Floating Badge) -->
-  <div id="seal-dock-indicator" class="fixed top-20 right-6 z-40 opacity-0 pointer-events-none transition-all duration-500 scale-90">
-    <div class="glass-gov px-3 py-2 rounded-xl border border-bis-gold/50 shadow-seal-float flex items-center gap-3">
-      <div class="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-xs border border-emerald-500/30">
+  <!-- Docked Verified 3D Seal Target Indicator (Pops up when emblem docks on scroll) -->
+  <div id="seal-dock-indicator" class="fixed top-24 right-6 z-30 opacity-0 pointer-events-none transition-all duration-500 scale-90">
+    <div class="glass-gov px-3.5 py-2.5 rounded-2xl border border-bis-gold/60 shadow-seal-float flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center font-bold text-xs border border-emerald-500/40">
         <i data-lucide="check" class="w-4 h-4"></i>
       </div>
       <div>
-        <p class="text-[10px] font-bold uppercase tracking-wider text-bis-navy">National Seal Active</p>
+        <p class="text-[10px] font-bold uppercase tracking-wider text-bis-navy">Verified Seal Active</p>
         <p class="text-[9px] text-slate-500 font-mono">IS/ISO Sovereign Security</p>
       </div>
     </div>
@@ -275,152 +288,147 @@
 
   <main class="relative z-20 pt-28">
 
-    <!-- HERO SECTION -->
-    <section id="hero" class="min-h-[92vh] flex items-center relative px-4 md:px-8 max-w-7xl mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full py-12">
+    <!-- ================= HERO SECTION ================= -->
+    <section id="hero" class="min-h-[90vh] flex items-center relative px-4 md:px-8 max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full py-10 lg:py-16">
         
-        <!-- Left: Authority Content -->
+        <!-- Left: Mandate & Headings -->
         <div class="lg:col-span-7 space-y-6 pointer-events-auto">
           
-          <!-- Government Mandate Pill -->
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 border border-slate-200/90 shadow-sm backdrop-blur-md">
-            <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 border border-slate-200/90 shadow-sm backdrop-blur-md">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
             <span class="text-xs font-semibold text-bis-navy tracking-tight">The Bureau of Indian Standards Act, 2016</span>
             <span class="text-slate-300">|</span>
-            <span class="text-[11px] font-mono font-medium text-slate-600">SIH26107 ARCHITECTURE</span>
+            <span class="text-[11px] font-mono font-medium text-slate-600">SOVEREIGN QUALITY PORTAL</span>
           </div>
 
-          <!-- Hero Main Title -->
           <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-bis-navy leading-[1.12] tracking-tight">
             Ensuring Quality, <br class="hidden sm:inline">
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-bis-navy via-bis-royal to-bis-gold">Safety & Trust</span> <br class="hidden sm:inline">
             Across the Nation.
           </h1>
 
-          <!-- Official Description & Statutory Role -->
           <p class="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
             The National Standards Body of India operating under the Department of Consumer Affairs. 
-            Establishing robust technical frameworks, certifying products, and safeguarding 1.4 billion citizens through uncompromising quality standards.
+            Establishing technical standards, certifying industrial products, and safeguarding 1.4 billion citizens through uncompromising quality benchmarks.
           </p>
 
-          <!-- Key Metrics Pills -->
-          <div class="grid grid-cols-3 gap-3 max-w-lg pt-2">
-            <div class="p-3 bg-white/80 rounded-xl border border-slate-200/80 shadow-sm backdrop-blur-sm">
+          <!-- Core Statistics Metrics -->
+          <div class="grid grid-cols-3 gap-3 max-w-lg pt-1">
+            <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-bis-navy">22,000+</div>
               <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">IS Codes Active</div>
             </div>
-            <div class="p-3 bg-white/80 rounded-xl border border-slate-200/80 shadow-sm backdrop-blur-sm">
+            <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-bis-royal">40,000+</div>
               <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Active Licences</div>
             </div>
-            <div class="p-3 bg-white/80 rounded-xl border border-slate-200/80 shadow-sm backdrop-blur-sm">
+            <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-amber-600">100%</div>
-              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">HUID Traceability</div>
+              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">HUID Traceable</div>
             </div>
           </div>
 
-          <!-- Interactive Action Buttons -->
-          <div class="flex flex-wrap items-center gap-4 pt-4">
-            <!-- CTA 1: ISI License Verification -->
-            <button onclick="openVerificationModal('isimod')" class="px-6 py-3.5 bg-gradient-to-r from-bis-navy to-bis-royal hover:from-bis-royal hover:to-bis-navy text-white rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 flex items-center gap-2.5 border border-bis-gold/40 group">
+          <!-- Hero Action CTAs -->
+          <div class="flex flex-wrap items-center gap-4 pt-3">
+            <button id="hero-verify-isi-btn" class="px-6 py-3.5 bg-gradient-to-r from-bis-navy to-bis-royal hover:from-bis-royal hover:to-bis-navy text-white rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-200 flex items-center gap-2.5 border border-bis-gold/40 group">
               <i data-lucide="badge-check" class="w-5 h-5 text-bis-gold transition-transform group-hover:scale-110"></i>
               <span>Verify License / ISI Mark</span>
             </button>
 
-            <!-- CTA 2: HUID Hallmarking Checker -->
-            <button onclick="openVerificationModal('huidmod')" class="px-6 py-3.5 bg-white hover:bg-slate-50 text-bis-navy rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 flex items-center gap-2.5 border border-slate-300 hover:border-bis-gold group">
+            <button id="hero-check-huid-btn" class="px-6 py-3.5 bg-white hover:bg-slate-50 text-bis-navy rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-200 flex items-center gap-2.5 border border-slate-300 hover:border-bis-gold group">
               <i data-lucide="gem" class="w-5 h-5 text-amber-500 transition-transform group-hover:scale-110"></i>
-              <span>Check Hallmarked Jewellery (HUID)</span>
+              <span>Check Hallmarked Jewellery</span>
             </button>
           </div>
 
-          <!-- Interactive 3D Orbit Tip -->
-          <div class="text-xs text-slate-400 flex items-center gap-2 pt-2">
+          <!-- 3D Orbit Tip -->
+          <div class="text-xs text-slate-500 flex items-center gap-2 pt-2">
             <i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-bis-gold animate-bounce"></i>
-            <span>Interactive 3D standard emblem: Click & drag to rotate in real time.</span>
+            <span>Interactive 3D ISI Mark: Drag with mouse or swipe on touch to rotate emblem.</span>
           </div>
 
         </div>
 
-        <!-- Right: 3D Emblem Viewport Reservation (Spacially transparent for Three.js render) -->
-        <div class="lg:col-span-5 h-[340px] sm:h-[460px] lg:h-[540px] relative pointer-events-auto flex items-center justify-center">
-          
-          <!-- Micro-controls on 3D Viewport -->
-          <div class="absolute bottom-4 right-4 z-30 flex items-center gap-2 glass-gov p-1.5 rounded-lg border border-slate-200 text-xs shadow-sm">
-            <button id="reset-3d-cam" title="Reset View" class="p-1.5 hover:bg-slate-100 rounded text-slate-600 hover:text-bis-navy transition-all">
+        <!-- Right: 3D Viewport Controls & Spatial Layout -->
+        <div class="lg:col-span-5 h-[340px] sm:h-[460px] lg:h-[520px] relative pointer-events-auto flex items-center justify-center">
+          <!-- 3D Viewport Overlay Micro-Controls -->
+          <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 glass-gov p-1.5 rounded-xl border border-slate-200 text-xs shadow-sm">
+            <button id="reset-3d-cam-btn" title="Reset View" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-bis-navy transition-all">
               <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
             </button>
-            <button id="toggle-metal-mode" title="Toggle Metallic Finish (Gold / Chrome)" class="px-2 py-1 bg-bis-gold/20 hover:bg-bis-gold/30 text-bis-navy rounded font-semibold text-[11px] transition-all flex items-center gap-1">
+            <button id="toggle-finish-btn" title="Toggle Finish (Gold Chrome / Brushed Steel)" class="px-2.5 py-1 bg-bis-gold/20 hover:bg-bis-gold/30 text-bis-navy rounded-lg font-semibold text-[11px] transition-all flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
-              <span id="finish-label">Chrome Gold</span>
+              <span id="finish-mode-label">Chrome Gold</span>
             </button>
           </div>
 
-          <!-- Subtle 3D Depth Rings (purely CSS visual anchor) -->
-          <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-slate-200/50 absolute -z-10 animate-pulse pointer-events-none"></div>
-          <div class="w-80 h-80 sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-bis-royal/10 absolute -z-10 pointer-events-none"></div>
+          <!-- Concentric Aesthetic Depth Rings -->
+          <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-slate-200/60 absolute -z-10 animate-pulse pointer-events-none"></div>
+          <div class="w-80 h-80 sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-bis-royal/15 absolute -z-10 pointer-events-none"></div>
         </div>
 
       </div>
     </section>
 
-    <!-- AUTHENTICATED e-BIS OFFICER & CITIZEN DASHBOARD (Accessible by logged-in users) -->
-    <section id="authenticated-dashboard" class="py-16 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto hidden">
-      <div class="glass-gov rounded-3xl p-6 sm:p-10 border border-bis-gold/40 shadow-xl relative overflow-hidden">
+    <!-- ================= AUTHENTICATED e-BIS DASHBOARD ================= -->
+    <section id="authenticated-dashboard" class="py-12 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto hidden">
+      <div class="glass-gov rounded-3xl p-6 sm:p-10 border border-bis-gold/50 shadow-xl relative overflow-hidden">
+        
         <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Secure Session Verified | Bureau of Indian Standards
+              Secure Session Active | Bureau of Indian Standards
             </div>
             <h2 class="font-display text-2xl sm:text-3xl font-bold text-bis-navy">
               e-BIS Officer & Certified Citizen Portal
             </h2>
             <p class="text-xs sm:text-sm text-slate-600 mt-1">
-              Active Authorized ID: <span id="dash-user-email" class="font-mono font-semibold text-bis-royal">authorized@gov.in</span>
+              Active Identity: <span id="dash-user-email-display" class="font-mono font-bold text-bis-royal">user@bis.gov.in</span>
             </p>
           </div>
           <div class="flex items-center gap-3">
-            <button onclick="triggerAuditReportGen()" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow transition-all">
-              <i data-lucide="file-text" class="w-4 h-4 text-bis-gold"></i>
-              Export Audit Trail
+            <button id="dash-export-report-btn" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow transition-all">
+              <i data-lucide="download" class="w-4 h-4 text-bis-gold"></i>
+              Export Audit Trail (.txt)
             </button>
-            <button onclick="logoutFirebaseUser()" class="px-4 py-2 bg-slate-200 hover:bg-red-50 hover:text-red-600 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all">
+            <button id="dash-logout-btn" class="px-4 py-2 bg-slate-200 hover:bg-red-50 hover:text-red-600 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all">
               <i data-lucide="log-out" class="w-4 h-4"></i>
               Sign Out
             </button>
           </div>
         </div>
 
-        <!-- Dashboard Fast Metrics -->
+        <!-- Fast Metrics -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <div class="bg-white/80 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Surveillance Queries</span>
-            <div class="text-2xl font-black text-bis-navy mt-1">18 Checks</div>
-            <span class="text-[10px] text-emerald-600 font-medium">All authenticated with Central LIMS</span>
+          <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase">Surveillance Inquiries</span>
+            <div class="text-2xl font-black text-bis-navy mt-1">24 Checks</div>
+            <span class="text-[10px] text-emerald-600 font-medium font-mono">Central LIMS Synced</span>
           </div>
-          <div class="bg-white/80 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Bookmarked IS Standards</span>
-            <div class="text-2xl font-black text-bis-royal mt-1">6 Codes</div>
-            <span class="text-[10px] text-slate-500">IS 14543, IS 1786, IS 1417</span>
+          <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase">Bookmarked Standards</span>
+            <div class="text-2xl font-black text-bis-royal mt-1">8 Codes</div>
+            <span class="text-[10px] text-slate-500 font-mono">IS 14543, IS 1786, IS 1417...</span>
           </div>
-          <div class="bg-white/80 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Statutory Role</span>
-            <div class="text-2xl font-black text-amber-600 mt-1">Citizen / Officer</div>
-            <span class="text-[10px] text-slate-500 font-mono">Role ID: #BIS-AUTH-2026</span>
+          <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase">Jurisdiction Role</span>
+            <div class="text-2xl font-black text-amber-600 mt-1">Authorized</div>
+            <span class="text-[10px] text-slate-500 font-mono">ID: #BIS-OFFICER-2026</span>
           </div>
-          <div class="bg-white/80 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">API Gateway State</span>
-            <div class="text-2xl font-black text-emerald-700 mt-1">Operational</div>
-            <span class="text-[10px] text-emerald-600 font-mono">Response: 42ms SSL Encrypted</span>
+          <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase">Registry Protocol</span>
+            <div class="text-2xl font-black text-emerald-700 mt-1">Active</div>
+            <span class="text-[10px] text-emerald-600 font-mono">TLS 1.3 End-to-End</span>
           </div>
         </div>
 
-        <!-- Recent Verification Audit Logs -->
+        <!-- Recent Audit Trail Table -->
         <div class="mt-8">
           <h3 class="font-display font-bold text-base text-bis-navy mb-3 flex items-center gap-2">
             <i data-lucide="history" class="w-4 h-4 text-bis-gold"></i>
-            Recent Conformity & Hallmarking Inquiries
+            Recent Conformity & Hallmarking Records
           </h3>
           <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
             <table class="w-full text-left text-xs">
@@ -429,31 +437,37 @@
                   <th class="py-3 px-4">Timestamp</th>
                   <th class="py-3 px-4">Identifier / Code</th>
                   <th class="py-3 px-4">Standard Category</th>
-                  <th class="py-3 px-4">Statutory Status</th>
+                  <th class="py-3 px-4">Status</th>
                   <th class="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100 font-sans">
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Today, 14:22</td>
+                  <td class="py-3 px-4 font-mono text-slate-500">Today, 18:30</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">CM/L-8400192384</td>
                   <td class="py-3 px-4 text-slate-700">IS 14543 (Packaged Water)</td>
                   <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">OPERATIVE</span></td>
-                  <td class="py-3 px-4 text-right"><button onclick="setSampleCode('cml', '8400192384')" class="text-bis-royal hover:underline font-semibold">View Detail</button></td>
+                  <td class="py-3 px-4 text-right">
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="8400192384">View Details</button>
+                  </td>
                 </tr>
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Today, 11:05</td>
+                  <td class="py-3 px-4 font-mono text-slate-500">Today, 14:15</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">HUID: AB12C3</td>
                   <td class="py-3 px-4 text-slate-700">Gold Jewellery 22K916</td>
                   <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">CERTIFIED</span></td>
-                  <td class="py-3 px-4 text-right"><button onclick="setSampleCode('huid', 'AB12C3')" class="text-bis-royal hover:underline font-semibold">View Detail</button></td>
+                  <td class="py-3 px-4 text-right">
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="huid" data-code="AB12C3">View Details</button>
+                  </td>
                 </tr>
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Yesterday, 17:40</td>
+                  <td class="py-3 px-4 font-mono text-slate-500">Yesterday, 10:45</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">CM/L-9200381920</td>
                   <td class="py-3 px-4 text-slate-700">IS 1786 (High Strength TMT Steel)</td>
                   <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">OPERATIVE</span></td>
-                  <td class="py-3 px-4 text-right"><button onclick="setSampleCode('cml', '9200381920')" class="text-bis-royal hover:underline font-semibold">View Detail</button></td>
+                  <td class="py-3 px-4 text-right">
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="9200381920">View Details</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -463,31 +477,29 @@
       </div>
     </section>
 
-    <!-- STATUTORY MANDATE & JURISDICTION (Directly from SIH26107 Dossier) -->
+    <!-- ================= STATUTORY MANDATE SECTION ================= -->
     <section id="statutory" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto">
       <div class="text-center max-w-3xl mx-auto mb-14">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bis-royal/10 text-bis-royal text-xs font-bold uppercase tracking-wider mb-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-bis-royal/10 text-bis-royal text-xs font-bold uppercase tracking-wider mb-3">
           <i data-lucide="landmark" class="w-3.5 h-3.5"></i> Section 1: Statutory Framework
         </div>
         <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight">
           Institutional Mandate & Regulatory Jurisdiction
         </h2>
-        <p class="text-slate-600 mt-3 text-sm sm:text-base">
-          Succeeding the historic Indian Standards Institution (ISI founded 1947), BIS stands as the National Standards Body of India under the statutory mandate of the BIS Act, 2016.
+        <p class="text-slate-600 mt-3 text-sm sm:text-base leading-relaxed">
+          Succeeding the historic Indian Standards Institution (ISI, established 1947), the Bureau of Indian Standards operates under parliamentary mandate as the National Standards Body of India (BIS Act, 2016).
         </p>
       </div>
 
-      <!-- Statutory Architecture Grid -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        
         <div class="glass-gov p-6 rounded-2xl shadow-gov-soft border-t-4 border-t-bis-navy hover:shadow-gov-hover transition-all">
           <div class="w-12 h-12 rounded-xl bg-bis-navy/5 text-bis-navy flex items-center justify-center mb-4">
             <i data-lucide="scale" class="w-6 h-6"></i>
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">BIS Act, 2016</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Primary Statutory Body</p>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Statutory Core</p>
           <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Empowered by parliamentary statute to enforce compulsory conformity assessment, penalize counterfeit marks, and declare mandatory Indian Standards.
+            Statutory authority to declare mandatory Indian Standards, certify industrial conformity, and penalize unauthorized use of standard marks.
           </p>
         </div>
 
@@ -498,7 +510,7 @@
           <h3 class="font-display font-bold text-lg text-bis-navy">Consumer Affairs</h3>
           <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Nodal Ministry</p>
           <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Operating under the Department of Consumer Affairs, ensuring strict protection of consumer rights and harmonized food & product safety regimes.
+            Operates under Department of Consumer Affairs, aligning statutory consumer protection frameworks with mandatory quality control regimes.
           </p>
         </div>
 
@@ -507,9 +519,9 @@
             <i data-lucide="globe-2" class="w-6 h-6"></i>
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">ISO & IEC Member</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">International Body</p>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Global Standing</p>
           <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Representing the Republic of India at the International Organization for Standardization (ISO) and International Electrotechnical Commission (IEC).
+            Founding member of ISO and official Indian National Committee for IEC, representing India in international standard harmonization.
           </p>
         </div>
 
@@ -517,17 +529,16 @@
           <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
             <i data-lucide="cpu" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">SIH26107 Protocol</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Hackathon Architecture</p>
+          <h3 class="font-display font-bold text-lg text-bis-navy">e-BIS Unified Digital</h3>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Digital Governance</p>
           <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Next-generation automated verification pipeline and cryptographic ledger integrity for seamless citizen compliance and real-time validation.
+            Complete digital lifecycle tracking: online licensing, surveillance audits, mobile scanning via BIS Care, and real-time laboratory workflows.
           </p>
         </div>
-
       </div>
     </section>
 
-    <!-- CONFORMITY ASSESSMENT & CORE SCHEMES (From SIH26107 Section 2) -->
+    <!-- ================= CONFORMITY ASSESSMENT SCHEMES ================= -->
     <section id="schemes" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <div>
@@ -535,8 +546,8 @@
           <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1">
             Conformity Assessment & Schemes
           </h2>
-          <p class="text-slate-600 text-sm mt-2 max-w-2xl">
-            Multi-tiered statutory frameworks tailored for heavy industries, consumer electronics, international imports, and high-value bullion.
+          <p class="text-slate-600 text-sm mt-2 max-w-2xl leading-relaxed">
+            Comprehensive conformity assessment frameworks tailored for core industries, electronic equipment, cross-border imports, and gold hallmarking.
           </p>
         </div>
         <div class="mt-4 md:mt-0 flex gap-2">
@@ -551,7 +562,6 @@
         
         <!-- Scheme 1: ISI Mark -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="isi">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-bl-full pointer-events-none"></div>
           <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-bold px-2.5 py-1 rounded bg-red-50 text-red-700 border border-red-200">Mandatory (QCO)</span>
             <span class="text-xs font-mono font-bold text-slate-400">Scheme I</span>
@@ -561,25 +571,17 @@
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">ISI Mark Certification</h3>
           <p class="text-xs font-semibold text-slate-500 mt-1">Domestic Manufacturing</p>
-          <div class="mt-4 space-y-2 text-xs text-slate-600">
-            <div class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-              <span><strong>Scope:</strong> Cement, structural steel, LPG cylinders, packaged drinking water, safety glass.</span>
-            </div>
-            <div class="flex items-start gap-2">
-              <i data-lucide="shield-alert" class="w-4 h-4 text-bis-navy shrink-0 mt-0.5"></i>
-              <span><strong>Protocol:</strong> Rigorous factory inspections, on-site testing & BIS laboratory validation.</span>
-            </div>
-          </div>
-          <button onclick="openVerificationModal('isimod')" class="mt-6 w-full py-2 bg-slate-100 hover:bg-bis-navy hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
-            <span>Verify License (CM/L)</span>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            Covers cement, steel, LPG cylinders, packaged drinking water, and automotive tyres. Requires factory audits & laboratory validation.
+          </p>
+          <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-bis-navy hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="isi">
+            <span>Explore Dossier</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
         <!-- Scheme 2: CRS -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="crs">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full pointer-events-none"></div>
           <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-bold px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">MeitY Mandate</span>
             <span class="text-xs font-mono font-bold text-slate-400">Scheme II</span>
@@ -589,27 +591,19 @@
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">Compulsory Registration</h3>
           <p class="text-xs font-semibold text-slate-500 mt-1">IT & Electronic Goods</p>
-          <div class="mt-4 space-y-2 text-xs text-slate-600">
-            <div class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-              <span><strong>Scope:</strong> Laptops, mobile phones, servers, power adapters, lithium batteries, smart TVs.</span>
-            </div>
-            <div class="flex items-start gap-2">
-              <i data-lucide="file-check" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
-              <span><strong>Protocol:</strong> Self-declaration of conformity based on testing in BIS-recognized labs.</span>
-            </div>
-          </div>
-          <button onclick="openVerificationModal('isimod')" class="mt-6 w-full py-2 bg-slate-100 hover:bg-blue-600 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
-            <span>Search CRS Registration</span>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            Governs laptops, mobile phones, servers, power adapters, and LED lights under CRO orders with self-declaration testing.
+          </p>
+          <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-blue-600 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="crs">
+            <span>Explore Dossier</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
         <!-- Scheme 3: FMCS -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="fmcs">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full pointer-events-none"></div>
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200">Statutory Cross-Border</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200">Cross-Border</span>
             <span class="text-xs font-mono font-bold text-slate-400">FMCS</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-purple-700 text-white flex items-center justify-center font-bold text-lg mb-4 shadow-sm group-hover:scale-105 transition-transform">
@@ -617,25 +611,17 @@
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">Foreign Manufacturers</h3>
           <p class="text-xs font-semibold text-slate-500 mt-1">Cross-Border Imports</p>
-          <div class="mt-4 space-y-2 text-xs text-slate-600">
-            <div class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-              <span><strong>Scope:</strong> Overseas manufacturers exporting certified goods into Indian territorial waters.</span>
-            </div>
-            <div class="flex items-start gap-2">
-              <i data-lucide="plane" class="w-4 h-4 text-purple-700 shrink-0 mt-0.5"></i>
-              <span><strong>Protocol:</strong> Mandatory overseas plant audits & Authorized Indian Representative (AIR) filing.</span>
-            </div>
-          </div>
-          <button onclick="openVerificationModal('isimod')" class="mt-6 w-full py-2 bg-slate-100 hover:bg-purple-700 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
-            <span>Check AIR & FMCS Code</span>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            Mandatory overseas facility audits and appointment of Authorized Indian Representatives (AIR) for goods exported to India.
+          </p>
+          <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-purple-700 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="fmcs">
+            <span>Explore Dossier</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
 
         <!-- Scheme 4: Hallmarking HUID -->
-        <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden border-amber-300/60" data-scheme="huid">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
+        <div class="tilt-card glass-gov p-6 rounded-2xl border border-amber-300/80 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="huid">
           <div class="flex items-center justify-between mb-4">
             <span class="text-xs font-bold px-2.5 py-1 rounded bg-amber-100 text-amber-800 border border-amber-300">Consumer Trust</span>
             <span class="text-xs font-mono font-bold text-amber-600">HUID</span>
@@ -644,19 +630,12 @@
             <i data-lucide="gem" class="w-6 h-6"></i>
           </div>
           <h3 class="font-display font-bold text-lg text-bis-navy">Gold & Silver Hallmarking</h3>
-          <p class="text-xs font-semibold text-slate-500 mt-1">Assaying & Traceability</p>
-          <div class="mt-4 space-y-2 text-xs text-slate-600">
-            <div class="flex items-start gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-              <span><strong>Scope:</strong> Gold jewelry, bullion bars, and silver articles sold nationwide.</span>
-            </div>
-            <div class="flex items-start gap-2">
-              <i data-lucide="hash" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
-              <span><strong>Protocol:</strong> Assaying & Hallmarking Centres (AHC) laser-assign 6-digit alphanumeric HUID.</span>
-            </div>
-          </div>
-          <button onclick="openVerificationModal('huidmod')" class="mt-6 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm">
-            <span>Verify 6-Digit HUID</span>
+          <p class="text-xs font-semibold text-slate-500 mt-1">Laser Assaying</p>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
+            Mandatory 6-character alphanumeric Hallmark Unique Identification (HUID) assigned to each jewelry article to guarantee precious metal fineness.
+          </p>
+          <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm" data-scheme="huid">
+            <span>Explore Dossier</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -664,22 +643,21 @@
       </div>
     </section>
 
-    <!-- CRITICAL OPERATIONAL PILLARS (Standards Formulation & LIMS Laboratory Network) -->
+    <!-- ================= OPERATIONAL PILLARS ================= -->
     <section id="pillars" class="py-20 bg-slate-100/70 border-y border-slate-200/80 px-4 md:px-8 relative pointer-events-auto">
       <div class="max-w-7xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-14">
-          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal">Section 3: Ecosystem Functions</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal">Section 3: National Infrastructure</span>
           <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1">
-            Critical Operational Pillars
+            Standards & Laboratory Pillars
           </h2>
-          <p class="text-slate-600 text-sm mt-2">
-            The dual engine of Indian technological sovereignty: forward-looking technical standards formulation and rigorous physical lab testing.
+          <p class="text-slate-600 text-sm mt-2 leading-relaxed">
+            The dual engine of Indian technological sovereignty: forward-looking technical standards formulation and physical testing laboratories.
           </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          <!-- Pillar 1: Standards Formulation -->
+          <!-- Pillar 1 -->
           <div class="glass-gov p-8 rounded-2xl shadow-gov-soft border border-slate-200">
             <div class="flex items-center gap-4 mb-6">
               <div class="w-14 h-14 rounded-2xl bg-bis-navy text-bis-gold flex items-center justify-center shadow-md">
@@ -687,34 +665,25 @@
               </div>
               <div>
                 <h3 class="font-display font-bold text-xl text-bis-navy">Standards Formulation</h3>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">15 Division Councils & Sectional Committees</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">15 Technical Councils & 400+ Committees</p>
               </div>
             </div>
             <p class="text-slate-600 text-sm leading-relaxed mb-6">
-              Over 15 Division Councils oversee sectional technical committees formulating Indian Standards (IS), covering civil engineering, electronics, chemicals, food technology, textiles, and cutting-edge frontier disciplines including <strong>Artificial Intelligence, Smart Cities, Quantum Tech, and IoT</strong>.
+              Technical Division Councils establish Indian Standards (IS), covering civil infrastructure, electronics, chemicals, food technology, textiles, and frontier disciplines including <strong>Artificial Intelligence, Smart Grids, Quantum Tech, and IoT</strong>.
             </p>
-            
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">15 Councils</div>
-                <div class="text-slate-500">Sectoral Technical Divisions</div>
+                <div class="font-bold text-bis-navy">15 Division Councils</div>
+                <div class="text-slate-500">Sectoral Technical Oversight</div>
               </div>
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">400+ Committees</div>
-                <div class="text-slate-500">Industry & Academic Experts</div>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">Frontier Tech</div>
-                <div class="text-slate-500">AI, Blockchain, Smart Grid</div>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">WTO-TBT</div>
-                <div class="text-slate-500">Enquiry Point for Global Trade</div>
+                <div class="font-bold text-bis-navy">WTO-TBT Desk</div>
+                <div class="text-slate-500">Global Trade Barrier Compliance</div>
               </div>
             </div>
           </div>
 
-          <!-- Pillar 2: Laboratory Network LIMS -->
+          <!-- Pillar 2 -->
           <div class="glass-gov p-8 rounded-2xl shadow-gov-soft border border-slate-200">
             <div class="flex items-center gap-4 mb-6">
               <div class="w-14 h-14 rounded-2xl bg-bis-royal text-white flex items-center justify-center shadow-md">
@@ -722,47 +691,34 @@
               </div>
               <div>
                 <h3 class="font-display font-bold text-xl text-bis-navy">Laboratory Network (LIMS)</h3>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">National Testing & Verification Infrastructure</p>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Central, Regional & Recognized Labs</p>
               </div>
             </div>
             <p class="text-slate-600 text-sm leading-relaxed mb-6">
-              Operates Central, Regional, and Branch Testing Laboratories alongside an extensive network of <strong>NABL-accredited third-party labs</strong> under the Laboratory Recognition Scheme (LRS). Managed completely digitally via the <strong>Laboratory Information Management System (LIMS)</strong>.
+              Operates Central, Regional, and Branch Testing Laboratories alongside an extensive network of <strong>NABL-accredited third-party laboratories</strong> managed through the digital <strong>Laboratory Information Management System (LIMS)</strong>.
             </p>
-            
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="p-3 bg-white rounded-xl border border-slate-200">
                 <div class="font-bold text-bis-navy">8 Central Labs</div>
-                <div class="text-slate-500">Sahibabad, Chennai, Kolkata etc.</div>
+                <div class="text-slate-500">Sahibabad, Chennai, Kolkata...</div>
               </div>
               <div class="p-3 bg-white rounded-xl border border-slate-200">
                 <div class="font-bold text-bis-navy">LIMS Connected</div>
                 <div class="text-slate-500">100% Digital Sample Tracking</div>
               </div>
-              <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">NABL Accredited</div>
-                <div class="text-slate-500">ISO/IEC 17025 Compliant</div>
-              </div>
-              <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">Surveillance Tests</div>
-                <div class="text-slate-500">Continuous Market Auditing</div>
-              </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- INTERACTIVE VERIFICATION SIMULATOR (Live Testing Tool for Citizens) -->
+    <!-- ================= INTERACTIVE VERIFICATION SIMULATOR ================= -->
     <section id="simulator" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto">
       <div class="glass-navy rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl">
         
-        <!-- Decorative subtle emblem glow -->
-        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-bis-royal/40 blur-3xl pointer-events-none"></div>
-
         <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-bis-gold text-xs font-semibold mb-4 border border-bis-gold/20">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Official Citizen Authenticator
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-bis-gold text-xs font-semibold mb-4 border border-bis-gold/30">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Official Citizen Verification Console
           </div>
           <h2 class="font-display text-3xl sm:text-4xl font-black tracking-tight text-white">
             Instant Verification Simulator
@@ -772,88 +728,88 @@
           </p>
         </div>
 
-        <!-- Simulator Interface Tabs -->
+        <!-- Simulator Tabs -->
         <div class="mt-8">
           <div class="flex border-b border-white/20 gap-4 text-sm font-semibold">
-            <button id="tab-btn-cml" onclick="switchSimTab('cml')" class="pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2">
+            <button id="sim-tab-cml-btn" class="pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2 focus:outline-none">
               <i data-lucide="check-square" class="w-4 h-4"></i> ISI License (CM/L Number)
             </button>
-            <button id="tab-btn-huid" onclick="switchSimTab('huid')" class="pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2">
+            <button id="sim-tab-huid-btn" class="pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2 focus:outline-none">
               <i data-lucide="gem" class="w-4 h-4"></i> Hallmarking HUID (6-Character)
             </button>
           </div>
 
-          <!-- Tab Content: CM/L Search -->
-          <div id="sim-content-cml" class="mt-6 space-y-4">
+          <!-- CM/L Tab View -->
+          <div id="sim-view-cml" class="mt-6 space-y-4">
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
-                <input type="text" id="sim-cml-input" placeholder="Enter 7 or 8-digit CM/L Number (e.g. 8400192384 or 4100021570)" 
+                <input type="text" id="sim-cml-input" placeholder="Enter CM/L Number (e.g. 8400192384 or 9200381920)" 
                        value="8400192384"
                        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-bis-gold text-sm font-mono">
-                <span class="absolute right-3 top-3 text-xs bg-white/10 px-2 py-1 rounded text-slate-300 font-mono">CM/L</span>
+                <span class="absolute right-3 top-3.5 text-xs bg-white/10 px-2 py-0.5 rounded text-slate-300 font-mono">CM/L</span>
               </div>
-              <button onclick="executeVerification('cml')" class="px-6 py-3.5 bg-bis-gold hover:bg-amber-400 text-bis-navy font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
+              <button id="execute-cml-btn" class="px-6 py-3.5 bg-bis-gold hover:bg-amber-400 text-bis-navy font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
                 <i data-lucide="search" class="w-4 h-4"></i> Validate Licence
               </button>
             </div>
-            <div class="text-xs text-slate-400 flex items-center gap-2">
+            <div class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
               <span>Quick test codes:</span>
-              <button onclick="setSampleCode('cml', '8400192384')" class="underline hover:text-bis-gold">8400192384 (Packaged Water)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="8400192384">8400192384 (Packaged Water)</button>
               <span>•</span>
-              <button onclick="setSampleCode('cml', '9200381920')" class="underline hover:text-bis-gold">9200381920 (Structural Steel)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="9200381920">9200381920 (Structural Steel)</button>
             </div>
           </div>
 
-          <!-- Tab Content: HUID Search -->
-          <div id="sim-content-huid" class="mt-6 space-y-4 hidden">
+          <!-- HUID Tab View -->
+          <div id="sim-view-huid" class="mt-6 space-y-4 hidden">
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
-                <input type="text" id="sim-huid-input" maxlength="6" placeholder="Enter 6-digit Alphanumeric HUID (e.g. AB12C3 or 9K2X4M)" 
+                <input type="text" id="sim-huid-input" maxlength="6" placeholder="Enter 6-character HUID (e.g. AB12C3 or 9K2X4M)" 
                        value="AB12C3"
                        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-bis-gold text-sm font-mono uppercase tracking-widest">
-                <span class="absolute right-3 top-3 text-xs bg-white/10 px-2 py-1 rounded text-slate-300 font-mono">HUID</span>
+                <span class="absolute right-3 top-3.5 text-xs bg-white/10 px-2 py-0.5 rounded text-slate-300 font-mono">HUID</span>
               </div>
-              <button onclick="executeVerification('huid')" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
+              <button id="execute-huid-btn" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
                 <i data-lucide="gem" class="w-4 h-4"></i> Authenticate HUID
               </button>
             </div>
-            <div class="text-xs text-slate-400 flex items-center gap-2">
+            <div class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
               <span>Quick test codes:</span>
-              <button onclick="setSampleCode('huid', 'AB12C3')" class="underline hover:text-bis-gold">AB12C3 (22K Gold Bangle)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="AB12C3">AB12C3 (22K Gold Bangle)</button>
               <span>•</span>
-              <button onclick="setSampleCode('huid', '9K2X4M')" class="underline hover:text-bis-gold">9K2X4M (18K Diamond Ring Base)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="9K2X4M">9K2X4M (18K Diamond Ring Base)</button>
             </div>
           </div>
 
-          <!-- Verification Live Output Card -->
+          <!-- Dynamic Verification Result Card -->
           <div id="sim-result-card" class="mt-6 p-6 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md hidden transition-all">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-3">
-                <div id="res-badge-icon" class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                  <i data-lucide="check" class="w-6 h-6"></i>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-center gap-3.5">
+                <div id="sim-res-icon" class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold border border-emerald-500/30 shrink-0">
+                  <i data-lucide="check-check" class="w-6 h-6"></i>
                 </div>
                 <div>
-                  <h4 id="res-title" class="font-display font-bold text-lg text-white">GENUINE BIS LICENCE ACTIVE</h4>
-                  <p id="res-subtitle" class="text-xs text-emerald-300 font-mono">IS 14543:2016 Conformity Confirmed</p>
+                  <h4 id="sim-res-title" class="font-display font-bold text-lg text-white">GENUINE BIS LICENCE ACTIVE</h4>
+                  <p id="sim-res-subtitle" class="text-xs text-emerald-300 font-mono mt-0.5">IS 14543:2016 Conformity Confirmed</p>
                 </div>
               </div>
-              <span id="res-status-tag" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase">
+              <span id="sim-res-badge" class="self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase">
                 OPERATIVE
               </span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-4 border-t border-white/10 text-xs">
-              <div>
-                <span class="text-slate-400 block">Manufacturer / Jeweller:</span>
-                <span id="res-field-1" class="font-semibold text-white mt-0.5 block">Himalayan Aqua Springs Pvt Ltd</span>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <span class="text-slate-400 block font-sans">Manufacturer / Entity:</span>
+                <span id="sim-res-field1" class="font-semibold text-white mt-1 block">Himalayan Aqua Springs Pvt Ltd</span>
               </div>
-              <div>
-                <span class="text-slate-400 block">Product / Article Category:</span>
-                <span id="res-field-2" class="font-semibold text-white mt-0.5 block">Packaged Drinking Water (Other than Mineral)</span>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <span class="text-slate-400 block font-sans">Product / Category:</span>
+                <span id="sim-res-field2" class="font-semibold text-white mt-1 block">Packaged Drinking Water (Other than Mineral)</span>
               </div>
-              <div>
-                <span class="text-slate-400 block">Valid Through / Assayed Date:</span>
-                <span id="res-field-3" class="font-semibold text-white mt-0.5 block">31-Dec-2027 (Surveillance Normal)</span>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <span class="text-slate-400 block font-sans">Validity / Surveillance:</span>
+                <span id="sim-res-field3" class="font-semibold text-white mt-1 block font-mono">31-Dec-2027 (Surveillance Normal)</span>
               </div>
             </div>
           </div>
@@ -863,30 +819,30 @@
       </div>
     </section>
 
-    <!-- HALLMARKING DETAIL SECTION -->
+    <!-- ================= HALLMARKING DEEP DIVE ================= -->
     <section id="hallmarking" class="py-20 bg-white border-b border-slate-200/80 px-4 md:px-8 relative pointer-events-auto">
       <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           <div class="lg:col-span-6 space-y-6">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-bold uppercase tracking-wider">
-              <i data-lucide="shield" class="w-3.5 h-3.5"></i> Guaranteed Purity
+              <i data-lucide="shield" class="w-3.5 h-3.5"></i> Guaranteed Precious Metal Fineness
             </div>
             <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight">
-              Understanding the 3 Marks of Genuine Hallmarked Gold
+              The 3 Marks of Genuine Hallmarked Gold
             </h2>
             <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Under BIS statutory regulations, every gold jewelry article must carry three distinct laser-engraved identification marks to guarantee purity and protect consumers against adulteration.
+              Under BIS statutory regulations, every piece of gold jewelry must carry three distinct laser-engraved identification marks to guarantee purity and protect consumers against adulteration.
             </p>
 
-            <div class="space-y-4 pt-2">
+            <div class="space-y-4 pt-1">
               <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
                 <div class="w-10 h-10 rounded-lg bg-bis-navy text-bis-gold flex items-center justify-center font-black text-sm shrink-0">
                   1
                 </div>
                 <div>
-                  <h4 class="font-display font-bold text-bis-navy text-sm">BIS Standard Mark</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Triangular official hallmark symbol confirming compliance with IS 1417 standards.</p>
+                  <h4 class="font-display font-bold text-bis-navy text-sm">BIS Triangular Standard Mark</h4>
+                  <p class="text-xs text-slate-600 mt-0.5">Confirms article testing at an Assaying & Hallmarking Centre according to IS 1417.</p>
                 </div>
               </div>
 
@@ -895,8 +851,8 @@
                   2
                 </div>
                 <div>
-                  <h4 class="font-display font-bold text-bis-navy text-sm">Purity in Carat and Fineness</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">22K916 (91.6% pure), 18K750 (75.0% pure), or 14K585 (58.5% pure gold).</p>
+                  <h4 class="font-display font-bold text-bis-navy text-sm">Purity in Carats & Fineness</h4>
+                  <p class="text-xs text-slate-600 mt-0.5">Explicitly stamped: 22K916 (91.6% pure), 18K750 (75.0% pure), or 14K585 (58.5% pure).</p>
                 </div>
               </div>
 
@@ -906,49 +862,48 @@
                 </div>
                 <div>
                   <h4 class="font-display font-bold text-bis-navy text-sm">6-Digit Alphanumeric HUID</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Hallmark Unique Identification: A unique cryptographic serial code laser-engraved onto each individual piece at Assaying Centres.</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Hallmark Unique Identification: A distinct serial laser-engraved code for absolute chain-of-custody.</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Visual Demonstration Graphic -->
+          <!-- Visual Hallmark Bar Demonstration -->
           <div class="lg:col-span-6">
-            <div class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-bis-navy text-white shadow-xl border border-bis-gold/30 relative">
+            <div class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-bis-navy text-white shadow-xl border border-bis-gold/30">
               <div class="text-center pb-6 border-b border-white/10">
                 <span class="text-xs font-mono text-bis-gold uppercase tracking-widest">Laser Engraving Anatomy</span>
-                <h3 class="text-lg font-bold mt-1">Official Hallmark Representation</h3>
+                <h3 class="text-lg font-bold mt-1">Official Hallmark Inscription</h3>
               </div>
 
-              <!-- Graphic Mockup of Engraved Gold Bar -->
               <div class="py-10 flex flex-col items-center justify-center">
-                <div class="w-full max-w-md bg-gradient-to-r from-amber-400 via-amber-200 to-amber-400 text-slate-900 p-6 rounded-2xl shadow-inner border-2 border-amber-500/50 flex items-center justify-around font-mono font-bold tracking-wider">
-                  <div class="text-center group cursor-pointer" title="BIS Standard Mark">
+                <div class="w-full max-w-md bg-gradient-to-r from-amber-400 via-amber-200 to-amber-400 text-slate-900 p-6 rounded-2xl shadow-inner border-2 border-amber-500/60 flex items-center justify-around font-mono font-bold tracking-wider">
+                  <div class="text-center">
                     <svg viewBox="0 0 100 100" class="w-12 h-12 mx-auto fill-slate-900">
                       <polygon points="50,15 90,85 10,85" fill="none" stroke="#0f172a" stroke-width="10"/>
                       <circle cx="50" cy="55" r="10" fill="#0f172a"/>
                     </svg>
-                    <span class="text-[10px] block mt-1 uppercase font-sans">BIS Logo</span>
+                    <span class="text-[10px] block mt-1 uppercase font-sans font-bold">BIS Logo</span>
                   </div>
 
-                  <div class="h-10 w-px bg-slate-800/20"></div>
+                  <div class="h-10 w-px bg-slate-800/30"></div>
 
                   <div class="text-center">
                     <span class="text-2xl font-black">22K916</span>
-                    <span class="text-[10px] block font-sans uppercase">Purity Grade</span>
+                    <span class="text-[10px] block font-sans uppercase font-bold">Purity Grade</span>
                   </div>
 
-                  <div class="h-10 w-px bg-slate-800/20"></div>
+                  <div class="h-10 w-px bg-slate-800/30"></div>
 
                   <div class="text-center">
                     <span class="text-xl font-black tracking-widest bg-slate-900/10 px-2 py-1 rounded">AB12C3</span>
-                    <span class="text-[10px] block font-sans uppercase">6-Digit HUID</span>
+                    <span class="text-[10px] block font-sans uppercase font-bold">6-Digit HUID</span>
                   </div>
                 </div>
               </div>
 
               <div class="text-center text-xs text-slate-300">
-                <p>Downloaded BIS Care App to scan direct QR-code hallmarks on your mobile camera.</p>
+                <p>Verify gold jewelry anytime using the BIS Care Mobile App or the online simulator above.</p>
               </div>
             </div>
           </div>
@@ -957,76 +912,69 @@
       </div>
     </section>
 
-    <!-- OFFICIAL PORTAL FOOTER -->
+    <!-- ================= FOOTER ================= -->
     <footer class="bg-bis-deep text-slate-300 text-sm border-t border-white/10 relative pointer-events-auto">
       <div class="flag-accent-bar"></div>
       
       <div class="max-w-7xl mx-auto px-4 md:px-8 py-14">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           
-          <!-- Column 1: Organization Bio -->
           <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded bg-bis-gold/20 flex items-center justify-center text-bis-gold font-bold text-lg border border-bis-gold/40">
+              <div class="w-9 h-9 rounded-xl bg-bis-gold/20 flex items-center justify-center text-bis-gold font-bold text-lg border border-bis-gold/50">
                 BIS
               </div>
               <span class="font-display font-bold text-white text-lg">Bureau of Indian Standards</span>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Manak Bhavan, 9 Bahadur Shah Zafar Marg, New Delhi 110002. Operating under the Bureau of Indian Standards Act, 2016 for consumer safety, industrial quality assurance, and technical standardization.
+              Manak Bhavan, 9 Bahadur Shah Zafar Marg, New Delhi 110002. Operating under the BIS Act, 2016 for consumer safety, industrial quality assurance, and technical standardization.
             </p>
             <div class="flex items-center gap-2 pt-2">
               <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] font-mono text-amber-300">ISO 9001:2015</span>
-              <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] font-mono text-emerald-400">SIH26107 ARCH</span>
+              <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] font-mono text-emerald-400">e-BIS Sovereign</span>
             </div>
           </div>
 
-          <!-- Column 2: Core Schemes -->
           <div>
             <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Schemes</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="#schemes" class="hover:text-white transition-colors">ISI Mark Scheme (Scheme-I)</a></li>
+              <li><a href="#schemes" class="hover:text-white transition-colors">ISI Mark (Scheme-I)</a></li>
               <li><a href="#schemes" class="hover:text-white transition-colors">Compulsory Registration (CRS)</a></li>
               <li><a href="#schemes" class="hover:text-white transition-colors">Foreign Manufacturers (FMCS)</a></li>
-              <li><a href="#hallmarking" class="hover:text-white transition-colors">Hallmarking & HUID System</a></li>
-              <li><a href="#schemes" class="hover:text-white transition-colors">Management Systems (MSCD)</a></li>
+              <li><a href="#hallmarking" class="hover:text-white transition-colors">Hallmarking & HUID</a></li>
             </ul>
           </div>
 
-          <!-- Column 3: Digital Portals -->
           <div>
-            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Online Portals</h4>
+            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Digital Portals</h4>
             <ul class="space-y-2 text-xs">
               <li><a href="#simulator" class="hover:text-white transition-colors">e-BIS Unified Portal</a></li>
               <li><a href="#pillars" class="hover:text-white transition-colors">LIMS Testing Network</a></li>
               <li><a href="#simulator" class="hover:text-white transition-colors">Know Your Standards (KYS)</a></li>
-              <li><a href="#simulator" class="hover:text-white transition-colors">BIS Care Mobile Application</a></li>
-              <li><a href="#simulator" class="hover:text-white transition-colors">National Standards Portal</a></li>
+              <li><a href="#simulator" class="hover:text-white transition-colors">BIS Care Mobile App</a></li>
             </ul>
           </div>
 
-          <!-- Column 4: Statutory & Legal -->
           <div>
-            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Legal & Statutory</h4>
+            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Statutory & Legal</h4>
             <ul class="space-y-2 text-xs">
               <li><a href="#statutory" class="hover:text-white transition-colors">The BIS Act, 2016</a></li>
               <li><a href="#statutory" class="hover:text-white transition-colors">Quality Control Orders (QCOs)</a></li>
               <li><a href="#statutory" class="hover:text-white transition-colors">Citizen Charter</a></li>
-              <li><a href="#statutory" class="hover:text-white transition-colors">RTI Mandate & Disclosures</a></li>
-              <li><a href="#statutory" class="hover:text-white transition-colors">Public Grievances (CPGRAMS)</a></li>
+              <li><a href="#statutory" class="hover:text-white transition-colors">Public Grievances</a></li>
             </ul>
           </div>
 
         </div>
 
         <div class="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 Bureau of Indian Standards (BIS). All Rights Reserved. Content Owned by Ministry of Consumer Affairs, GOI.</p>
+          <p>© 2026 Bureau of Indian Standards (BIS). All Rights Reserved. Government of India.</p>
           <div class="flex items-center gap-4">
             <span class="hover:text-slate-400 cursor-pointer">Security Policy</span>
             <span>•</span>
             <span class="hover:text-slate-400 cursor-pointer">Terms of Use</span>
             <span>•</span>
-            <span class="hover:text-slate-400 cursor-pointer">Hyperlinking Guidelines</span>
+            <span class="hover:text-slate-400 cursor-pointer">Compliance</span>
           </div>
         </div>
       </div>
@@ -1034,24 +982,39 @@
 
   </main>
 
-  <!-- MODAL: Verification Dialog (ISI / CRS / HUID) -->
-  <div id="verify-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="glass-gov max-w-lg w-full rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
-      
-      <!-- Modal Header -->
-      <div class="bg-bis-navy text-white px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i data-lucide="shield-check" class="w-5 h-5 text-bis-gold"></i>
-          <h3 id="modal-head-title" class="font-display font-bold text-base">Statutory Verification Engine</h3>
+  <!-- ================= MODAL 1: SCHEME DETAILS DOSSIER ================= -->
+  <div id="scheme-details-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-gov max-w-lg w-full rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform modal-enter">
+      <div class="bg-bis-navy text-white px-6 py-4 flex items-center justify-between border-b border-bis-gold/30">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-bis-gold/20 flex items-center justify-center text-bis-gold border border-bis-gold/40">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="modal-dossier-title" class="font-display font-bold text-base">Scheme Dossier</h3>
+            <p class="text-[10px] text-slate-300 font-mono">Bureau of Indian Standards Statutory Framework</p>
+          </div>
         </div>
-        <button onclick="closeVerificationModal()" class="text-slate-400 hover:text-white transition-colors">
+        <button id="close-scheme-modal-btn" class="text-slate-400 hover:text-white transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-  <!-- MODAL: FIREBASE AUTHENTICATION (Sign In / Sign Up / Forgot Password) -->
+      <div class="p-6 space-y-4 text-xs text-slate-700 leading-relaxed" id="modal-dossier-content">
+        <!-- Injected via JavaScript based on chosen scheme -->
+      </div>
+
+      <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
+        <button id="dismiss-scheme-modal-btn" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg font-semibold text-xs transition-colors">
+          Close Dossier
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: FIREBASE & DEMO AUTHENTICATION ================= -->
   <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="glass-gov max-w-md w-full rounded-2xl shadow-2xl border border-bis-gold/40 overflow-hidden transform transition-all animate-in fade-in duration-200">
+    <div class="glass-gov max-w-md w-full rounded-2xl shadow-2xl border border-bis-gold/40 overflow-hidden transform modal-enter">
       
       <!-- Modal Header -->
       <div class="bg-bis-navy text-white px-6 py-4 flex items-center justify-between border-b border-bis-gold/30">
@@ -1064,7 +1027,7 @@
             <p class="text-[10px] text-slate-300 font-mono">Government Identity Service</p>
           </div>
         </div>
-        <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white transition-colors">
+        <button id="close-auth-modal-btn" class="text-slate-400 hover:text-white transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -1072,11 +1035,34 @@
       <!-- Modal Body -->
       <div class="p-6 space-y-4">
         
-        <!-- Error / Success Alert Box -->
-        <div id="auth-alert" class="hidden p-3 rounded-xl text-xs flex items-start gap-2"></div>
+        <!-- Error / Info Alert Box -->
+        <div id="auth-alert-box" class="hidden p-3 rounded-xl text-xs flex items-start gap-2"></div>
 
-        <!-- Google Auth Button -->
-        <button onclick="handleGoogleSignIn()" class="w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300 transition-all flex items-center justify-center gap-2.5 shadow-sm hover:shadow">
+        <!-- DEMO ACCESS BUTTON (Instant bypass for sandboxes/iframes) -->
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> Instant Officer Demo Mode
+            </span>
+            <span class="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">BYPASS IFRAME RESTRICTION</span>
+          </div>
+          <p class="text-[10px] text-amber-800 leading-tight mb-2">
+            Test the live authenticated dashboard immediately without Firebase domain restrictions:
+          </p>
+          <button id="demo-officer-login-btn" type="button" class="w-full py-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-xs rounded-lg transition-all shadow-sm flex items-center justify-center gap-1.5">
+            <i data-lucide="user-check" class="w-4 h-4"></i>
+            <span>Authenticate as Demo Officer</span>
+          </button>
+        </div>
+
+        <div class="flex items-center my-1">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="px-2 text-[10px] text-slate-400 uppercase font-bold">Or Firebase Live Auth</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        <!-- Google OAuth Button -->
+        <button id="google-auth-btn" type="button" class="w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300 transition-all flex items-center justify-center gap-2.5 shadow-sm hover:shadow">
           <svg class="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -1086,58 +1072,52 @@
           <span>Continue with Google</span>
         </button>
 
-        <div class="flex items-center my-2">
-          <div class="flex-grow border-t border-slate-200"></div>
-          <span class="px-2 text-[11px] text-slate-400 uppercase font-medium">Or using credentials</span>
-          <div class="flex-grow border-t border-slate-200"></div>
-        </div>
-
         <!-- Email & Password Form -->
-        <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
+        <form id="firebase-auth-form" class="space-y-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Official / Personal Email</label>
             <div class="relative">
-              <input type="email" id="auth-email" required class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="officer@bis.gov.in or citizen@domain.com">
+              <input type="email" id="auth-email-input" required class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="officer@bis.gov.in or citizen@domain.com">
               <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             </div>
           </div>
 
-          <div id="password-group">
+          <div id="password-form-group">
             <div class="flex justify-between items-center mb-1">
               <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Access Password</label>
-              <button type="button" onclick="setAuthMode('reset')" id="forgot-pw-link" class="text-[11px] text-bis-royal hover:underline">Forgot password?</button>
+              <button type="button" id="forgot-password-link" class="text-[11px] text-bis-royal hover:underline">Forgot password?</button>
             </div>
             <div class="relative">
-              <input type="password" id="auth-password" class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="••••••••••••">
+              <input type="password" id="auth-password-input" class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="••••••••••••">
               <i data-lucide="key-round" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             </div>
           </div>
 
           <button type="submit" id="auth-submit-btn" class="w-full py-2.5 bg-bis-navy hover:bg-bis-royal text-white rounded-lg font-bold text-xs tracking-wide transition-all shadow-md flex items-center justify-center gap-2">
-            <span id="auth-btn-text">Authenticate Credentials</span>
+            <span id="auth-submit-label">Authenticate Credentials</span>
             <div id="auth-spinner" class="hidden w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           </button>
         </form>
 
-        <!-- Toggle Auth Modes (Sign In / Register / Reset) -->
         <div class="pt-2 text-center text-xs text-slate-600 border-t border-slate-200">
-          <span id="auth-toggle-msg">Don't have an e-BIS account yet?</span>
-          <button type="button" onclick="toggleAuthMode()" id="auth-toggle-btn" class="font-bold text-bis-royal hover:underline ml-1">
+          <span id="auth-toggle-hint">Don't have an e-BIS account yet?</span>
+          <button type="button" id="toggle-auth-mode-btn" class="font-bold text-bis-royal hover:underline ml-1">
             Register New Account
           </button>
         </div>
 
         <p class="text-[10px] text-slate-400 text-center leading-tight">
-          By signing in you agree to statutory provisions under Section 29 of the BIS Act, 2016 concerning digital integrity and non-repudiation.
+          Protected under Section 29 of the BIS Act, 2016 concerning digital integrity and non-repudiation.
         </p>
 
       </div>
     </div>
   </div>
 
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     /* =========================================================================
-       FIREBASE AUTHENTICATION INITIALIZATION & HANDLERS
+       1. FIREBASE AUTHENTICATION CONFIG & CONTROLLER
        ========================================================================= */
 
     const firebaseConfig = {
@@ -1149,102 +1129,88 @@
       appId: "1:1083906225011:web:bcf0f277abb737aa9b8b06"
     };
 
-    let authInstance = null;
-    let currentAuthMode = 'signin'; // 'signin' | 'signup' | 'reset'
-    let currentUser = null;
+    let firebaseAuth = null;
+    let authMode = 'signin'; // 'signin' | 'signup' | 'reset'
+    let currentAuthUser = null;
 
-    function initFirebaseAuth() {
+    function initFirebase() {
       try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
+        if (typeof firebase !== 'undefined') {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          firebaseAuth = firebase.auth();
+          firebaseAuth.onAuthStateChanged((user) => {
+            if (user) {
+              setSessionUser({
+                email: user.email || 'officer@bis.gov.in',
+                displayName: user.displayName || user.email?.split('@')[0] || 'Authorized Officer',
+                isDemo: false
+              });
+            } else if (!currentAuthUser?.isDemo) {
+              clearSessionUser();
+            }
+          });
         }
-        authInstance = firebase.auth();
-
-        // Listen to state changes
-        authInstance.onAuthStateChanged((user) => {
-          currentUser = user;
-          updateAuthUI(user);
-        });
       } catch (err) {
-        console.error("Firebase auth initialization error:", err);
+        console.warn("Firebase Auth initialized in fallback mode:", err);
       }
     }
 
-    function updateAuthUI(user) {
-      const loggedOutDiv = document.getElementById('auth-logged-out');
-      const loggedInDiv = document.getElementById('auth-logged-in');
-      const dashboardSection = document.getElementById('authenticated-dashboard');
-      const mobileSigninBtn = document.getElementById('mobile-signin-btn');
+    function setSessionUser(userData) {
+      currentAuthUser = userData;
+      document.getElementById('auth-state-logged-out').classList.add('hidden');
+      document.getElementById('auth-state-logged-in').classList.remove('hidden');
+      document.getElementById('authenticated-dashboard').classList.remove('hidden');
 
-      if (user) {
-        // Show user avatar & actions
-        loggedOutDiv.classList.add('hidden');
-        loggedInDiv.classList.remove('hidden');
-        dashboardSection.classList.remove('hidden');
+      const initial = (userData.displayName || userData.email).charAt(0).toUpperCase();
+      document.getElementById('user-badge-avatar').innerText = initial;
+      document.getElementById('user-badge-name').innerText = userData.displayName;
+      document.getElementById('user-dropdown-email').innerText = userData.email;
+      document.getElementById('dash-user-email-display').innerText = userData.email;
 
-        const email = user.email || 'Authorized Officer';
-        const displayName = user.displayName || email.split('@')[0];
-        const initial = displayName.charAt(0).toUpperCase();
-
-        document.getElementById('user-display-name').innerText = displayName;
-        document.getElementById('user-email-tag').innerText = email;
-        document.getElementById('dash-user-email').innerText = email;
-        document.getElementById('user-avatar').innerText = initial;
-
-        if (mobileSigninBtn) {
-          mobileSigninBtn.innerHTML = `<i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i> ${displayName} (Signed In)`;
-        }
-      } else {
-        // Show login button
-        loggedOutDiv.classList.remove('hidden');
-        loggedInDiv.classList.add('hidden');
-        dashboardSection.classList.add('hidden');
-
-        if (mobileSigninBtn) {
-          mobileSigninBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Officer / Citizen Sign In`;
-        }
+      const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+      if (mobileAuthBtn) {
+        mobileAuthBtn.innerHTML = `<i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i> ${userData.displayName} (Signed In)`;
+        lucide.createIcons();
       }
-      lucide.createIcons();
     }
 
-    function toggleUserDropdown() {
-      const dd = document.getElementById('user-dropdown');
-      dd.classList.toggle('hidden');
+    function clearSessionUser() {
+      currentAuthUser = null;
+      document.getElementById('auth-state-logged-out').classList.remove('hidden');
+      document.getElementById('auth-state-logged-in').classList.add('hidden');
+      document.getElementById('authenticated-dashboard').classList.add('hidden');
+      document.getElementById('user-profile-dropdown').classList.add('hidden');
+
+      const mobileAuthBtn = document.getElementById('mobile-auth-btn');
+      if (mobileAuthBtn) {
+        mobileAuthBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Officer / Citizen Sign In`;
+        lucide.createIcons();
+      }
     }
 
-    // Close user dropdown if click falls outside
-    window.addEventListener('click', (e) => {
-      const userBtn = document.getElementById('user-menu-btn');
-      const dd = document.getElementById('user-dropdown');
-      if (userBtn && dd && !userBtn.contains(e.target) && !dd.contains(e.target)) {
-        dd.classList.add('hidden');
-      }
-    });
-
-    function setAuthAlert(msg, type = 'error') {
-      const alertBox = document.getElementById('auth-alert');
-      alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200', 'bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
-      
-      if (type === 'error') {
-        alertBox.classList.add('bg-red-50', 'text-red-700', 'border', 'border-red-200');
-        alertBox.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i> <span>${msg}</span>`;
-      } else {
-        alertBox.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
-        alertBox.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 shrink-0 mt-0.5"></i> <span>${msg}</span>`;
-      }
+    function showAuthAlert(msg, type = 'error') {
+      const box = document.getElementById('auth-alert-box');
+      box.className = `p-3 rounded-xl text-xs flex items-start gap-2 ${
+        type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+      }`;
+      box.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-4 h-4 shrink-0 mt-0.5"></i><span>${msg}</span>`;
+      box.classList.remove('hidden');
       lucide.createIcons();
     }
 
     function clearAuthAlert() {
-      const alertBox = document.getElementById('auth-alert');
-      alertBox.classList.add('hidden');
-      alertBox.innerHTML = '';
+      const box = document.getElementById('auth-alert-box');
+      box.classList.add('hidden');
+      box.innerHTML = '';
     }
 
     function openAuthModal(mode = 'signin') {
       setAuthMode(mode);
       clearAuthAlert();
       document.getElementById('auth-modal').classList.remove('hidden');
+      lucide.createIcons();
     }
 
     function closeAuthModal() {
@@ -1253,159 +1219,63 @@
     }
 
     function setAuthMode(mode) {
-      currentAuthMode = mode;
+      authMode = mode;
       clearAuthAlert();
       const title = document.getElementById('auth-modal-title');
-      const submitText = document.getElementById('auth-btn-text');
-      const toggleMsg = document.getElementById('auth-toggle-msg');
-      const toggleBtn = document.getElementById('auth-toggle-btn');
-      const pwGroup = document.getElementById('password-group');
-      const pwInput = document.getElementById('auth-password');
+      const submitLabel = document.getElementById('auth-submit-label');
+      const toggleHint = document.getElementById('auth-toggle-hint');
+      const toggleBtn = document.getElementById('toggle-auth-mode-btn');
+      const pwGroup = document.getElementById('password-form-group');
+      const pwInput = document.getElementById('auth-password-input');
 
       if (mode === 'signin') {
         title.innerText = 'e-BIS Portal Sign In';
-        submitText.innerText = 'Authenticate Credentials';
-        toggleMsg.innerText = "Don't have an e-BIS account yet?";
+        submitLabel.innerText = 'Authenticate Credentials';
+        toggleHint.innerText = "Don't have an e-BIS account yet?";
         toggleBtn.innerText = 'Register New Account';
         pwGroup.classList.remove('hidden');
         pwInput.required = true;
       } else if (mode === 'signup') {
         title.innerText = 'Create Official e-BIS Account';
-        submitText.innerText = 'Create Verified Account';
-        toggleMsg.innerText = 'Already have credentials?';
+        submitLabel.innerText = 'Create Verified Account';
+        toggleHint.innerText = 'Already registered?';
         toggleBtn.innerText = 'Sign In Instead';
         pwGroup.classList.remove('hidden');
         pwInput.required = true;
       } else if (mode === 'reset') {
         title.innerText = 'Reset Portal Password';
-        submitText.innerText = 'Send Reset Link';
-        toggleMsg.innerText = 'Remembered credentials?';
+        submitLabel.innerText = 'Send Reset Link';
+        toggleHint.innerText = 'Remembered credentials?';
         toggleBtn.innerText = 'Return to Sign In';
         pwGroup.classList.add('hidden');
         pwInput.required = false;
       }
     }
 
-    function toggleAuthMode() {
-      if (currentAuthMode === 'signin') {
-        setAuthMode('signup');
-      } else {
-        setAuthMode('signin');
-      }
-    }
-
-    async function handleAuthSubmit(e) {
-      e.preventDefault();
-      clearAuthAlert();
-
-      const email = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
-      const spinner = document.getElementById('auth-spinner');
-      const submitBtn = document.getElementById('auth-submit-btn');
-
-      spinner.classList.remove('hidden');
-      submitBtn.disabled = true;
-
-      try {
-        if (currentAuthMode === 'signin') {
-          await authInstance.signInWithEmailAndPassword(email, password);
-          closeAuthModal();
-        } else if (currentAuthMode === 'signup') {
-          await authInstance.createUserWithEmailAndPassword(email, password);
-          setAuthAlert('Account created successfully! Session authenticated.', 'success');
-          setTimeout(() => { closeAuthModal(); }, 1200);
-        } else if (currentAuthMode === 'reset') {
-          await authInstance.sendPasswordResetEmail(email);
-          setAuthAlert('Password reset instructions sent to your email.', 'success');
-        }
-      } catch (err) {
-        console.error("Auth action failed:", err);
-        let msg = err.message || 'Authentication error occurred.';
-        if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-          msg = 'Invalid email or password combination. Please re-check.';
-        } else if (err.code === 'auth/email-already-in-use') {
-          msg = 'This email is already registered. Please sign in instead.';
-        } else if (err.code === 'auth/weak-password') {
-          msg = 'Password is too weak. Please use at least 6 characters.';
-        }
-        setAuthAlert(msg, 'error');
-      } finally {
-        spinner.classList.add('hidden');
-        submitBtn.disabled = false;
-      }
-    }
-
-    async function handleGoogleSignIn() {
-      clearAuthAlert();
-      try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        await authInstance.signInWithPopup(provider);
-        closeAuthModal();
-      } catch (err) {
-        console.error("Google sign-in error:", err);
-        setAuthAlert(err.message || 'Google sign-in failed. Please verify browser popups.', 'error');
-      }
-    }
-
-    async function logoutFirebaseUser() {
-      try {
-        await authInstance.signOut();
-        const dd = document.getElementById('user-dropdown');
-        if (dd) dd.classList.add('hidden');
-      } catch (err) {
-        console.error("Logout error:", err);
-      }
-    }
-
-    function triggerAuditReportGen() {
-      const email = currentUser?.email || 'Officer';
-      const reportTxt = `BUREAU OF INDIAN STANDARDS - AUDIT TRAIL EXPORT\nUser: ${email}\nTimestamp: ${new Date().toISOString()}\nStatutory Status: CONFORMITY VERIFIED (BIS Act 2016)`;
-      
-      const blob = new Blob([reportTxt], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `BIS_Audit_Export_${Date.now()}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
     /* =========================================================================
-       THREE.JS 3D SCENE: ISI EMBLEM & NATIONAL QUALITY MESH
+       2. THREE.JS 3D SCENE: METALLIC ISI SEAL & GLOBAL QUALITY MESH
        ========================================================================= */
 
     let scene, camera, renderer;
     let emblemGroup, meshWireframe;
-    let metalMaterial, chromeGoldMaterial, chromeSteelMaterial;
-    let isGoldMode = true;
-    let targetRotationX = 0, targetRotationY = 0;
+    let chromeGoldMaterial, chromeSteelMaterial;
+    let isGoldFinish = true;
     let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
+    let prevMouse = { x: 0, y: 0 };
+    let targetRotX = 0, targetRotY = 0;
     let scrollProgress = 0;
-
-    // Viewport and Docking targets
-    const initialPosition = { x: 2.2, y: 0.1, z: 0 };
-    const dockedPosition = { x: 4.8, y: 3.2, z: -2.0 };
-    const initialScale = 1.0;
-    const dockedScale = 0.28;
 
     function initThreeScene() {
       const container = document.getElementById('canvas-container');
       const canvas = document.getElementById('webgl-canvas');
-      
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      // 1. Scene
       scene = new THREE.Scene();
 
-      // 2. Camera
       camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
       camera.position.set(0, 0, 7.5);
 
-      // 3. Renderer with antialiasing and alpha transparency
       renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: true,
@@ -1414,300 +1284,243 @@
       });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      // 4. Lights: Realistic Studio Lighting with Gold / Chrome highlights
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      // Lighting with warm key + cool fill for realistic metal sheen
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
       scene.add(ambientLight);
 
-      const keyLight = new THREE.DirectionalLight(0xfff4e0, 2.0);
-      keyLight.position.set(5, 8, 5);
+      const keyLight = new THREE.DirectionalLight(0xfff6e5, 2.2);
+      keyLight.position.set(5, 8, 6);
       scene.add(keyLight);
 
-      const fillLight = new THREE.DirectionalLight(0xd4e4ff, 1.2);
-      fillLight.position.set(-6, -2, 4);
+      const fillLight = new THREE.DirectionalLight(0xd9e7ff, 1.4);
+      fillLight.position.set(-6, -3, 4);
       scene.add(fillLight);
 
-      const rimLight = new THREE.DirectionalLight(0xd4af37, 2.5);
+      const rimLight = new THREE.DirectionalLight(0xd4af37, 2.6);
       rimLight.position.set(0, 5, -5);
       scene.add(rimLight);
 
-      // 5. Materials: Brushed Gold Chrome vs Steel
+      // Metallic Materials
       chromeGoldMaterial = new THREE.MeshStandardMaterial({
         color: 0xD4AF37,
-        metalness: 0.88,
-        roughness: 0.22,
-        emissive: 0x241a05,
-        emissiveIntensity: 0.2
-      });
-
-      chromeSteelMaterial = new THREE.MeshStandardMaterial({
-        color: 0xD8E1E8,
-        metalness: 0.94,
-        roughness: 0.18,
-        emissive: 0x050b14,
+        metalness: 0.92,
+        roughness: 0.2,
+        emissive: 0x221703,
         emissiveIntensity: 0.15
       });
 
-      metalMaterial = chromeGoldMaterial;
+      chromeSteelMaterial = new THREE.MeshStandardMaterial({
+        color: 0xDEE5EB,
+        metalness: 0.95,
+        roughness: 0.16,
+        emissive: 0x060c14,
+        emissiveIntensity: 0.15
+      });
 
-      // 6. Build the 3D BIS / ISI Standard Mark Emblem
-      buildISIEmblem();
+      // Construct the 3D ISI Mark
+      buildEmblemMesh();
 
-      // 7. Background 3D Network Mesh (Nationwide Standards Grid)
+      // Background mesh grid
       buildBackgroundMesh();
 
-      // Responsive adjustments
-      updateViewportLayout();
+      updateLayoutForScreen();
 
-      // Event Listeners
-      window.addEventListener('resize', onWindowResize);
-      window.addEventListener('scroll', onWindowScroll, { passive: true });
-      setupInteractionEvents();
+      // Drag and interaction listeners
+      window.addEventListener('resize', handleWindowResize);
+      window.addEventListener('scroll', handleWindowScroll, { passive: true });
+      setup3DDragInteractions();
     }
 
-    function buildISIEmblem() {
+    function buildEmblemMesh() {
       emblemGroup = new THREE.Group();
+      const currentMat = isGoldFinish ? chromeGoldMaterial : chromeSteelMaterial;
 
       // Outer Thick Beveled Shield Ring
-      const outerRingGeo = new THREE.TorusGeometry(1.65, 0.12, 16, 64);
-      const outerRing = new THREE.Mesh(outerRingGeo, metalMaterial);
-      emblemGroup.add(outerRing);
+      const ringGeo = new THREE.TorusGeometry(1.65, 0.11, 16, 64);
+      const ringMesh = new THREE.Mesh(ringGeo, currentMat);
+      emblemGroup.add(ringMesh);
 
-      // Middle Cylindrical Plinth / Medallion Coin
-      const baseCoinGeo = new THREE.CylinderGeometry(1.5, 1.5, 0.12, 48);
+      // Deep Navy Base Plinth
+      const baseCoinGeo = new THREE.CylinderGeometry(1.52, 1.52, 0.12, 48);
       baseCoinGeo.rotateX(Math.PI / 2);
       const baseCoinMat = new THREE.MeshStandardMaterial({
         color: 0x0A2540,
-        metalness: 0.6,
-        roughness: 0.35
+        metalness: 0.5,
+        roughness: 0.4
       });
       const baseCoin = new THREE.Mesh(baseCoinGeo, baseCoinMat);
-      baseCoin.position.z = -0.04;
+      baseCoin.position.z = -0.05;
       emblemGroup.add(baseCoin);
 
-      // Geometric ISI Emblem Central Motif
-      // Outer Rectangle Profile
-      const boxProfileShape = new THREE.Shape();
-      const s = 0.95;
-      boxProfileShape.moveTo(-s, -s);
-      boxProfileShape.lineTo(s, -s);
-      boxProfileShape.lineTo(s, s);
-      boxProfileShape.lineTo(-s, s);
-      boxProfileShape.closePath();
+      // Geometric ISI Outer Boundary
+      const rectShape = new THREE.Shape();
+      const s = 0.94;
+      rectShape.moveTo(-s, -s);
+      rectShape.lineTo(s, -s);
+      rectShape.lineTo(s, s);
+      rectShape.lineTo(-s, s);
+      rectShape.closePath();
 
-      // Hole inside
-      const holePath = new THREE.Path();
-      const hs = 0.78;
-      holePath.moveTo(-hs, -hs);
-      holePath.lineTo(hs, -hs);
-      holePath.lineTo(hs, hs);
-      holePath.lineTo(-hs, hs);
-      holePath.closePath();
-      boxProfileShape.holes.push(holePath);
+      const innerHole = new THREE.Path();
+      const hs = 0.76;
+      innerHole.moveTo(-hs, -hs);
+      innerHole.lineTo(hs, -hs);
+      innerHole.lineTo(hs, hs);
+      innerHole.lineTo(-hs, hs);
+      innerHole.closePath();
+      rectShape.holes.push(innerHole);
 
-      const extrudeSettings = {
-        depth: 0.15,
+      const rectGeo = new THREE.ExtrudeGeometry(rectShape, {
+        depth: 0.14,
         bevelEnabled: true,
         bevelSegments: 4,
         steps: 1,
         bevelSize: 0.03,
         bevelThickness: 0.03
-      };
-
-      const rectGeo = new THREE.ExtrudeGeometry(boxProfileShape, extrudeSettings);
-      const rectMesh = new THREE.Mesh(rectGeo, metalMaterial);
+      });
+      const rectMesh = new THREE.Mesh(rectGeo, currentMat);
       rectMesh.position.z = 0.02;
       emblemGroup.add(rectMesh);
 
-      // Central "I-S-I" Structural Pillars & Wheel (Ashoka Chakra stylized core)
-      // Horizontal Cross Bar
-      const hBarGeo = new THREE.BoxGeometry(1.2, 0.14, 0.16);
-      const hBar = new THREE.Mesh(hBarGeo, metalMaterial);
+      // Horizontal Bar
+      const hBarGeo = new THREE.BoxGeometry(1.2, 0.13, 0.15);
+      const hBar = new THREE.Mesh(hBarGeo, currentMat);
       hBar.position.set(0, 0, 0.1);
       emblemGroup.add(hBar);
 
       // Vertical Stem
-      const vBarGeo = new THREE.BoxGeometry(0.14, 1.2, 0.16);
-      const vBar = new THREE.Mesh(vBarGeo, metalMaterial);
+      const vBarGeo = new THREE.BoxGeometry(0.13, 1.2, 0.15);
+      const vBar = new THREE.Mesh(vBarGeo, currentMat);
       vBar.position.set(0, 0, 0.1);
       emblemGroup.add(vBar);
 
-      // Central Gold Hub Orb
-      const hubGeo = new THREE.SphereGeometry(0.24, 32, 32);
-      const hub = new THREE.Mesh(hubGeo, metalMaterial);
+      // Central Hub Sphere
+      const hubGeo = new THREE.SphereGeometry(0.22, 32, 32);
+      const hub = new THREE.Mesh(hubGeo, currentMat);
       hub.position.set(0, 0, 0.18);
       emblemGroup.add(hub);
 
-      // Outer Decorative Satellite Studs (symbolizing 15 technical councils)
-      const count = 12;
-      for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
+      // Satellite Studs representing 12 Regional Divisions
+      for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2;
         const studGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.08, 12);
         studGeo.rotateX(Math.PI / 2);
-        const stud = new THREE.Mesh(studGeo, metalMaterial);
-        stud.position.set(Math.cos(angle) * 1.35, Math.sin(angle) * 1.35, 0.05);
+        const stud = new THREE.Mesh(studGeo, currentMat);
+        stud.position.set(Math.cos(angle) * 1.34, Math.sin(angle) * 1.34, 0.05);
         emblemGroup.add(stud);
       }
 
-      // Initial placement in hero section
-      emblemGroup.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
       scene.add(emblemGroup);
     }
 
     function buildBackgroundMesh() {
-      // 3D coordinate lattice representing security and testing nodes
       const meshGeo = new THREE.IcosahedronGeometry(12, 2);
       const wireMat = new THREE.MeshBasicMaterial({
         color: 0x0A2540,
         wireframe: true,
         transparent: true,
-        opacity: 0.07
+        opacity: 0.06
       });
       meshWireframe = new THREE.Mesh(meshGeo, wireMat);
-      meshWireframe.position.set(0, 0, -5);
+      meshWireframe.position.set(0, 0, -4.5);
       scene.add(meshWireframe);
     }
 
-    function updateViewportLayout() {
-      const width = window.innerWidth;
-      if (width < 1024) {
-        // Mobile layout: position emblem in upper-mid screen
-        initialPosition.x = 0;
-        initialPosition.y = 0.6;
-        emblemGroup.scale.set(0.75, 0.75, 0.75);
+    function updateLayoutForScreen() {
+      if (!emblemGroup) return;
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        emblemGroup.position.set(0, 0.5, 0);
+        emblemGroup.scale.set(0.72, 0.72, 0.72);
       } else {
-        // Desktop: position emblem to the right of hero text
-        initialPosition.x = 2.4;
-        initialPosition.y = 0.0;
+        emblemGroup.position.set(2.4, 0.0, 0);
         emblemGroup.scale.set(1.0, 1.0, 1.0);
       }
-      onWindowScroll();
+      handleWindowScroll();
     }
 
-    function onWindowResize() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      camera.aspect = width / height;
+    function handleWindowResize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      updateViewportLayout();
+      renderer.setSize(w, h);
+      updateLayoutForScreen();
     }
 
-    function setupInteractionEvents() {
-      const canvas = document.getElementById('webgl-canvas');
-
-      // Mouse drag controls
-      window.addEventListener('mousedown', (e) => {
-        // Check if click was in right half or on 3D canvas
+    function setup3DDragInteractions() {
+      const onStart = (x, y) => {
         isDragging = true;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-      });
+        prevMouse = { x, y };
+      };
+      const onMove = (x, y) => {
+        if (!isDragging) return;
+        const dx = x - prevMouse.x;
+        const dy = y - prevMouse.y;
+        targetRotY += dx * 0.008;
+        targetRotX += dy * 0.008;
+        prevMouse = { x, y };
+      };
+      const onEnd = () => { isDragging = false; };
 
-      window.addEventListener('mousemove', (e) => {
-        // Subtle ambient parallax
-        const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-        const mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      window.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
+      window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+      window.addEventListener('mouseup', onEnd);
 
-        if (isDragging) {
-          const deltaX = e.clientX - previousMousePosition.x;
-          const deltaY = e.clientY - previousMousePosition.y;
-
-          targetRotationY += deltaX * 0.008;
-          targetRotationX += deltaY * 0.008;
-
-          previousMousePosition = { x: e.clientX, y: e.clientY };
-        } else {
-          // Gentle hovering tilt when not dragging
-          if (emblemGroup && scrollProgress < 0.2) {
-            emblemGroup.rotation.y = THREE.MathUtils.lerp(emblemGroup.rotation.y, mouseX * 0.4 + targetRotationY, 0.05);
-            emblemGroup.rotation.x = THREE.MathUtils.lerp(emblemGroup.rotation.x, -mouseY * 0.3 + targetRotationX, 0.05);
-          }
-        }
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-      window.addEventListener('mouseleave', () => { isDragging = false; });
-
-      // Touch events for mobile dragging
       window.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          isDragging = true;
-          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
+        if (e.touches.length === 1) onStart(e.touches[0].clientX, e.touches[0].clientY);
       }, { passive: true });
-
       window.addEventListener('touchmove', (e) => {
-        if (isDragging && e.touches.length === 1) {
-          const deltaX = e.touches[0].clientX - previousMousePosition.x;
-          const deltaY = e.touches[0].clientY - previousMousePosition.y;
-          targetRotationY += deltaX * 0.008;
-          targetRotationX += deltaY * 0.008;
-          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
+        if (e.touches.length === 1) onMove(e.touches[0].clientX, e.touches[0].clientY);
       }, { passive: true });
+      window.addEventListener('touchend', onEnd);
 
-      window.addEventListener('touchend', () => { isDragging = false; });
-
-      // Reset camera button
-      document.getElementById('reset-3d-cam')?.addEventListener('click', () => {
-        targetRotationX = 0;
-        targetRotationY = 0;
-        emblemGroup.rotation.set(0, 0, 0);
+      // Reset camera
+      document.getElementById('reset-3d-cam-btn')?.addEventListener('click', () => {
+        targetRotX = 0;
+        targetRotY = 0;
+        if (emblemGroup) emblemGroup.rotation.set(0, 0, 0);
       });
 
-      // Toggle Metal finish button
-      document.getElementById('toggle-metal-mode')?.addEventListener('click', toggleMetalFinish);
-    }
+      // Finish toggle
+      document.getElementById('toggle-finish-btn')?.addEventListener('click', () => {
+        isGoldFinish = !isGoldFinish;
+        const targetMat = isGoldFinish ? chromeGoldMaterial : chromeSteelMaterial;
+        const label = document.getElementById('finish-mode-label');
+        if (label) label.innerText = isGoldFinish ? 'Chrome Gold' : 'Brushed Steel';
 
-    function toggleMetalFinish() {
-      isGoldMode = !isGoldMode;
-      const targetMat = isGoldMode ? chromeGoldMaterial : chromeSteelMaterial;
-      const label = document.getElementById('finish-label');
-      if (label) label.innerText = isGoldMode ? 'Chrome Gold' : 'Brushed Steel';
-
-      emblemGroup.traverse((child) => {
-        if (child.isMesh && child.material !== chromeGoldMaterial && child.material !== chromeSteelMaterial) {
-          // Keep base navy plinth unchanged
-          return;
-        }
-        if (child.isMesh) {
-          child.material = targetMat;
-        }
+        emblemGroup.traverse((child) => {
+          if (child.isMesh && child.material !== chromeGoldMaterial && child.material !== chromeSteelMaterial) {
+            return;
+          }
+          if (child.isMesh) {
+            child.material = targetMat;
+          }
+        });
       });
     }
 
-    function onWindowScroll() {
+    function handleWindowScroll() {
       const scrollY = window.scrollY || window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = Math.min(Math.max(scrollY / 700, 0), 1);
-
+      scrollProgress = Math.min(Math.max(scrollY / 650, 0), 1);
       const isMobile = window.innerWidth < 1024;
       const dockElem = document.getElementById('seal-dock-indicator');
 
-      // Docking interpolation
       if (emblemGroup) {
-        // Interpolate position
-        const currentStartX = isMobile ? 0 : 2.4;
-        const currentStartY = isMobile ? 0.6 : 0.0;
-        const targetX = isMobile ? 2.5 : 4.4;
-        const targetY = isMobile ? 3.4 : 3.0;
+        const startX = isMobile ? 0 : 2.4;
+        const startY = isMobile ? 0.5 : 0.0;
+        const targetX = isMobile ? 2.5 : 4.6;
+        const targetY = isMobile ? 3.4 : 3.1;
 
-        emblemGroup.position.x = THREE.MathUtils.lerp(currentStartX, targetX, scrollProgress);
-        emblemGroup.position.y = THREE.MathUtils.lerp(currentStartY, targetY, scrollProgress);
-        emblemGroup.position.z = THREE.MathUtils.lerp(0, -1.5, scrollProgress);
+        emblemGroup.position.x = THREE.MathUtils.lerp(startX, targetX, scrollProgress);
+        emblemGroup.position.y = THREE.MathUtils.lerp(startY, targetY, scrollProgress);
+        emblemGroup.position.z = THREE.MathUtils.lerp(0, -1.8, scrollProgress);
 
-        // Interpolate scale
-        const startScale = isMobile ? 0.75 : 1.0;
-        const currentScale = THREE.MathUtils.lerp(startScale, 0.22, scrollProgress);
-        emblemGroup.scale.set(currentScale, currentScale, currentScale);
+        const startScale = isMobile ? 0.72 : 1.0;
+        const curScale = THREE.MathUtils.lerp(startScale, 0.24, scrollProgress);
+        emblemGroup.scale.set(curScale, curScale, curScale);
 
-        // Control seal dock badge visibility
         if (dockElem) {
           if (scrollProgress > 0.85) {
             dockElem.style.opacity = '1';
@@ -1718,33 +1531,19 @@
           }
         }
       }
-
-      // Navbar shrink effect
-      const nav = document.querySelector('nav');
-      if (scrollY > 50) {
-        nav.classList.add('py-2');
-        nav.classList.remove('py-3');
-      } else {
-        nav.classList.add('py-3');
-        nav.classList.remove('py-2');
-      }
     }
 
-    function animate() {
-      requestAnimationFrame(animate);
+    function animate3DLoop() {
+      requestAnimationFrame(animate3DLoop);
 
-      // Continuous gentle idle rotation of the BIS seal
       if (emblemGroup) {
-        emblemGroup.rotation.y += 0.003;
-        
-        // Drag smoothing lerp
+        emblemGroup.rotation.y += 0.0035;
         if (isDragging) {
-          emblemGroup.rotation.x = THREE.MathUtils.lerp(emblemGroup.rotation.x, targetRotationX, 0.1);
-          emblemGroup.rotation.y = THREE.MathUtils.lerp(emblemGroup.rotation.y, targetRotationY, 0.1);
+          emblemGroup.rotation.x = THREE.MathUtils.lerp(emblemGroup.rotation.x, targetRotX, 0.12);
+          emblemGroup.rotation.y = THREE.MathUtils.lerp(emblemGroup.rotation.y, targetRotY, 0.12);
         }
       }
 
-      // Background mesh slow rotation
       if (meshWireframe) {
         meshWireframe.rotation.y += 0.0006;
         meshWireframe.rotation.x += 0.0003;
@@ -1754,60 +1553,8 @@
     }
 
     /* =========================================================================
-       UI INTERACTIONS: TILT CARDS, VERIFICATION SIMULATOR & MODALS
+       3. VERIFICATION ENGINE & DATA REGISTRY
        ========================================================================= */
-
-    // 3D Parallax Tilt for Scheme Cards
-    function setupCardParallax() {
-      const cards = document.querySelectorAll('.tilt-card');
-      cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left - rect.width / 2;
-          const y = e.clientY - rect.top - rect.height / 2;
-          const tiltX = (y / (rect.height / 2)) * -6;
-          const tiltY = (x / (rect.width / 2)) * 6;
-          card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-        });
-      });
-    }
-
-    // Simulator Tab Switcher
-    function switchSimTab(tab) {
-      const cmlContent = document.getElementById('sim-content-cml');
-      const huidContent = document.getElementById('sim-content-huid');
-      const cmlBtn = document.getElementById('tab-btn-cml');
-      const huidBtn = document.getElementById('tab-btn-huid');
-      const resultCard = document.getElementById('sim-result-card');
-
-      resultCard.classList.add('hidden');
-
-      if (tab === 'cml') {
-        cmlContent.classList.remove('hidden');
-        huidContent.classList.add('hidden');
-        cmlBtn.className = "pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2";
-        huidBtn.className = "pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2";
-      } else {
-        cmlContent.classList.add('hidden');
-        huidContent.classList.remove('hidden');
-        huidBtn.className = "pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2";
-        cmlBtn.className = "pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2";
-      }
-    }
-
-    function setSampleCode(type, code) {
-      if (type === 'cml') {
-        document.getElementById('sim-cml-input').value = code;
-        executeVerification('cml');
-      } else {
-        document.getElementById('sim-huid-input').value = code;
-        executeVerification('huid');
-      }
-    }
 
     const mockRegistry = {
       cml: {
@@ -1816,14 +1563,14 @@
           subtitle: 'IS 14543:2016 Conformity Confirmed | CM/L-8400192384',
           field1: 'Himalayan Aqua Springs Pvt Ltd, Dehradun',
           field2: 'Packaged Drinking Water (Other than Mineral)',
-          field3: 'Valid through: 31-Dec-2027 (Surveillance Normal)'
+          field3: '31-Dec-2027 (Surveillance Normal)'
         },
         '9200381920': {
           title: 'GENUINE BIS LICENCE ACTIVE (SCHEME-I)',
           subtitle: 'IS 1786:2008 Conformity Confirmed | CM/L-9200381920',
           field1: 'National TMT Steels Ltd, Jamshedpur',
-          field2: 'High Strength Deformed Steel Bars for Concrete Reinforcement',
-          field3: 'Valid through: 14-Aug-2028 (QCO Mandate Compliant)'
+          field2: 'High Strength Deformed Steel Bars (Fe 550D)',
+          field3: '14-Aug-2028 (QCO Mandate Compliant)'
         }
       },
       huid: {
@@ -1831,117 +1578,467 @@
           title: 'CERTIFIED 22-CARAT GOLD HALLMARK (HUID)',
           subtitle: 'AHC Code: DL-402 | Laser Serial: AB12C3',
           field1: 'Tanishq Jewellers (Retailer Lic: HM/C-771829)',
-          field2: '22K916 Traditional Gold Kada / Bangle (Weight: 24.82g)',
+          field2: '22K916 Traditional Gold Kada / Bangle (24.82g)',
           field3: 'Assayed: 12-Feb-2026 at Central Bullion Labs'
         },
         '9K2X4M': {
           title: 'CERTIFIED 18-CARAT GOLD HALLMARK (HUID)',
           subtitle: 'AHC Code: MH-118 | Laser Serial: 9K2X4M',
           field1: 'Kalyan Jewellers (Retailer Lic: HM/C-552109)',
-          field2: '18K750 Diamond Mount Ring Base (Weight: 6.45g)',
+          field2: '18K750 Diamond Mount Ring Base (6.45g)',
           field3: 'Assayed: 04-Jan-2026 at Regional Hallmark Centre'
         }
       }
     };
 
-    function executeVerification(type) {
+    function runVerification(type, queryCode) {
+      const code = (queryCode || '').trim();
       const resultCard = document.getElementById('sim-result-card');
-      const titleEl = document.getElementById('res-title');
-      const subEl = document.getElementById('res-subtitle');
-      const f1 = document.getElementById('res-field-1');
-      const f2 = document.getElementById('res-field-2');
-      const f3 = document.getElementById('res-field-3');
+      const title = document.getElementById('sim-res-title');
+      const sub = document.getElementById('sim-res-subtitle');
+      const f1 = document.getElementById('sim-res-field1');
+      const f2 = document.getElementById('sim-res-field2');
+      const f3 = document.getElementById('sim-res-field3');
+      const badge = document.getElementById('sim-res-badge');
 
-      let query = '';
-      if (type === 'cml') {
-        query = document.getElementById('sim-cml-input').value.trim();
-      } else {
-        query = document.getElementById('sim-huid-input').value.trim().toUpperCase();
-      }
+      if (!code) return;
 
-      const match = mockRegistry[type][query];
+      const normalizedCode = type === 'huid' ? code.toUpperCase() : code;
+      const hit = mockRegistry[type][normalizedCode];
 
       resultCard.classList.remove('hidden');
 
-      if (match) {
-        titleEl.innerText = match.title;
-        subEl.innerText = match.subtitle;
-        f1.innerText = match.field1;
-        f2.innerText = match.field2;
-        f3.innerText = match.field3;
+      if (hit) {
+        title.innerText = hit.title;
+        sub.innerText = hit.subtitle;
+        f1.innerText = hit.field1;
+        f2.innerText = hit.field2;
+        f3.innerText = hit.field3;
+        badge.innerText = 'OPERATIVE';
+        badge.className = 'self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase';
       } else {
-        titleEl.innerText = 'PROVISIONAL OR MANUAL AUDIT REQUIRED';
-        subEl.innerText = `Record for '${query}' routed to SIH26107 Verification Queue`;
+        title.innerText = 'PROVISIONAL / MANUAL AUDIT RECORD';
+        sub.innerText = `Record for '${normalizedCode}' routed to Verification Queue`;
         f1.innerText = 'Central Regulatory Directory (e-BIS Portal)';
         f2.innerText = 'Awaiting Physical Lab / AHC Batch Sync';
-        f3.innerText = 'Notice: Check with regional branch office';
+        f3.innerText = 'Notice: Verify directly with regional branch office';
+        badge.innerText = 'PENDING SYNC';
+        badge.className = 'self-start sm:self-auto px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold uppercase';
       }
 
       lucide.createIcons();
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // Modal Handling
-    function openVerificationModal(mode) {
-      const modal = document.getElementById('verify-modal');
-      const title = document.getElementById('modal-head-title');
-      const input = document.getElementById('modal-code-input');
-      const label = document.getElementById('modal-input-label');
-      const fb = document.getElementById('modal-feedback-area');
+    /* =========================================================================
+       4. SCHEME DOSSIER MODAL CONTENT
+       ========================================================================= */
 
-      fb.classList.add('hidden');
-      modal.classList.remove('hidden');
-
-      if (mode === 'huidmod') {
-        title.innerText = 'Hallmark (HUID) Authenticator';
-        label.innerText = '6-Digit Hallmark Unique ID (HUID)';
-        input.placeholder = 'e.g. AB12C3';
-        input.value = 'AB12C3';
-      } else {
-        title.innerText = 'BIS Licence (CM/L) Verification';
-        label.innerText = '7 or 8-Digit CM/L Number';
-        input.placeholder = 'e.g. 8400192384';
-        input.value = '8400192384';
+    const schemeDossiers = {
+      isi: {
+        title: 'Scheme I: Product Certification (ISI Mark)',
+        body: `
+          <div class="space-y-3">
+            <div class="p-3 bg-red-50 text-red-900 rounded-xl border border-red-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">Mandatory Quality Control Orders (QCO)</span>
+              Statutorily enforced under the BIS Act, 2016 for products impacting public health, structural safety, and mass consumer welfare.
+            </div>
+            <p><strong>Covered Products:</strong> Cement, high-strength TMT steel bars, LPG cylinders, packaged drinking water, safety glass, and electrical cables.</p>
+            <p><strong>Conformity Assessment:</strong> Involves comprehensive initial factory evaluation, rigorous testing of preliminary production samples in BIS-recognized laboratories, and random surveillance market auditing.</p>
+            <p><strong>Identifier Format:</strong> CM/L followed by a 7 or 8-digit unique alphanumeric license serial printed directly beside the ISI mark on all retail packaging.</p>
+          </div>
+        `
+      },
+      crs: {
+        title: 'Scheme II: Compulsory Registration Scheme (CRS)',
+        body: `
+          <div class="space-y-3">
+            <div class="p-3 bg-blue-50 text-blue-900 rounded-xl border border-blue-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">Electronics & IT Goods Order (MeitY)</span>
+              A modern, streamlined conformity assessment scheme based on self-declaration of conformity and testing in accredited laboratories.
+            </div>
+            <p><strong>Covered Products:</strong> Mobile devices, laptop computers, server chassis, smart TVs, lithium-ion power banks, and LED fixtures.</p>
+            <p><strong>Conformity Assessment:</strong> Product designs must pass testing in NABL-accredited BIS laboratories under applicable Indian Standards (e.g. IS 13252). Registered models are permitted to carry the CRS Standard Logo.</p>
+            <p><strong>Identifier Format:</strong> R-XXXXXXXX registration code accompanied by the designated Indian Standard number.</p>
+          </div>
+        `
+      },
+      fmcs: {
+        title: 'Foreign Manufacturers Certification Scheme (FMCS)',
+        body: `
+          <div class="space-y-3">
+            <div class="p-3 bg-purple-50 text-purple-900 rounded-xl border border-purple-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">Cross-Border Imports & Sovereignty</span>
+              Empowers overseas manufacturers to use the official ISI mark for goods entering Indian territorial jurisdiction.
+            </div>
+            <p><strong>Requirements:</strong> Physical audit of foreign manufacturing facilities by accredited BIS inspecting officers, verification of testing infrastructure, and legal nomination of an Authorized Indian Representative (AIR).</p>
+            <p><strong>Performance Bond:</strong> Overseas licensees submit performance bank guarantees ensuring compliance with Indian Standard specifications and swift resolution of consumer grievances.</p>
+          </div>
+        `
+      },
+      huid: {
+        title: 'Hallmarking & 6-Digit HUID Traceability',
+        body: `
+          <div class="space-y-3">
+            <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">Consumer Bullion & Jewellery Trust</span>
+              Statutory 3-mark laser engraving guaranteeing fineness and anti-counterfeiting for precious metals.
+            </div>
+            <p><strong>The Three Hallmarks:</strong> (1) Triangular BIS Standard Logo, (2) Carat & Fineness mark (22K916, 18K750, 14K585), and (3) 6-character laser-engraved HUID.</p>
+            <p><strong>Assaying & Hallmarking Centres (AHC):</strong> Articles are physically sampled, fire-assayed, and registered in the national central e-BIS HUID cryptographic database before entering retail trade.</p>
+          </div>
+        `
       }
-    }
-
-    function closeVerificationModal() {
-      document.getElementById('verify-modal').classList.add('hidden');
-    }
-
-    function runModalVerification() {
-      const code = document.getElementById('modal-code-input').value.trim();
-      const fb = document.getElementById('modal-feedback-area');
-      const fbDesc = document.getElementById('mf-desc');
-      
-      fb.classList.remove('hidden');
-      fbDesc.innerText = `Code ${code} validated with statutory integrity. Verified under BIS Act 2016 framework.`;
-      lucide.createIcons();
-    }
-
-    // Mobile Navigation Drawer Toggle
-    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
-    });
-
-    // Contrast Toggle Accessibility
-    let isHighContrast = false;
-    document.getElementById('contrast-toggle')?.addEventListener('click', () => {
-      isHighContrast = !isHighContrast;
-      if (isHighContrast) {
-        document.body.classList.add('contrast-125');
-      } else {
-        document.body.classList.remove('contrast-125');
-      }
-    });
-
-    window.onload = function () {
-      initThreeScene();
-      animate();
-      setupCardParallax();
-      initFirebaseAuth();
-      lucide.createIcons();
     };
+
+    function openSchemeDossier(schemeKey) {
+      const modal = document.getElementById('scheme-details-modal');
+      const title = document.getElementById('modal-dossier-title');
+      const content = document.getElementById('modal-dossier-content');
+      const dossier = schemeDossiers[schemeKey];
+
+      if (dossier) {
+        title.innerText = dossier.title;
+        content.innerHTML = dossier.body;
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+      }
+    }
+
+    function closeSchemeDossier() {
+      document.getElementById('scheme-details-modal').classList.add('hidden');
+    }
+
+    /* =========================================================================
+       5. WIRE UP ALL BUTTONS AND EVENT LISTENERS
+       ========================================================================= */
+
+    function setupAllEventHandlers() {
+      // 1. Navigation & Mobile Drawer
+      const mobileBtn = document.getElementById('mobile-menu-toggle-btn');
+      const mobileDrawer = document.getElementById('mobile-nav-drawer');
+      mobileBtn?.addEventListener('click', () => {
+        mobileDrawer.classList.toggle('hidden');
+      });
+
+      document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileDrawer.classList.add('hidden');
+        });
+      });
+
+      // 2. High Contrast Accessibility Toggle
+      const contrastBtn = document.getElementById('contrast-toggle-btn');
+      const contrastLabel = document.getElementById('contrast-label');
+      contrastBtn?.addEventListener('click', () => {
+        document.body.classList.toggle('high-contrast');
+        const isActive = document.body.classList.contains('high-contrast');
+        if (contrastLabel) {
+          contrastLabel.innerText = isActive ? 'Normal View' : 'High Contrast';
+        }
+      });
+
+      // 3. User Profile Dropdown Toggle
+      const userBtn = document.getElementById('user-profile-menu-btn');
+      const userDropdown = document.getElementById('user-profile-dropdown');
+      userBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userDropdown.classList.toggle('hidden');
+      });
+      window.addEventListener('click', (e) => {
+        if (userBtn && userDropdown && !userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+          userDropdown.classList.add('hidden');
+        }
+      });
+
+      // 4. Quick Verify Navigation Button
+      document.getElementById('nav-quick-verify-btn')?.addEventListener('click', () => {
+        document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // 5. Auth Modal Open Triggers
+      const openModalHandler = () => openAuthModal('signin');
+      document.getElementById('open-signin-modal-btn')?.addEventListener('click', openModalHandler);
+      document.getElementById('mobile-auth-btn')?.addEventListener('click', openModalHandler);
+
+      document.getElementById('close-auth-modal-btn')?.addEventListener('click', closeAuthModal);
+      document.getElementById('close-scheme-modal-btn')?.addEventListener('click', closeSchemeDossier);
+      document.getElementById('dismiss-scheme-modal-btn')?.addEventListener('click', closeSchemeDossier);
+
+      // Close modals on outside backdrop click
+      window.addEventListener('click', (e) => {
+        const authModal = document.getElementById('auth-modal');
+        const schemeModal = document.getElementById('scheme-details-modal');
+        if (e.target === authModal) closeAuthModal();
+        if (e.target === schemeModal) closeSchemeDossier();
+      });
+
+      // 6. Auth Toggle Mode
+      document.getElementById('toggle-auth-mode-btn')?.addEventListener('click', () => {
+        setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
+      });
+
+      document.getElementById('forgot-password-link')?.addEventListener('click', () => {
+        setAuthMode('reset');
+      });
+
+      // 7. Instant Demo Officer Login
+      document.getElementById('demo-officer-login-btn')?.addEventListener('click', () => {
+        setSessionUser({
+          email: 'officer.auditor@bis.gov.in',
+          displayName: 'Director K. Sharma (BIS)',
+          isDemo: true
+        });
+        closeAuthModal();
+        document.getElementById('authenticated-dashboard')?.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // 8. Sign Out Handlers
+      const logoutHandler = async () => {
+        if (firebaseAuth && currentAuthUser && !currentAuthUser.isDemo) {
+          try {
+            await firebaseAuth.signOut();
+          } catch (err) {
+            console.error("Signout error:", err);
+          }
+        }
+        clearSessionUser();
+      };
+      document.getElementById('dropdown-signout-btn')?.addEventListener('click', logoutHandler);
+      document.getElementById('dash-logout-btn')?.addEventListener('click', logoutHandler);
+
+      // 9. Firebase Form Submission (Email/Password & Password Reset)
+      document.getElementById('firebase-auth-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearAuthAlert();
+
+        const email = document.getElementById('auth-email-input').value.trim();
+        const password = document.getElementById('auth-password-input').value;
+        const spinner = document.getElementById('auth-spinner');
+        const submitBtn = document.getElementById('auth-submit-btn');
+
+        if (!firebaseAuth) {
+          showAuthAlert("Firebase SDK not reachable in this environment. Please click 'Authenticate as Demo Officer' above to test immediately!", "error");
+          return;
+        }
+
+        spinner.classList.remove('hidden');
+        submitBtn.disabled = true;
+
+        try {
+          if (authMode === 'signin') {
+            const cred = await firebaseAuth.signInWithEmailAndPassword(email, password);
+            setSessionUser({
+              email: cred.user.email,
+              displayName: cred.user.displayName || email.split('@')[0],
+              isDemo: false
+            });
+            closeAuthModal();
+          } else if (authMode === 'signup') {
+            const cred = await firebaseAuth.createUserWithEmailAndPassword(email, password);
+            setSessionUser({
+              email: cred.user.email,
+              displayName: email.split('@')[0],
+              isDemo: false
+            });
+            showAuthAlert("Account registered and authenticated!", "success");
+            setTimeout(closeAuthModal, 1000);
+          } else if (authMode === 'reset') {
+            await firebaseAuth.sendPasswordResetEmail(email);
+            showAuthAlert("Password reset instructions dispatched to your email address.", "success");
+          }
+        } catch (err) {
+          console.error("Auth error:", err);
+          let userMsg = err.message || "An authentication error occurred.";
+          if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+            userMsg = "Invalid email or password combination. Try 'Authenticate as Demo Officer' for fast testing.";
+          } else if (err.code === 'auth/unauthorized-domain') {
+            userMsg = "Domain unauthorized in Firebase console. Please click 'Authenticate as Demo Officer' above to bypass iframe domain restrictions.";
+          }
+          showAuthAlert(userMsg, "error");
+        } finally {
+          spinner.classList.add('hidden');
+          submitBtn.disabled = false;
+        }
+      });
+
+      // 10. Google Auth Button
+      document.getElementById('google-auth-btn')?.addEventListener('click', async () => {
+        clearAuthAlert();
+        if (!firebaseAuth) {
+          showAuthAlert("Firebase Auth offline. Use 'Authenticate as Demo Officer' above to test all features!", "error");
+          return;
+        }
+        try {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          const cred = await firebaseAuth.signInWithPopup(provider);
+          setSessionUser({
+            email: cred.user.email,
+            displayName: cred.user.displayName || 'Authorized Google Officer',
+            isDemo: false
+          });
+          closeAuthModal();
+        } catch (err) {
+          console.error("Google signin error:", err);
+          let msg = err.message || "Google sign-in could not be completed.";
+          if (err.code === 'auth/unauthorized-domain') {
+            msg = "This preview domain is not whitelisted in Firebase Auth. Click 'Authenticate as Demo Officer' above to test immediately!";
+          }
+          showAuthAlert(msg, "error");
+        }
+      });
+
+      // 11. Hero Action Buttons
+      document.getElementById('hero-verify-isi-btn')?.addEventListener('click', () => {
+        switchSimTab('cml');
+        document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('sim-cml-input')?.focus();
+      });
+
+      document.getElementById('hero-check-huid-btn')?.addEventListener('click', () => {
+        switchSimTab('huid');
+        document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('sim-huid-input')?.focus();
+      });
+
+      // 12. Simulator Tabs
+      const cmlTabBtn = document.getElementById('sim-tab-cml-btn');
+      const huidTabBtn = document.getElementById('sim-tab-huid-btn');
+      cmlTabBtn?.addEventListener('click', () => switchSimTab('cml'));
+      huidTabBtn?.addEventListener('click', () => switchSimTab('huid'));
+
+      // 13. Simulator Execute Actions
+      document.getElementById('execute-cml-btn')?.addEventListener('click', () => {
+        const val = document.getElementById('sim-cml-input').value;
+        runVerification('cml', val);
+      });
+      document.getElementById('execute-huid-btn')?.addEventListener('click', () => {
+        const val = document.getElementById('sim-huid-input').value;
+        runVerification('huid', val);
+      });
+
+      // Quick Code pills in Simulator
+      document.querySelectorAll('.quick-code-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const type = btn.getAttribute('data-type');
+          const code = btn.getAttribute('data-code');
+          if (type === 'cml') {
+            document.getElementById('sim-cml-input').value = code;
+          } else {
+            document.getElementById('sim-huid-input').value = code;
+          }
+          runVerification(type, code);
+        });
+      });
+
+      // Table test links in Dashboard
+      document.querySelectorAll('.table-test-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const type = btn.getAttribute('data-type');
+          const code = btn.getAttribute('data-code');
+          switchSimTab(type);
+          if (type === 'cml') {
+            document.getElementById('sim-cml-input').value = code;
+          } else {
+            document.getElementById('sim-huid-input').value = code;
+          }
+          document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
+          runVerification(type, code);
+        });
+      });
+
+      // 14. Scheme Dossier Modal Openers
+      document.querySelectorAll('.open-scheme-modal-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-scheme');
+          openSchemeDossier(key);
+        });
+      });
+
+      // 15. Export Audit Report (.txt file download)
+      document.getElementById('dash-export-report-btn')?.addEventListener('click', () => {
+        const email = currentAuthUser ? currentAuthUser.email : 'officer@bis.gov.in';
+        const dateStr = new Date().toISOString();
+        const content = 
+`===================================================================
+BUREAU OF INDIAN STANDARDS - OFFICIAL COMPLIANCE AUDIT EXPORT
+===================================================================
+Generated By: ${email}
+Timestamp:    ${dateStr}
+Portal:       e-BIS Sovereign Technical Framework
+BIS Act:      The Bureau of Indian Standards Act, 2016 (Mandatory)
+
+AUDIT SUMMARY LOG:
+- Record #1: CM/L-8400192384 | IS 14543 (Packaged Water) -> OPERATIVE
+- Record #2: HUID-AB12C3      | 22K916 Traditional Gold Kada -> CERTIFIED
+- Record #3: CM/L-9200381920 | IS 1786 (High Strength TMT Steel) -> OPERATIVE
+
+Statutory Status: All listed licenses conform with published Indian Standards.
+===================================================================`;
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BIS_Statutory_Audit_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      // 16. Card 3D Mouse Parallax Tilt
+      setupCardParallax();
+    }
+
+    function switchSimTab(tab) {
+      const cmlView = document.getElementById('sim-view-cml');
+      const huidView = document.getElementById('sim-view-huid');
+      const cmlBtn = document.getElementById('sim-tab-cml-btn');
+      const huidBtn = document.getElementById('sim-tab-huid-btn');
+      const resultCard = document.getElementById('sim-result-card');
+
+      resultCard.classList.add('hidden');
+
+      if (tab === 'cml') {
+        cmlView.classList.remove('hidden');
+        huidView.classList.add('hidden');
+        cmlBtn.className = "pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2 focus:outline-none";
+        huidBtn.className = "pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2 focus:outline-none";
+      } else {
+        cmlView.classList.add('hidden');
+        huidView.classList.remove('hidden');
+        huidBtn.className = "pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2 focus:outline-none";
+        cmlBtn.className = "pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2 focus:outline-none";
+      }
+      lucide.createIcons();
+    }
+
+    function setupCardParallax() {
+      const cards = document.querySelectorAll('.tilt-card');
+      cards.forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          const tiltX = (y / (rect.height / 2)) * -6;
+          const tiltY = (x / (rect.width / 2)) * 6;
+          card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+        });
+      });
+    }
+
+    // Window Load Bootstrap
+    window.addEventListener('load', () => {
+      initThreeScene();
+      animate3DLoop();
+      initFirebase();
+      setupAllEventHandlers();
+      lucide.createIcons();
+    });
   </script>
 </body>
 </html>
