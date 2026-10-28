@@ -11,7 +11,7 @@
   <!-- Google Fonts: Inter & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -41,8 +41,8 @@
             }
           },
           fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            display: ['Outfit', 'Inter', 'sans-serif'],
+            sans: ['Inter', 'Noto Sans Devanagari', 'system-ui', 'sans-serif'],
+            display: ['Outfit', 'Noto Sans Devanagari', 'Inter', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace']
           },
           boxShadow: {
@@ -102,6 +102,47 @@
       pointer-events: none;
     }
 
+    /* Realistic Gold Metallic Gradient & Glint Animation */
+    .gold-metallic-card {
+      background: linear-gradient(135deg, #ECC870 0%, #F5DE98 25%, #D4AF37 50%, #E6C875 75%, #A88424 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 40px -10px rgba(212, 175, 55, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 6px rgba(110, 80, 10, 0.5);
+    }
+
+    .gold-glint {
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 80%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: skewX(-25deg);
+      animation: goldSheenSweep 5.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    @keyframes goldSheenSweep {
+      0% { left: -120%; }
+      35% { left: 160%; }
+      100% { left: 160%; }
+    }
+
+    /* Animated Gold Floating Bangle Orbit */
+    .gold-ring-orbit {
+      animation: gentleFloat 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes gentleFloat {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-8px) rotate(1deg); }
+    }
+
     /* High contrast mode helper */
     body.high-contrast {
       filter: contrast(125%);
@@ -138,25 +179,26 @@
     <!-- Official Government Sub-Bar -->
     <div class="bg-bis-deep text-white text-xs py-1.5 px-4 md:px-8 flex justify-between items-center border-b border-white/10 font-medium select-none">
       <div class="flex items-center space-x-3">
-        <span class="inline-flex items-center gap-1.5 text-slate-300">
+        <span class="inline-flex items-center gap-1.5 text-slate-300" data-i18n="govIndia">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           भारत सरकार | Government of India
         </span>
         <span class="hidden md:inline text-white/30">|</span>
-        <span class="hidden md:inline text-amber-300/90 font-mono text-[11px]">Department of Consumer Affairs</span>
+        <span class="hidden md:inline text-amber-300/90 font-mono text-[11px]" data-i18n="deptConsumerAffairs">उपभोक्ता मामले, खाद्य और सार्वजनिक वितरण मंत्रालय</span>
       </div>
       <div class="flex items-center space-x-4">
         <button id="contrast-toggle-btn" class="hover:text-amber-300 transition-colors flex items-center gap-1 text-[11px] focus:outline-none">
           <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-          <span id="contrast-label">High Contrast</span>
+          <span id="contrast-label" data-i18n="contrastLabel">उच्च कंट्रास्ट</span>
         </button>
         <span class="text-white/30">|</span>
-        <div class="flex items-center gap-1 text-[11px]">
-          <i data-lucide="globe" class="w-3.5 h-3.5 text-bis-gold"></i>
-          <select id="lang-select" class="bg-transparent text-white border-0 focus:ring-0 cursor-pointer text-xs pr-1">
-            <option value="en" class="text-slate-900">English (National)</option>
-            <option value="hi" class="text-slate-900">हिन्दी (Hindi)</option>
-          </select>
+        <!-- Language Switcher -->
+        <div class="flex items-center gap-1.5 text-[11px]">
+          <i data-lucide="languages" class="w-3.5 h-3.5 text-bis-gold"></i>
+          <button id="lang-toggle-btn" class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 border border-white/20 text-bis-gold font-bold transition-all text-xs flex items-center gap-1">
+            <span id="current-lang-code" class="font-mono">हिन्दी</span>
+            <i data-lucide="refresh-cw" class="w-3 h-3 text-slate-300"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -168,7 +210,6 @@
         <!-- Logo Brand & Seal -->
         <a href="#hero" class="flex items-center gap-3.5 group shrink-0">
           <div class="relative w-10 h-10 rounded-xl bg-bis-navy p-1.5 flex items-center justify-center shadow-md border border-bis-gold/50 group-hover:border-bis-gold transition-colors">
-            <!-- BIS Geometric ISI Mark representation -->
             <svg viewBox="0 0 100 100" class="w-full h-full fill-bis-gold" aria-hidden="true">
               <rect x="15" y="15" width="70" height="70" rx="10" fill="none" stroke="#D4AF37" stroke-width="8"/>
               <path d="M 28 32 L 72 32 M 50 32 L 50 68 M 35 68 L 65 68" stroke="#D4AF37" stroke-width="7" stroke-linecap="round"/>
@@ -177,23 +218,23 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <span class="font-display font-black text-xl tracking-tight text-bis-navy uppercase">BIS</span>
-              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-bis-gold/20 text-bis-royal border border-bis-gold/40">Statutory Body</span>
+              <span class="font-display font-black text-xl tracking-tight text-bis-navy uppercase" data-i18n="brandTitle">BIS</span>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-bis-gold/20 text-bis-royal border border-bis-gold/40" data-i18n="statutoryBadge">सांविधिक निकाय</span>
             </div>
-            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:block">Bureau of Indian Standards</p>
+            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider hidden sm:block" data-i18n="brandSubtitle">भारतीय मानक ब्यूरो</p>
           </div>
         </a>
 
         <!-- Desktop Navigation Links -->
         <div class="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-medium text-slate-700">
-          <a href="#hero" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Home</a>
-          <a href="#statutory" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">About Mandate</a>
-          <a href="#schemes" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Conformity Schemes</a>
-          <a href="#hallmarking" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Hallmarking</a>
-          <a href="#pillars" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all">Labs & Standards</a>
+          <a href="#hero" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all" data-i18n="navHome">गृह</a>
+          <a href="#statutory" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all" data-i18n="navMandate">परिचय व अधिदेश</a>
+          <a href="#schemes" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all" data-i18n="navSchemes">अनुरूपता योजनाएं</a>
+          <a href="#hallmarking" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all" data-i18n="navHallmarking">स्वर्ण हॉलमार्किंग</a>
+          <a href="#pillars" class="px-3 py-1.5 rounded-lg hover:text-bis-navy hover:bg-slate-100 transition-all" data-i18n="navLabs">मानक व प्रयोगशालाएं</a>
           <a href="#simulator" class="px-3 py-1.5 rounded-lg text-bis-royal font-semibold hover:bg-blue-50 transition-all flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-bis-gold"></span>
-            Verify Code
+            <span data-i18n="navVerify">कोड सत्यापित करें</span>
           </a>
         </div>
 
@@ -202,14 +243,14 @@
           <!-- Quick Verify Trigger -->
           <button id="nav-quick-verify-btn" class="px-3 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg text-xs font-semibold tracking-wide transition-all shadow-sm flex items-center gap-1.5 border border-bis-gold/30 hover:shadow-gov-soft">
             <i data-lucide="shield-check" class="w-4 h-4 text-bis-gold"></i>
-            <span class="hidden md:inline">Quick</span> Verify
+            <span data-i18n="quickVerifyBtn">त्वरित सत्यापन</span>
           </button>
 
           <!-- AUTH: Logged Out State Button -->
           <div id="auth-state-logged-out" class="flex items-center">
             <button id="open-signin-modal-btn" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm flex items-center gap-1.5 border border-amber-400/50 hover:shadow-gov-soft">
               <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-              <span>Officer / Citizen Sign In</span>
+              <span data-i18n="officerSignInBtn">अधिकारी / नागरिक लॉगिन</span>
             </button>
           </div>
 
@@ -220,26 +261,26 @@
                 U
               </div>
               <div class="text-left hidden sm:block leading-tight">
-                <span id="user-badge-name" class="font-bold text-bis-navy block text-[11px] truncate max-w-[120px]">Officer User</span>
-                <span class="text-[9px] text-emerald-600 font-mono font-semibold">● Active Session</span>
+                <span id="user-badge-name" class="font-bold text-bis-navy block text-[11px] truncate max-w-[120px]">Authorized Officer</span>
+                <span class="text-[9px] text-emerald-600 font-mono font-semibold" data-i18n="activeSessionBadge">● सक्रिय सत्र</span>
               </div>
               <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
             </button>
 
             <!-- User Dropdown Menu -->
-            <div id="user-profile-dropdown" class="hidden absolute right-0 mt-2 w-60 glass-gov rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 modal-enter">
+            <div id="user-profile-dropdown" class="hidden absolute right-0 mt-2 w-64 glass-gov rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 modal-enter">
               <div class="px-4 py-2.5 border-b border-slate-200">
-                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Authorized Officer</p>
+                <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider" data-i18n="authorizedOfficerTag">अधिकृत अधिकारी</p>
                 <p id="user-dropdown-email" class="text-xs font-semibold text-bis-navy truncate mt-0.5 font-mono">user@bis.gov.in</p>
-                <span class="mt-1 inline-block text-[9px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">e-BIS Sovereign Role</span>
+                <span class="mt-1 inline-block text-[9px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold" data-i18n="sovereignRole">ई-बीआईएस संप्रभु भूमिका</span>
               </div>
               <a href="#authenticated-dashboard" id="dropdown-dash-link" class="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-100 hover:text-bis-navy transition-colors font-medium">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 text-bis-royal"></i>
-                <span>Compliance Dashboard</span>
+                <span data-i18n="dashComplianceTitle">अनुपालन डैशबोर्ड</span>
               </a>
               <button id="dropdown-signout-btn" class="w-full text-left flex items-center gap-2.5 px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 transition-colors font-semibold">
                 <i data-lucide="log-out" class="w-4 h-4"></i>
-                <span>Sign Out of Portal</span>
+                <span data-i18n="signOutBtn">पोर्टल से साइन आउट करें</span>
               </button>
             </div>
           </div>
@@ -253,15 +294,15 @@
 
       <!-- Mobile Navigation Drawer -->
       <div id="mobile-nav-drawer" class="hidden lg:hidden pt-3 pb-2 border-t border-slate-200 mt-2 space-y-1">
-        <a href="#hero" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Home</a>
-        <a href="#statutory" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Statutory Mandate (BIS Act 2016)</a>
-        <a href="#schemes" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Conformity Assessment Schemes</a>
-        <a href="#hallmarking" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Hallmarking & 6-Digit HUID</a>
-        <a href="#pillars" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Laboratory Testing & Standards</a>
-        <a href="#simulator" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-bis-royal hover:bg-blue-50 rounded-lg">Online Verification Simulator</a>
+        <a href="#hero" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg" data-i18n="navHome">गृह</a>
+        <a href="#statutory" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg" data-i18n="navMandate">परिचय व अधिदेश</a>
+        <a href="#schemes" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg" data-i18n="navSchemes">अनुरूपता योजनाएं</a>
+        <a href="#hallmarking" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg" data-i18n="navHallmarking">स्वर्ण हॉलमार्किंग</a>
+        <a href="#pillars" class="mobile-nav-link block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg" data-i18n="navLabs">मानक व प्रयोगशालाएं</a>
+        <a href="#simulator" class="mobile-nav-link block px-3 py-2 text-sm font-semibold text-bis-royal hover:bg-blue-50 rounded-lg" data-i18n="navVerify">कोड सत्यापित करें</a>
         <div class="pt-2 border-t border-slate-200">
           <button id="mobile-auth-btn" class="w-full text-left px-3 py-2 text-sm font-bold text-amber-700 hover:bg-amber-50 rounded-lg flex items-center gap-2">
-            <i data-lucide="lock" class="w-4 h-4"></i> Officer / Citizen Sign In
+            <i data-lucide="lock" class="w-4 h-4"></i> <span data-i18n="officerSignInBtn">अधिकारी / नागरिक लॉगिन</span>
           </button>
         </div>
       </div>
@@ -273,15 +314,15 @@
     <canvas id="webgl-canvas" class="w-full h-full block"></canvas>
   </div>
 
-  <!-- Docked Verified 3D Seal Target Indicator (Pops up when emblem docks on scroll) -->
+  <!-- Docked Verified 3D Seal Target Indicator -->
   <div id="seal-dock-indicator" class="fixed top-24 right-6 z-30 opacity-0 pointer-events-none transition-all duration-500 scale-90">
     <div class="glass-gov px-3.5 py-2.5 rounded-2xl border border-bis-gold/60 shadow-seal-float flex items-center gap-3">
       <div class="w-8 h-8 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center font-bold text-xs border border-emerald-500/40">
         <i data-lucide="check" class="w-4 h-4"></i>
       </div>
       <div>
-        <p class="text-[10px] font-bold uppercase tracking-wider text-bis-navy">Verified Seal Active</p>
-        <p class="text-[9px] text-slate-500 font-mono">IS/ISO Sovereign Security</p>
+        <p class="text-[10px] font-bold uppercase tracking-wider text-bis-navy" data-i18n="verifiedSealActive">सत्यापित सील सक्रिय</p>
+        <p class="text-[9px] text-slate-500 font-mono" data-i18n="isoSovereignSec">IS/ISO संप्रभु सुरक्षा</p>
       </div>
     </div>
   </div>
@@ -297,35 +338,34 @@
           
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 border border-slate-200/90 shadow-sm backdrop-blur-md">
             <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-            <span class="text-xs font-semibold text-bis-navy tracking-tight">The Bureau of Indian Standards Act, 2016</span>
+            <span class="text-xs font-semibold text-bis-navy tracking-tight" data-i18n="heroActBadge">भारतीय मानक ब्यूरो अधिनियम, 2016</span>
             <span class="text-slate-300">|</span>
-            <span class="text-[11px] font-mono font-medium text-slate-600">SOVEREIGN QUALITY PORTAL</span>
+            <span class="text-[11px] font-mono font-medium text-slate-600" data-i18n="heroSovereignPill">राष्ट्रीय गुणवत्ता पोर्टल</span>
           </div>
 
-          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-bis-navy leading-[1.12] tracking-tight">
-            Ensuring Quality, <br class="hidden sm:inline">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-bis-navy via-bis-royal to-bis-gold">Safety & Trust</span> <br class="hidden sm:inline">
-            Across the Nation.
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-bis-navy leading-[1.15] tracking-tight">
+            <span data-i18n="heroTitlePart1">राष्ट्र भर में गुणवत्ता,</span> <br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-bis-navy via-bis-royal to-bis-gold" data-i18n="heroTitlePart2">सुरक्षा और विश्वास</span> <br class="hidden sm:inline">
+            <span data-i18n="heroTitlePart3">सुनिश्चित करना।</span>
           </h1>
 
-          <p class="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
-            The National Standards Body of India operating under the Department of Consumer Affairs. 
-            Establishing technical standards, certifying industrial products, and safeguarding 1.4 billion citizens through uncompromising quality benchmarks.
+          <p class="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed" data-i18n="heroDescription">
+            उपभोक्ता मामले मंत्रालय के अधीन संचालित भारत का राष्ट्रीय मानक निकाय। तकनीकी मानक तय करना, औद्योगिक उत्पादों को प्रमाणित करना और 1.4 अरब नागरिकों को समझौताहीन गुणवत्ता प्रदान करना।
           </p>
 
           <!-- Core Statistics Metrics -->
           <div class="grid grid-cols-3 gap-3 max-w-lg pt-1">
             <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-bis-navy">22,000+</div>
-              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">IS Codes Active</div>
+              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider" data-i18n="metricIsCodes">सक्रिय आईएस कोड</div>
             </div>
             <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-bis-royal">40,000+</div>
-              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Active Licences</div>
+              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider" data-i18n="metricLicences">सक्रिय लाइसेंस</div>
             </div>
             <div class="p-3 bg-white/85 rounded-xl border border-slate-200/90 shadow-sm backdrop-blur-sm">
               <div class="text-xl sm:text-2xl font-black text-amber-600">100%</div>
-              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider">HUID Traceable</div>
+              <div class="text-[11px] font-medium text-slate-500 uppercase tracking-wider" data-i18n="metricHuidTrace">एचयूआईडी ट्रेस करने योग्य</div>
             </div>
           </div>
 
@@ -333,37 +373,35 @@
           <div class="flex flex-wrap items-center gap-4 pt-3">
             <button id="hero-verify-isi-btn" class="px-6 py-3.5 bg-gradient-to-r from-bis-navy to-bis-royal hover:from-bis-royal hover:to-bis-navy text-white rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-200 flex items-center gap-2.5 border border-bis-gold/40 group">
               <i data-lucide="badge-check" class="w-5 h-5 text-bis-gold transition-transform group-hover:scale-110"></i>
-              <span>Verify License / ISI Mark</span>
+              <span data-i18n="verifyIsiBtn">लाइसेंस / आईएसआई मार्क सत्यापित करें</span>
             </button>
 
             <button id="hero-check-huid-btn" class="px-6 py-3.5 bg-white hover:bg-slate-50 text-bis-navy rounded-xl font-semibold text-sm tracking-wide shadow-gov-soft hover:shadow-gov-hover transition-all duration-200 flex items-center gap-2.5 border border-slate-300 hover:border-bis-gold group">
               <i data-lucide="gem" class="w-5 h-5 text-amber-500 transition-transform group-hover:scale-110"></i>
-              <span>Check Hallmarked Jewellery</span>
+              <span data-i18n="checkGoldBtn">हॉलमार्क आभूषण जांचें</span>
             </button>
           </div>
 
           <!-- 3D Orbit Tip -->
           <div class="text-xs text-slate-500 flex items-center gap-2 pt-2">
             <i data-lucide="mouse-pointer" class="w-3.5 h-3.5 text-bis-gold animate-bounce"></i>
-            <span>Interactive 3D ISI Mark: Drag with mouse or swipe on touch to rotate emblem.</span>
+            <span data-i18n="orbitTip">इंटरएक्टिव 3डी प्रतीक: रोटेट करने के लिए माउस ड्रैग या टच स्वाइप करें।</span>
           </div>
 
         </div>
 
         <!-- Right: 3D Viewport Controls & Spatial Layout -->
         <div class="lg:col-span-5 h-[340px] sm:h-[460px] lg:h-[520px] relative pointer-events-auto flex items-center justify-center">
-          <!-- 3D Viewport Overlay Micro-Controls -->
           <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 glass-gov p-1.5 rounded-xl border border-slate-200 text-xs shadow-sm">
             <button id="reset-3d-cam-btn" title="Reset View" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-bis-navy transition-all">
               <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
             </button>
-            <button id="toggle-finish-btn" title="Toggle Finish (Gold Chrome / Brushed Steel)" class="px-2.5 py-1 bg-bis-gold/20 hover:bg-bis-gold/30 text-bis-navy rounded-lg font-semibold text-[11px] transition-all flex items-center gap-1.5">
+            <button id="toggle-finish-btn" title="Toggle Finish" class="px-2.5 py-1 bg-bis-gold/20 hover:bg-bis-gold/30 text-bis-navy rounded-lg font-semibold text-[11px] transition-all flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
-              <span id="finish-mode-label">Chrome Gold</span>
+              <span id="finish-mode-label" data-i18n="goldFinishLabel">क्रोम गोल्ड फिनिश</span>
             </button>
           </div>
 
-          <!-- Concentric Aesthetic Depth Rings -->
           <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full border border-slate-200/60 absolute -z-10 animate-pulse pointer-events-none"></div>
           <div class="w-80 h-80 sm:w-[440px] sm:h-[440px] rounded-full border border-dashed border-bis-royal/15 absolute -z-10 pointer-events-none"></div>
         </div>
@@ -379,23 +417,23 @@
           <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Secure Session Active | Bureau of Indian Standards
+              <span data-i18n="dashBadge">सुरक्षित सत्र सक्रिय | भारतीय मानक ब्यूरो</span>
             </div>
-            <h2 class="font-display text-2xl sm:text-3xl font-bold text-bis-navy">
-              e-BIS Officer & Certified Citizen Portal
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-bis-navy" data-i18n="dashHeading">
+              ई-बीआईएस अधिकारी एवं प्रमाणित नागरिक पोर्टल
             </h2>
             <p class="text-xs sm:text-sm text-slate-600 mt-1">
-              Active Identity: <span id="dash-user-email-display" class="font-mono font-bold text-bis-royal">user@bis.gov.in</span>
+              <span data-i18n="dashActiveId">सक्रिय पहचान:</span> <span id="dash-user-email-display" class="font-mono font-bold text-bis-royal">user@bis.gov.in</span>
             </p>
           </div>
           <div class="flex items-center gap-3">
             <button id="dash-export-report-btn" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white text-xs font-semibold rounded-xl flex items-center gap-1.5 shadow transition-all">
               <i data-lucide="download" class="w-4 h-4 text-bis-gold"></i>
-              Export Audit Trail (.txt)
+              <span data-i18n="exportTrailBtn">ऑडिट रिपोर्ट डाउनलोड करें (.txt)</span>
             </button>
             <button id="dash-logout-btn" class="px-4 py-2 bg-slate-200 hover:bg-red-50 hover:text-red-600 text-slate-700 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all">
               <i data-lucide="log-out" class="w-4 h-4"></i>
-              Sign Out
+              <span data-i18n="signOutBtn">साइन आउट करें</span>
             </button>
           </div>
         </div>
@@ -403,23 +441,23 @@
         <!-- Fast Metrics -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Surveillance Inquiries</span>
+            <span class="text-[11px] text-slate-500 font-semibold uppercase" data-i18n="metricSurveillance">निगरानी जांच</span>
             <div class="text-2xl font-black text-bis-navy mt-1">24 Checks</div>
-            <span class="text-[10px] text-emerald-600 font-medium font-mono">Central LIMS Synced</span>
+            <span class="text-[10px] text-emerald-600 font-medium font-mono" data-i18n="limsSynced">केंद्रीय एलआईएमएस सिंक</span>
           </div>
           <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Bookmarked Standards</span>
+            <span class="text-[11px] text-slate-500 font-semibold uppercase" data-i18n="metricSavedCodes">बुकमार्क मानक</span>
             <div class="text-2xl font-black text-bis-royal mt-1">8 Codes</div>
             <span class="text-[10px] text-slate-500 font-mono">IS 14543, IS 1786, IS 1417...</span>
           </div>
           <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Jurisdiction Role</span>
-            <div class="text-2xl font-black text-amber-600 mt-1">Authorized</div>
+            <span class="text-[11px] text-slate-500 font-semibold uppercase" data-i18n="metricRole">क्षेत्राधिकार पद</span>
+            <div class="text-2xl font-black text-amber-600 mt-1" data-i18n="authorizedRoleText">अधिकृत</div>
             <span class="text-[10px] text-slate-500 font-mono">ID: #BIS-OFFICER-2026</span>
           </div>
           <div class="bg-white/90 p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-semibold uppercase">Registry Protocol</span>
-            <div class="text-2xl font-black text-emerald-700 mt-1">Active</div>
+            <span class="text-[11px] text-slate-500 font-semibold uppercase" data-i18n="metricRegistry">रजिस्ट्री प्रोटोकॉल</span>
+            <div class="text-2xl font-black text-emerald-700 mt-1" data-i18n="activeStatus">सक्रिय</div>
             <span class="text-[10px] text-emerald-600 font-mono">TLS 1.3 End-to-End</span>
           </div>
         </div>
@@ -428,45 +466,45 @@
         <div class="mt-8">
           <h3 class="font-display font-bold text-base text-bis-navy mb-3 flex items-center gap-2">
             <i data-lucide="history" class="w-4 h-4 text-bis-gold"></i>
-            Recent Conformity & Hallmarking Records
+            <span data-i18n="recentAuditLogTitle">हाल के अनुरूपता व हॉलमार्किंग सत्यापन रिकॉर्ड</span>
           </h3>
           <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">Timestamp</th>
-                  <th class="py-3 px-4">Identifier / Code</th>
-                  <th class="py-3 px-4">Standard Category</th>
-                  <th class="py-3 px-4">Status</th>
-                  <th class="py-3 px-4 text-right">Action</th>
+                  <th class="py-3 px-4" data-i18n="thTimestamp">समय</th>
+                  <th class="py-3 px-4" data-i18n="thCode">पहचान / कोड</th>
+                  <th class="py-3 px-4" data-i18n="thCategory">मानक श्रेणी</th>
+                  <th class="py-3 px-4" data-i18n="thStatus">स्थिति</th>
+                  <th class="py-3 px-4 text-right" data-i18n="thAction">कार्रवाई</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-sans">
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Today, 18:30</td>
+                  <td class="py-3 px-4 font-mono text-slate-500" data-i18n="timeToday">आज, 18:30</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">CM/L-8400192384</td>
-                  <td class="py-3 px-4 text-slate-700">IS 14543 (Packaged Water)</td>
-                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">OPERATIVE</span></td>
+                  <td class="py-3 px-4 text-slate-700" data-i18n="auditWater">IS 14543 (पैकेज्ड पेयजल)</td>
+                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold" data-i18n="badgeOperative">वैध व सक्रिय</span></td>
                   <td class="py-3 px-4 text-right">
-                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="8400192384">View Details</button>
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="8400192384" data-i18n="viewDetailsBtn">विवरण देखें</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Today, 14:15</td>
+                  <td class="py-3 px-4 font-mono text-slate-500" data-i18n="timeTodayEarlier">आज, 14:15</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">HUID: AB12C3</td>
-                  <td class="py-3 px-4 text-slate-700">Gold Jewellery 22K916</td>
-                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">CERTIFIED</span></td>
+                  <td class="py-3 px-4 text-slate-700" data-i18n="auditGold">स्वर्ण आभूषण 22K916</td>
+                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold" data-i18n="badgeCertified">प्रमाणित</span></td>
                   <td class="py-3 px-4 text-right">
-                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="huid" data-code="AB12C3">View Details</button>
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="huid" data-code="AB12C3" data-i18n="viewDetailsBtn">विवरण देखें</button>
                   </td>
                 </tr>
                 <tr class="hover:bg-slate-50">
-                  <td class="py-3 px-4 font-mono text-slate-500">Yesterday, 10:45</td>
+                  <td class="py-3 px-4 font-mono text-slate-500" data-i18n="timeYesterday">कल, 10:45</td>
                   <td class="py-3 px-4 font-mono font-bold text-bis-navy">CM/L-9200381920</td>
-                  <td class="py-3 px-4 text-slate-700">IS 1786 (High Strength TMT Steel)</td>
-                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">OPERATIVE</span></td>
+                  <td class="py-3 px-4 text-slate-700" data-i18n="auditSteel">IS 1786 (टीएमटी स्टील बार)</td>
+                  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold" data-i18n="badgeOperative">वैध व सक्रिय</span></td>
                   <td class="py-3 px-4 text-right">
-                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="9200381920">View Details</button>
+                    <button class="table-test-btn text-bis-royal hover:underline font-semibold" data-type="cml" data-code="9200381920" data-i18n="viewDetailsBtn">विवरण देखें</button>
                   </td>
                 </tr>
               </tbody>
@@ -481,13 +519,13 @@
     <section id="statutory" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto">
       <div class="text-center max-w-3xl mx-auto mb-14">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-bis-royal/10 text-bis-royal text-xs font-bold uppercase tracking-wider mb-3">
-          <i data-lucide="landmark" class="w-3.5 h-3.5"></i> Section 1: Statutory Framework
+          <i data-lucide="landmark" class="w-3.5 h-3.5"></i> <span data-i18n="section1Tag">खंड 1: सांविधिक ढांचा</span>
         </div>
-        <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight">
-          Institutional Mandate & Regulatory Jurisdiction
+        <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight" data-i18n="mandateHeading">
+          संस्थागत अधिदेश और विनियामक क्षेत्राधिकार
         </h2>
-        <p class="text-slate-600 mt-3 text-sm sm:text-base leading-relaxed">
-          Succeeding the historic Indian Standards Institution (ISI, established 1947), the Bureau of Indian Standards operates under parliamentary mandate as the National Standards Body of India (BIS Act, 2016).
+        <p class="text-slate-600 mt-3 text-sm sm:text-base leading-relaxed" data-i18n="mandateLead">
+          1947 में स्थापित भारतीय मानक संस्थान (ISI) के उत्तराधिकारी के रूप में, भारतीय मानक ब्यूरो संसद के अधिनियम (बीआईएस अधिनियम, 2016) के तहत भारत के राष्ट्रीय मानक निकाय के रूप में संचालित होता है।
         </p>
       </div>
 
@@ -496,10 +534,10 @@
           <div class="w-12 h-12 rounded-xl bg-bis-navy/5 text-bis-navy flex items-center justify-center mb-4">
             <i data-lucide="scale" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">BIS Act, 2016</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Statutory Core</p>
-          <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Statutory authority to declare mandatory Indian Standards, certify industrial conformity, and penalize unauthorized use of standard marks.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="cardActTitle">बीआईएस अधिनियम, 2016</h3>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1" data-i18n="cardActSub">सांविधिक आधार</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed" data-i18n="cardActDesc">
+            अनिवार्य भारतीय मानकों की घोषणा, औद्योगिक अनुरूपता प्रमाणन और अनधिकृत मानक चिह्नों पर दंडात्मक कार्रवाई का पूर्ण कानूनी अधिकार।
           </p>
         </div>
 
@@ -507,10 +545,10 @@
           <div class="w-12 h-12 rounded-xl bg-bis-royal/5 text-bis-royal flex items-center justify-center mb-4">
             <i data-lucide="building-2" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">Consumer Affairs</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Nodal Ministry</p>
-          <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Operates under Department of Consumer Affairs, aligning statutory consumer protection frameworks with mandatory quality control regimes.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="cardMinistryTitle">उपभोक्ता मामले मंत्रालय</h3>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1" data-i18n="cardMinistrySub">नोडल मंत्रालय</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed" data-i18n="cardMinistryDesc">
+            उपभोक्ता संरक्षण और अनिवार्य गुणवत्ता नियंत्रण आदेशों (QCO) के राष्ट्रीय क्रियान्वयन हेतु उपभोक्ता मामले विभाग के साथ एकीकृत समन्वय।
           </p>
         </div>
 
@@ -518,10 +556,10 @@
           <div class="w-12 h-12 rounded-xl bg-bis-gold/10 text-amber-700 flex items-center justify-center mb-4">
             <i data-lucide="globe-2" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">ISO & IEC Member</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Global Standing</p>
-          <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Founding member of ISO and official Indian National Committee for IEC, representing India in international standard harmonization.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="cardIsoTitle">आईएसओ एवं आईईसी सदस्य</h3>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1" data-i18n="cardIsoSub">वैश्विक प्रतिनिधित्व</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed" data-i18n="cardIsoDesc">
+            अंतर्राष्ट्रीय मानकीकरण संगठन (ISO) के संस्थापक सदस्य और अंतरराष्ट्रीय मंचों पर भारत का आधिकारिक तकनीकी प्रतिनिधित्व।
           </p>
         </div>
 
@@ -529,10 +567,10 @@
           <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
             <i data-lucide="cpu" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">e-BIS Unified Digital</h3>
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">Digital Governance</p>
-          <p class="text-slate-600 text-xs mt-3 leading-relaxed">
-            Complete digital lifecycle tracking: online licensing, surveillance audits, mobile scanning via BIS Care, and real-time laboratory workflows.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="cardEbisTitle">ई-बीआईएस डिजिटल प्रणाली</h3>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1" data-i18n="cardEbisSub">पारदर्शी ई-गवर्नेंस</p>
+          <p class="text-slate-600 text-xs mt-3 leading-relaxed" data-i18n="cardEbisDesc">
+            डिजिटल लाइसेंसिंग, सर्विलांस ऑडिट, बीआईएस केयर मोबाइल ऐप स्कैनिंग और रियल-टाइम प्रयोगशाला सूचना प्रणाली (LIMS)।
           </p>
         </div>
       </div>
@@ -542,17 +580,17 @@
     <section id="schemes" class="py-20 px-4 md:px-8 max-w-7xl mx-auto relative pointer-events-auto">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal">Section 2: Quality Frameworks</span>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1">
-            Conformity Assessment & Schemes
+          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal" data-i18n="section2Tag">खंड 2: गुणवत्ता रूपरेखा</span>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1" data-i18n="schemesHeading">
+            अनुरूपता मूल्यांकन एवं प्रमुख योजनाएं
           </h2>
-          <p class="text-slate-600 text-sm mt-2 max-w-2xl leading-relaxed">
-            Comprehensive conformity assessment frameworks tailored for core industries, electronic equipment, cross-border imports, and gold hallmarking.
+          <p class="text-slate-600 text-sm mt-2 max-w-2xl leading-relaxed" data-i18n="schemesLead">
+            औद्योगिक उत्पादों, इलेक्ट्रॉनिक्स, सीमा पार आयात और स्वर्ण आभूषणों की गुणवत्ता जांच हेतु वैधानिक रूप से स्थापित योजनाएं।
           </p>
         </div>
         <div class="mt-4 md:mt-0 flex gap-2">
           <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Live Schemes Active
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span data-i18n="liveSchemesPill">योजनाएं पूर्णतः सक्रिय</span>
           </span>
         </div>
       </div>
@@ -563,19 +601,19 @@
         <!-- Scheme 1: ISI Mark -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="isi">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold px-2.5 py-1 rounded bg-red-50 text-red-700 border border-red-200">Mandatory (QCO)</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded bg-red-50 text-red-700 border border-red-200" data-i18n="schemeIsiBadge">अनिवार्य (QCO)</span>
             <span class="text-xs font-mono font-bold text-slate-400">Scheme I</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-bis-navy text-white flex items-center justify-center font-bold text-lg mb-4 shadow-sm group-hover:scale-105 transition-transform">
             ISI
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">ISI Mark Certification</h3>
-          <p class="text-xs font-semibold text-slate-500 mt-1">Domestic Manufacturing</p>
-          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-            Covers cement, steel, LPG cylinders, packaged drinking water, and automotive tyres. Requires factory audits & laboratory validation.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="schemeIsiTitle">आईएसआई मार्क प्रमाणन</h3>
+          <p class="text-xs font-semibold text-slate-500 mt-1" data-i18n="schemeIsiSub">घरेलू औद्योगिक विनिर्माण</p>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed" data-i18n="schemeIsiDesc">
+            सीमेंट, संरचनात्मक स्टील, एलपीजी सिलेंडर, पैकेज्ड पेयजल व हेलमेट। कड़े कारखाने निरीक्षण और लैब परीक्षण पर आधारित।
           </p>
           <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-bis-navy hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="isi">
-            <span>Explore Dossier</span>
+            <span data-i18n="exploreDossierBtn">दस्तावेज़ देखें</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -583,19 +621,19 @@
         <!-- Scheme 2: CRS -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="crs">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200">MeitY Mandate</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded bg-blue-50 text-blue-700 border border-blue-200" data-i18n="schemeCrsBadge">इलेक्ट्रॉनिक्स अधिदेश</span>
             <span class="text-xs font-mono font-bold text-slate-400">Scheme II</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg mb-4 shadow-sm group-hover:scale-105 transition-transform">
             CRS
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">Compulsory Registration</h3>
-          <p class="text-xs font-semibold text-slate-500 mt-1">IT & Electronic Goods</p>
-          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-            Governs laptops, mobile phones, servers, power adapters, and LED lights under CRO orders with self-declaration testing.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="schemeCrsTitle">अनिवार्य पंजीकरण योजना</h3>
+          <p class="text-xs font-semibold text-slate-500 mt-1" data-i18n="schemeCrsSub">आईटी व इलेक्ट्रॉनिक उपकरण</p>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed" data-i18n="schemeCrsDesc">
+            लैपटॉप, मोबाइल फोन, सर्वर, पावर एडेप्टर और एलईडी लाइट्स हेतु बीआईएस लैब परीक्षण पर आधारित अनुरूपता स्व-घोषणा।
           </p>
           <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-blue-600 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="crs">
-            <span>Explore Dossier</span>
+            <span data-i18n="exploreDossierBtn">दस्तावेज़ देखें</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -603,19 +641,19 @@
         <!-- Scheme 3: FMCS -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-slate-200/90 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="fmcs">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200">Cross-Border</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded bg-purple-50 text-purple-700 border border-purple-200" data-i18n="schemeFmcsBadge">सीमा पार आयात</span>
             <span class="text-xs font-mono font-bold text-slate-400">FMCS</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-purple-700 text-white flex items-center justify-center font-bold text-lg mb-4 shadow-sm group-hover:scale-105 transition-transform">
             FMCS
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">Foreign Manufacturers</h3>
-          <p class="text-xs font-semibold text-slate-500 mt-1">Cross-Border Imports</p>
-          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-            Mandatory overseas facility audits and appointment of Authorized Indian Representatives (AIR) for goods exported to India.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="schemeFmcsTitle">विदेशी निर्माता प्रमाणन</h3>
+          <p class="text-xs font-semibold text-slate-500 mt-1" data-i18n="schemeFmcsSub">अंतरराष्ट्रीय आयात अनुपालन</p>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed" data-i18n="schemeFmcsDesc">
+            भारत को निर्यात करने वाले विदेशी संयंत्रों का प्रत्यक्ष ऑडिट एवं अधिकृत भारतीय प्रतिनिधि (AIR) की अनिवार्य नियुक्ति।
           </p>
           <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-slate-100 hover:bg-purple-700 hover:text-white text-bis-navy rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5" data-scheme="fmcs">
-            <span>Explore Dossier</span>
+            <span data-i18n="exploreDossierBtn">दस्तावेज़ देखें</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -623,19 +661,19 @@
         <!-- Scheme 4: Hallmarking HUID -->
         <div class="tilt-card glass-gov p-6 rounded-2xl border border-amber-300/80 shadow-gov-soft hover:shadow-gov-hover transition-all duration-300 relative group overflow-hidden" data-scheme="huid">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold px-2.5 py-1 rounded bg-amber-100 text-amber-800 border border-amber-300">Consumer Trust</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded bg-amber-100 text-amber-800 border border-amber-300" data-i18n="schemeHuidBadge">उपभोक्ता विश्वास</span>
             <span class="text-xs font-mono font-bold text-amber-600">HUID</span>
           </div>
           <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-bis-gold to-amber-600 text-white flex items-center justify-center font-bold text-lg mb-4 shadow-sm group-hover:scale-105 transition-transform">
             <i data-lucide="gem" class="w-6 h-6"></i>
           </div>
-          <h3 class="font-display font-bold text-lg text-bis-navy">Gold & Silver Hallmarking</h3>
-          <p class="text-xs font-semibold text-slate-500 mt-1">Laser Assaying</p>
-          <p class="text-xs text-slate-600 mt-3 leading-relaxed">
-            Mandatory 6-character alphanumeric Hallmark Unique Identification (HUID) assigned to each jewelry article to guarantee precious metal fineness.
+          <h3 class="font-display font-bold text-lg text-bis-navy" data-i18n="schemeHuidTitle">स्वर्ण एवं रजत हॉलमार्किंग</h3>
+          <p class="text-xs font-semibold text-slate-500 mt-1" data-i18n="schemeHuidSub">लेजर एसेइंग व प्रमाणन</p>
+          <p class="text-xs text-slate-600 mt-3 leading-relaxed" data-i18n="schemeHuidDesc">
+            प्रत्येक आभूषण पर 6-अंकों का विशिष्ट अल्फ़ान्यूमेरिक एचयूआईडी कोड, जो धातु की शत-प्रतिशत शुद्धता सुनिश्चित करता है।
           </p>
           <button class="open-scheme-modal-btn mt-6 w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm" data-scheme="huid">
-            <span>Explore Dossier</span>
+            <span data-i18n="exploreDossierBtn">दस्तावेज़ देखें</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -647,12 +685,12 @@
     <section id="pillars" class="py-20 bg-slate-100/70 border-y border-slate-200/80 px-4 md:px-8 relative pointer-events-auto">
       <div class="max-w-7xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-14">
-          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal">Section 3: National Infrastructure</span>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1">
-            Standards & Laboratory Pillars
+          <span class="text-xs font-bold uppercase tracking-wider text-bis-royal" data-i18n="section3Tag">खंड 3: राष्ट्रीय अवसंरचना</span>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight mt-1" data-i18n="pillarsHeading">
+            मानक निर्माण एवं प्रयोगशाला नेटवर्क
           </h2>
-          <p class="text-slate-600 text-sm mt-2 leading-relaxed">
-            The dual engine of Indian technological sovereignty: forward-looking technical standards formulation and physical testing laboratories.
+          <p class="text-slate-600 text-sm mt-2 leading-relaxed" data-i18n="pillarsLead">
+            भारतीय तकनीकी संप्रभुता के दो मुख्य आधार: भविष्योन्मुखी तकनीकी मानकों का निर्माण और अत्याधुनिक परीक्षण प्रयोगशालाएं।
           </p>
         </div>
 
@@ -664,21 +702,21 @@
                 <i data-lucide="layers" class="w-7 h-7"></i>
               </div>
               <div>
-                <h3 class="font-display font-bold text-xl text-bis-navy">Standards Formulation</h3>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">15 Technical Councils & 400+ Committees</p>
+                <h3 class="font-display font-bold text-xl text-bis-navy" data-i18n="p1Title">मानक निर्माण (Standards Formulation)</h3>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide" data-i18n="p1Sub">15 तकनीकी प्रभाग परिषदें एवं 400+ समितियां</p>
               </div>
             </div>
-            <p class="text-slate-600 text-sm leading-relaxed mb-6">
-              Technical Division Councils establish Indian Standards (IS), covering civil infrastructure, electronics, chemicals, food technology, textiles, and frontier disciplines including <strong>Artificial Intelligence, Smart Grids, Quantum Tech, and IoT</strong>.
+            <p class="text-slate-600 text-sm leading-relaxed mb-6" data-i18n="p1Desc">
+              सिविल, इलेक्ट्रॉनिक्स, रसायन, खाद्य, वस्त्र के साथ-साथ <strong>आर्टिफिशियल इंटेलिजेंस (AI), स्मार्ट ग्रिड, क्वांटम कंप्यूटिंग और IoT</strong> जैसे आधुनिक क्षेत्रों में राष्ट्रीय मानक निर्धारित करना।
             </p>
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">15 Division Councils</div>
-                <div class="text-slate-500">Sectoral Technical Oversight</div>
+                <div class="font-bold text-bis-navy" data-i18n="p1Box1Title">15 प्रभाग परिषदें</div>
+                <div class="text-slate-500" data-i18n="p1Box1Desc">क्षेत्रवार तकनीकी विशेषज्ञता</div>
               </div>
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">WTO-TBT Desk</div>
-                <div class="text-slate-500">Global Trade Barrier Compliance</div>
+                <div class="font-bold text-bis-navy" data-i18n="p1Box2Title">WTO-TBT डेस्क</div>
+                <div class="text-slate-500" data-i18n="p1Box2Desc">वैश्विक व्यापार बाधा अनुपालन</div>
               </div>
             </div>
           </div>
@@ -690,21 +728,21 @@
                 <i data-lucide="flask-conical" class="w-7 h-7"></i>
               </div>
               <div>
-                <h3 class="font-display font-bold text-xl text-bis-navy">Laboratory Network (LIMS)</h3>
-                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Central, Regional & Recognized Labs</p>
+                <h3 class="font-display font-bold text-xl text-bis-navy" data-i18n="p2Title">प्रयोगशाला नेटवर्क (LIMS)</h3>
+                <p class="text-xs font-medium text-slate-500 uppercase tracking-wide" data-i18n="p2Sub">केंद्रीय, क्षेत्रीय और एनएबीएल मान्यता प्राप्त लैब्स</p>
               </div>
             </div>
-            <p class="text-slate-600 text-sm leading-relaxed mb-6">
-              Operates Central, Regional, and Branch Testing Laboratories alongside an extensive network of <strong>NABL-accredited third-party laboratories</strong> managed through the digital <strong>Laboratory Information Management System (LIMS)</strong>.
+            <p class="text-slate-600 text-sm leading-relaxed mb-6" data-i18n="p2Desc">
+              साहिबाबाद, चेन्नई, कोलकाता आदि में स्थित 8 केंद्रीय व क्षेत्रीय प्रयोगशालाओं के साथ <strong>LIMS डिजिटल पोर्टल</strong> के माध्यम से पारदर्शी और सटीक नमूना परीक्षण।
             </p>
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">8 Central Labs</div>
-                <div class="text-slate-500">Sahibabad, Chennai, Kolkata...</div>
+                <div class="font-bold text-bis-navy" data-i18n="p2Box1Title">8 केंद्रीय लैब्स</div>
+                <div class="text-slate-500" data-i18n="p2Box1Desc">साहिबाबाद, चेन्नई, कोलकाता...</div>
               </div>
               <div class="p-3 bg-white rounded-xl border border-slate-200">
-                <div class="font-bold text-bis-navy">LIMS Connected</div>
-                <div class="text-slate-500">100% Digital Sample Tracking</div>
+                <div class="font-bold text-bis-navy" data-i18n="p2Box2Title">LIMS से संबद्ध</div>
+                <div class="text-slate-500" data-i18n="p2Box2Desc">100% डिजिटल नमूना ट्रैकिंग</div>
               </div>
             </div>
           </div>
@@ -718,13 +756,13 @@
         
         <div class="max-w-3xl">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-bis-gold text-xs font-semibold mb-4 border border-bis-gold/30">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Official Citizen Verification Console
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> <span data-i18n="simTag">आधिकारिक नागरिक सत्यापन कंसोल</span>
           </div>
-          <h2 class="font-display text-3xl sm:text-4xl font-black tracking-tight text-white">
-            Instant Verification Simulator
+          <h2 class="font-display text-3xl sm:text-4xl font-black tracking-tight text-white" data-i18n="simHeading">
+            त्वरित ऑनलाइन सत्यापन सिमुलेटर
           </h2>
-          <p class="text-slate-300 text-sm sm:text-base mt-2">
-            Verify the authenticity of any ISI Standard Mark, Electronic Registration, or Gold Hallmark code directly against the statutory registry.
+          <p class="text-slate-300 text-sm sm:text-base mt-2" data-i18n="simLead">
+            केंद्रीय वैधानिक रजिस्ट्री से किसी भी आईएसआई मार्क, इलेक्ट्रॉनिक पंजीकरण या स्वर्ण हॉलमार्क की प्रामाणिकता की तुरंत पुष्टि करें।
           </p>
         </div>
 
@@ -732,10 +770,10 @@
         <div class="mt-8">
           <div class="flex border-b border-white/20 gap-4 text-sm font-semibold">
             <button id="sim-tab-cml-btn" class="pb-3 text-bis-gold border-b-2 border-bis-gold transition-all flex items-center gap-2 focus:outline-none">
-              <i data-lucide="check-square" class="w-4 h-4"></i> ISI License (CM/L Number)
+              <i data-lucide="check-square" class="w-4 h-4"></i> <span data-i18n="tabCml">आईएसआई लाइसेंस (CM/L संख्या)</span>
             </button>
             <button id="sim-tab-huid-btn" class="pb-3 text-slate-400 hover:text-white border-b-2 border-transparent transition-all flex items-center gap-2 focus:outline-none">
-              <i data-lucide="gem" class="w-4 h-4"></i> Hallmarking HUID (6-Character)
+              <i data-lucide="gem" class="w-4 h-4"></i> <span data-i18n="tabHuid">हॉलमार्किंग एचयूआईडी (6-अक्षर)</span>
             </button>
           </div>
 
@@ -743,20 +781,20 @@
           <div id="sim-view-cml" class="mt-6 space-y-4">
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
-                <input type="text" id="sim-cml-input" placeholder="Enter CM/L Number (e.g. 8400192384 or 9200381920)" 
+                <input type="text" id="sim-cml-input" placeholder="CM/L संख्या दर्ज करें (उदा. 8400192384 या 9200381920)" 
                        value="8400192384"
                        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-bis-gold text-sm font-mono">
                 <span class="absolute right-3 top-3.5 text-xs bg-white/10 px-2 py-0.5 rounded text-slate-300 font-mono">CM/L</span>
               </div>
               <button id="execute-cml-btn" class="px-6 py-3.5 bg-bis-gold hover:bg-amber-400 text-bis-navy font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
-                <i data-lucide="search" class="w-4 h-4"></i> Validate Licence
+                <i data-lucide="search" class="w-4 h-4"></i> <span data-i18n="btnValidateLicence">लाइसेंस सत्यापित करें</span>
               </button>
             </div>
             <div class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
-              <span>Quick test codes:</span>
-              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="8400192384">8400192384 (Packaged Water)</button>
+              <span data-i18n="quickSamplesTag">त्वरित परीक्षण कोड:</span>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="8400192384">8400192384 (पैकेज्ड पेयजल)</button>
               <span>•</span>
-              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="9200381920">9200381920 (Structural Steel)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="cml" data-code="9200381920">9200381920 (संरचनात्मक स्टील)</button>
             </div>
           </div>
 
@@ -764,20 +802,20 @@
           <div id="sim-view-huid" class="mt-6 space-y-4 hidden">
             <div class="flex flex-col sm:flex-row gap-3">
               <div class="relative flex-1">
-                <input type="text" id="sim-huid-input" maxlength="6" placeholder="Enter 6-character HUID (e.g. AB12C3 or 9K2X4M)" 
+                <input type="text" id="sim-huid-input" maxlength="6" placeholder="6-अक्षर एचयूआईडी दर्ज करें (उदा. AB12C3 या 9K2X4M)" 
                        value="AB12C3"
                        class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3.5 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-bis-gold text-sm font-mono uppercase tracking-widest">
                 <span class="absolute right-3 top-3.5 text-xs bg-white/10 px-2 py-0.5 rounded text-slate-300 font-mono">HUID</span>
               </div>
               <button id="execute-huid-btn" class="px-6 py-3.5 bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2">
-                <i data-lucide="gem" class="w-4 h-4"></i> Authenticate HUID
+                <i data-lucide="gem" class="w-4 h-4"></i> <span data-i18n="btnAuthenticateHuid">एचयूआईडी प्रमाणित करें</span>
               </button>
             </div>
             <div class="text-xs text-slate-300 flex flex-wrap items-center gap-2">
-              <span>Quick test codes:</span>
-              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="AB12C3">AB12C3 (22K Gold Bangle)</button>
+              <span data-i18n="quickSamplesTag">त्वरित परीक्षण कोड:</span>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="AB12C3">AB12C3 (22K स्वर्ण कंगन)</button>
               <span>•</span>
-              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="9K2X4M">9K2X4M (18K Diamond Ring Base)</button>
+              <button class="quick-code-btn underline hover:text-bis-gold font-mono" data-type="huid" data-code="9K2X4M">9K2X4M (18K डायमंड रिंग बेस)</button>
             </div>
           </div>
 
@@ -800,15 +838,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-4 border-t border-white/10 text-xs">
               <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                <span class="text-slate-400 block font-sans">Manufacturer / Entity:</span>
+                <span class="text-slate-400 block font-sans" data-i18n="resFieldManufacturer">निर्माता / इकाई:</span>
                 <span id="sim-res-field1" class="font-semibold text-white mt-1 block">Himalayan Aqua Springs Pvt Ltd</span>
               </div>
               <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                <span class="text-slate-400 block font-sans">Product / Category:</span>
+                <span class="text-slate-400 block font-sans" data-i18n="resFieldProduct">उत्पाद / श्रेणी:</span>
                 <span id="sim-res-field2" class="font-semibold text-white mt-1 block">Packaged Drinking Water (Other than Mineral)</span>
               </div>
               <div class="bg-white/5 p-3 rounded-xl border border-white/10">
-                <span class="text-slate-400 block font-sans">Validity / Surveillance:</span>
+                <span class="text-slate-400 block font-sans" data-i18n="resFieldValidity">वैधता / सर्विलांस:</span>
                 <span id="sim-res-field3" class="font-semibold text-white mt-1 block font-mono">31-Dec-2027 (Surveillance Normal)</span>
               </div>
             </div>
@@ -819,92 +857,169 @@
       </div>
     </section>
 
-    <!-- ================= HALLMARKING DEEP DIVE ================= -->
-    <section id="hallmarking" class="py-20 bg-white border-b border-slate-200/80 px-4 md:px-8 relative pointer-events-auto">
+    <!-- ================= ANIMATED GOLD PRODUCT SHOWCASE & HALLMARKING DEEP DIVE ================= -->
+    <section id="hallmarking" class="py-20 bg-gradient-to-b from-white to-amber-50/40 border-b border-slate-200/80 px-4 md:px-8 relative pointer-events-auto">
       <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider mb-2">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i> <span data-i18n="goldSectionPill">बहुमूल्य धातु शुद्धता की गारंटी</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight" data-i18n="goldHeading">
+            स्वर्ण हॉलमार्किंग: प्रामाणिक पहचान के ३ चिह्न
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base mt-2" data-i18n="goldLead">
+            उपभोक्ताओं को मिलावट से बचाने और शत-प्रतिशत शुद्धता सुनिश्चित करने हेतु भारत सरकार द्वारा प्रमाणित ३ लेजर-उत्कीर्ण चिह्न।
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          <div class="lg:col-span-6 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-bold uppercase tracking-wider">
-              <i data-lucide="shield" class="w-3.5 h-3.5"></i> Guaranteed Precious Metal Fineness
-            </div>
-            <h2 class="font-display text-3xl sm:text-4xl font-bold text-bis-navy tracking-tight">
-              The 3 Marks of Genuine Hallmarked Gold
-            </h2>
-            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Under BIS statutory regulations, every piece of gold jewelry must carry three distinct laser-engraved identification marks to guarantee purity and protect consumers against adulteration.
-            </p>
-
-            <div class="space-y-4 pt-1">
-              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="w-10 h-10 rounded-lg bg-bis-navy text-bis-gold flex items-center justify-center font-black text-sm shrink-0">
-                  1
+          <!-- Left: The 3 Mandatory Hallmark Marks -->
+          <div class="lg:col-span-6 space-y-4">
+            
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow transition-shadow">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-bis-navy text-bis-gold flex items-center justify-center font-black text-sm shrink-0 border border-bis-gold/40">
+                  <svg viewBox="0 0 100 100" class="w-7 h-7 fill-bis-gold">
+                    <polygon points="50,15 90,85 10,85" fill="none" stroke="#D4AF37" stroke-width="12"/>
+                    <circle cx="50" cy="55" r="10" fill="#D4AF37"/>
+                  </svg>
                 </div>
                 <div>
-                  <h4 class="font-display font-bold text-bis-navy text-sm">BIS Triangular Standard Mark</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Confirms article testing at an Assaying & Hallmarking Centre according to IS 1417.</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="w-10 h-10 rounded-lg bg-amber-500 text-white flex items-center justify-center font-black text-sm shrink-0">
-                  2
-                </div>
-                <div>
-                  <h4 class="font-display font-bold text-bis-navy text-sm">Purity in Carats & Fineness</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Explicitly stamped: 22K916 (91.6% pure), 18K750 (75.0% pure), or 14K585 (58.5% pure).</p>
-                </div>
-              </div>
-
-              <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <div class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-sm shrink-0">
-                  3
-                </div>
-                <div>
-                  <h4 class="font-display font-bold text-bis-navy text-sm">6-Digit Alphanumeric HUID</h4>
-                  <p class="text-xs text-slate-600 mt-0.5">Hallmark Unique Identification: A distinct serial laser-engraved code for absolute chain-of-custody.</p>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-bis-royal uppercase">चिह्न १ | Mark 1</span>
+                    <h4 class="font-display font-bold text-bis-navy text-sm sm:text-base" data-i18n="mark1Title">बीआईएस त्रिकोणीय मानक चिह्न (BIS Logo)</h4>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1 leading-relaxed" data-i18n="mark1Desc">
+                    प्रमाणित करता है कि आभूषण का परीक्षण बीआईएस मान्यता प्राप्त एसेइंग एवं हॉलमार्किंग केंद्र (AHC) में IS 1417 के अनुरूप हुआ है।
+                  </p>
                 </div>
               </div>
             </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow transition-shadow">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center font-mono font-black text-xs shrink-0 shadow-sm">
+                  22K<br>916
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 uppercase">चिह्न २ | Mark 2</span>
+                    <h4 class="font-display font-bold text-bis-navy text-sm sm:text-base" data-i18n="mark2Title">कैरेट व शुद्धता ग्रेड (Purity Grade)</h4>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1 leading-relaxed" data-i18n="mark2Desc">
+                    स्पष्ट उत्कीर्णन: <strong>22K916</strong> (91.6% शुद्ध), <strong>18K750</strong> (75.0% शुद्ध), अथवा <strong>14K585</strong> (58.5% शुद्ध सोना)।
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow transition-shadow">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-mono font-black text-xs shrink-0 shadow-sm">
+                  HUID
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 uppercase">चिह्न ३ | Mark 3</span>
+                    <h4 class="font-display font-bold text-bis-navy text-sm sm:text-base" data-i18n="mark3Title">६-अंकीय विशिष्ट एचयूआईडी (6-Digit HUID)</h4>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1 leading-relaxed" data-i18n="mark3Desc">
+                    प्रत्येक आभूषण पर लेजर से खुदा अनूठा अल्फ़ान्यूमेरिक सीरियल नंबर (जैसे <strong>AB12C3</strong>) जो बीआईएस सर्वर में दर्ज रहता है।
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Citizen Tip Pill -->
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-2.5">
+              <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0"></i>
+              <span data-i18n="goldBuyTip">आभूषण खरीदते समय हमेशा बीआईएस केयर ऐप में ६-अंकीय एचयूआईडी दर्ज कर पूर्ण विवरण जांचें।</span>
+            </div>
+
           </div>
 
-          <!-- Visual Hallmark Bar Demonstration -->
+          <!-- Right: Interactive Gold Product Showcase with Holographic Glint & Laser Stamp -->
           <div class="lg:col-span-6">
-            <div class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-bis-navy text-white shadow-xl border border-bis-gold/30">
-              <div class="text-center pb-6 border-b border-white/10">
-                <span class="text-xs font-mono text-bis-gold uppercase tracking-widest">Laser Engraving Anatomy</span>
-                <h3 class="text-lg font-bold mt-1">Official Hallmark Inscription</h3>
-              </div>
-
-              <div class="py-10 flex flex-col items-center justify-center">
-                <div class="w-full max-w-md bg-gradient-to-r from-amber-400 via-amber-200 to-amber-400 text-slate-900 p-6 rounded-2xl shadow-inner border-2 border-amber-500/60 flex items-center justify-around font-mono font-bold tracking-wider">
-                  <div class="text-center">
-                    <svg viewBox="0 0 100 100" class="w-12 h-12 mx-auto fill-slate-900">
-                      <polygon points="50,15 90,85 10,85" fill="none" stroke="#0f172a" stroke-width="10"/>
-                      <circle cx="50" cy="55" r="10" fill="#0f172a"/>
-                    </svg>
-                    <span class="text-[10px] block mt-1 uppercase font-sans font-bold">BIS Logo</span>
-                  </div>
-
-                  <div class="h-10 w-px bg-slate-800/30"></div>
-
-                  <div class="text-center">
-                    <span class="text-2xl font-black">22K916</span>
-                    <span class="text-[10px] block font-sans uppercase font-bold">Purity Grade</span>
-                  </div>
-
-                  <div class="h-10 w-px bg-slate-800/30"></div>
-
-                  <div class="text-center">
-                    <span class="text-xl font-black tracking-widest bg-slate-900/10 px-2 py-1 rounded">AB12C3</span>
-                    <span class="text-[10px] block font-sans uppercase font-bold">6-Digit HUID</span>
-                  </div>
+            <div class="p-6 sm:p-8 rounded-3xl bg-bis-navy text-white shadow-2xl border border-bis-gold/40 relative overflow-hidden">
+              
+              <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+                <div>
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-bis-gold" data-i18n="goldVisualTag">लेजर उत्कीर्णन दृश्य मॉडल</span>
+                  <h3 class="font-display font-bold text-lg text-white" data-i18n="goldVisualTitle">22K 916 स्वर्ण कंगन एवं सिल्लियां</h3>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  IS 1417 PASS
                 </div>
               </div>
 
-              <div class="text-center text-xs text-slate-300">
-                <p>Verify gold jewelry anytime using the BIS Care Mobile App or the online simulator above.</p>
+              <!-- Animated Gold Ingot / Bangle Artifact -->
+              <div class="py-4 flex flex-col items-center justify-center relative">
+                
+                <!-- The 3D CSS Gold Ingot Card with Holographic Glint -->
+                <div class="w-full max-w-sm gold-metallic-card rounded-2xl p-6 text-slate-900 font-sans border-2 border-amber-300 shadow-gold-glow relative transform transition-transform hover:scale-[1.02] duration-300">
+                  <div class="gold-glint"></div>
+
+                  <!-- Header: Purity and Standards Body -->
+                  <div class="flex items-center justify-between border-b border-amber-900/20 pb-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-lg bg-amber-950 text-amber-300 flex items-center justify-center font-black text-xs">
+                        BIS
+                      </div>
+                      <span class="text-xs font-black tracking-wider uppercase font-display text-amber-950">भारतीय मानक ब्यूरो</span>
+                    </div>
+                    <span class="text-xs font-mono font-black px-2 py-0.5 rounded bg-amber-950/10 text-amber-950">99.9% FINE GOLD</span>
+                  </div>
+
+                  <!-- Middle Body: The 3 Laser Engravings in High Detail -->
+                  <div class="py-6 flex items-center justify-around gap-2 my-2 bg-gradient-to-b from-amber-100/50 to-amber-300/40 rounded-xl border border-amber-900/15">
+                    
+                    <!-- Mark 1: BIS Triangular Logo -->
+                    <div class="text-center group cursor-pointer" title="Mark 1: BIS Standard Triangle">
+                      <svg viewBox="0 0 100 100" class="w-12 h-12 mx-auto drop-shadow">
+                        <polygon points="50,12 92,88 8,88" fill="none" stroke="#451a03" stroke-width="12"/>
+                        <circle cx="50" cy="58" r="10" fill="#451a03"/>
+                      </svg>
+                      <span class="text-[9px] block mt-1 font-bold text-amber-950 tracking-wider">BIS LOGO</span>
+                    </div>
+
+                    <div class="h-10 w-px bg-amber-900/30"></div>
+
+                    <!-- Mark 2: Purity -->
+                    <div class="text-center group cursor-pointer" title="Mark 2: Purity Grade">
+                      <span class="text-2xl font-black font-mono tracking-tight text-amber-950 block">22K916</span>
+                      <span class="text-[9px] block font-bold text-amber-950 tracking-wider">91.6% PURITY</span>
+                    </div>
+
+                    <div class="h-10 w-px bg-amber-900/30"></div>
+
+                    <!-- Mark 3: HUID Serial -->
+                    <div class="text-center group cursor-pointer" title="Mark 3: 6-Digit Alphanumeric HUID">
+                      <div class="bg-amber-950/15 px-2 py-1 rounded border border-amber-950/20 font-mono font-black text-base text-amber-950 tracking-widest shadow-inner">
+                        AB12C3
+                      </div>
+                      <span class="text-[9px] block mt-1 font-bold text-amber-950 tracking-wider">6-DIGIT HUID</span>
+                    </div>
+
+                  </div>
+
+                  <!-- Footer of Ingot: Weight and Serial -->
+                  <div class="flex items-center justify-between pt-2 text-[10px] font-mono text-amber-950/80 font-bold">
+                    <span>NET WEIGHT: 50.000 g</span>
+                    <span>SERIAL: DL-AHC-88219</span>
+                  </div>
+                </div>
+
+                <!-- Floating Holographic Badge Underneath -->
+                <div class="mt-4 flex items-center gap-2 text-xs text-amber-200">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                  <span data-i18n="goldSimSuccess">सत्यापन स्थिति: बीआईएस केंद्रीय डाटाबेस में पूर्णतः पंजीकृत</span>
+                </div>
+
               </div>
+
             </div>
           </div>
 
@@ -924,10 +1039,10 @@
               <div class="w-9 h-9 rounded-xl bg-bis-gold/20 flex items-center justify-center text-bis-gold font-bold text-lg border border-bis-gold/50">
                 BIS
               </div>
-              <span class="font-display font-bold text-white text-lg">Bureau of Indian Standards</span>
+              <span class="font-display font-bold text-white text-lg" data-i18n="brandSubtitle">भारतीय मानक ब्यूरो</span>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Manak Bhavan, 9 Bahadur Shah Zafar Marg, New Delhi 110002. Operating under the BIS Act, 2016 for consumer safety, industrial quality assurance, and technical standardization.
+            <p class="text-xs text-slate-400 leading-relaxed max-w-sm" data-i18n="footerAddress">
+              मानक भवन, 9 बहादुर शाह ज़फ़र मार्ग, नई दिल्ली 110002। उपभोक्ता सुरक्षा, औद्योगिक गुणवत्ता संवर्धन एवं तकनीकी मानकीकरण हेतु बीआईएस अधिनियम, 2016 के तहत संचालित।
             </p>
             <div class="flex items-center gap-2 pt-2">
               <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded text-[11px] font-mono text-amber-300">ISO 9001:2015</span>
@@ -936,45 +1051,45 @@
           </div>
 
           <div>
-            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Schemes</h4>
+            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold" data-i18n="footerCol1">प्रमुख योजनाएं</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="#schemes" class="hover:text-white transition-colors">ISI Mark (Scheme-I)</a></li>
-              <li><a href="#schemes" class="hover:text-white transition-colors">Compulsory Registration (CRS)</a></li>
-              <li><a href="#schemes" class="hover:text-white transition-colors">Foreign Manufacturers (FMCS)</a></li>
-              <li><a href="#hallmarking" class="hover:text-white transition-colors">Hallmarking & HUID</a></li>
+              <li><a href="#schemes" class="hover:text-white transition-colors" data-i18n="schemeIsiTitle">आईएसआई मार्क प्रमाणन</a></li>
+              <li><a href="#schemes" class="hover:text-white transition-colors" data-i18n="schemeCrsTitle">अनिवार्य पंजीकरण योजना</a></li>
+              <li><a href="#schemes" class="hover:text-white transition-colors" data-i18n="schemeFmcsTitle">विदेशी निर्माता प्रमाणन</a></li>
+              <li><a href="#hallmarking" class="hover:text-white transition-colors" data-i18n="schemeHuidTitle">स्वर्ण एवं रजत हॉलमार्किंग</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Digital Portals</h4>
+            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold" data-i18n="footerCol2">डिजिटल सेवाएं</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="#simulator" class="hover:text-white transition-colors">e-BIS Unified Portal</a></li>
-              <li><a href="#pillars" class="hover:text-white transition-colors">LIMS Testing Network</a></li>
-              <li><a href="#simulator" class="hover:text-white transition-colors">Know Your Standards (KYS)</a></li>
-              <li><a href="#simulator" class="hover:text-white transition-colors">BIS Care Mobile App</a></li>
+              <li><a href="#simulator" class="hover:text-white transition-colors">e-BIS एकीकृत पोर्टल</a></li>
+              <li><a href="#pillars" class="hover:text-white transition-colors">LIMS परीक्षण नेटवर्क</a></li>
+              <li><a href="#simulator" class="hover:text-white transition-colors">अपने मानक जानें (KYS)</a></li>
+              <li><a href="#simulator" class="hover:text-white transition-colors">बीआईएस केयर मोबाइल ऐप</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold">Statutory & Legal</h4>
+            <h4 class="font-display font-semibold text-white text-xs uppercase tracking-wider mb-4 text-bis-gold" data-i18n="footerCol3">सांविधिक व कानूनी</h4>
             <ul class="space-y-2 text-xs">
-              <li><a href="#statutory" class="hover:text-white transition-colors">The BIS Act, 2016</a></li>
-              <li><a href="#statutory" class="hover:text-white transition-colors">Quality Control Orders (QCOs)</a></li>
-              <li><a href="#statutory" class="hover:text-white transition-colors">Citizen Charter</a></li>
-              <li><a href="#statutory" class="hover:text-white transition-colors">Public Grievances</a></li>
+              <li><a href="#statutory" class="hover:text-white transition-colors" data-i18n="cardActTitle">बीआईएस अधिनियम, 2016</a></li>
+              <li><a href="#statutory" class="hover:text-white transition-colors">गुणवत्ता नियंत्रण आदेश (QCOs)</a></li>
+              <li><a href="#statutory" class="hover:text-white transition-colors">नागरिक अधिकार पत्र</a></li>
+              <li><a href="#statutory" class="hover:text-white transition-colors">सार्वजनिक शिकायत निवारण</a></li>
             </ul>
           </div>
 
         </div>
 
         <div class="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 Bureau of Indian Standards (BIS). All Rights Reserved. Government of India.</p>
+          <p data-i18n="footerCopyright">© 2026 भारतीय मानक ब्यूरो (BIS)। सर्वाधिकार सुरक्षित। भारत सरकार।</p>
           <div class="flex items-center gap-4">
-            <span class="hover:text-slate-400 cursor-pointer">Security Policy</span>
+            <span class="hover:text-slate-400 cursor-pointer" data-i18n="privacyPolicy">सुरक्षा नीति</span>
             <span>•</span>
-            <span class="hover:text-slate-400 cursor-pointer">Terms of Use</span>
+            <span class="hover:text-slate-400 cursor-pointer" data-i18n="termsOfUse">उपयोग की शर्तें</span>
             <span>•</span>
-            <span class="hover:text-slate-400 cursor-pointer">Compliance</span>
+            <span class="hover:text-slate-400 cursor-pointer" data-i18n="compliancePolicy">अनुपालन</span>
           </div>
         </div>
       </div>
@@ -991,8 +1106,8 @@
             <i data-lucide="book-open" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 id="modal-dossier-title" class="font-display font-bold text-base">Scheme Dossier</h3>
-            <p class="text-[10px] text-slate-300 font-mono">Bureau of Indian Standards Statutory Framework</p>
+            <h3 id="modal-dossier-title" class="font-display font-bold text-base" data-i18n="modalDossierHeading">योजना विवरण दस्तावेज़</h3>
+            <p class="text-[10px] text-slate-300 font-mono" data-i18n="modalDossierSub">भारतीय मानक ब्यूरो विनियामक ढांचा</p>
           </div>
         </div>
         <button id="close-scheme-modal-btn" class="text-slate-400 hover:text-white transition-colors">
@@ -1001,12 +1116,12 @@
       </div>
 
       <div class="p-6 space-y-4 text-xs text-slate-700 leading-relaxed" id="modal-dossier-content">
-        <!-- Injected via JavaScript based on chosen scheme -->
+        <!-- Injected via JavaScript based on chosen scheme and active language -->
       </div>
 
       <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
-        <button id="dismiss-scheme-modal-btn" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg font-semibold text-xs transition-colors">
-          Close Dossier
+        <button id="dismiss-scheme-modal-btn" class="px-4 py-2 bg-bis-navy hover:bg-bis-royal text-white rounded-lg font-semibold text-xs transition-colors" data-i18n="closeDossierBtn">
+          दस्तावेज़ बंद करें
         </button>
       </div>
     </div>
@@ -1023,8 +1138,8 @@
             <i data-lucide="shield-check" class="w-4 h-4"></i>
           </div>
           <div>
-            <h3 id="auth-modal-title" class="font-display font-bold text-base leading-tight">e-BIS Portal Sign In</h3>
-            <p class="text-[10px] text-slate-300 font-mono">Government Identity Service</p>
+            <h3 id="auth-modal-title" class="font-display font-bold text-base leading-tight" data-i18n="authModalTitle">ई-बीआईएस पोर्टल साइन इन</h3>
+            <p class="text-[10px] text-slate-300 font-mono" data-i18n="authModalSub">सरकारी पहचान एवं प्रमाणीकरण सेवा</p>
           </div>
         </div>
         <button id="close-auth-modal-btn" class="text-slate-400 hover:text-white transition-colors">
@@ -1038,26 +1153,26 @@
         <!-- Error / Info Alert Box -->
         <div id="auth-alert-box" class="hidden p-3 rounded-xl text-xs flex items-start gap-2"></div>
 
-        <!-- DEMO ACCESS BUTTON (Instant bypass for sandboxes/iframes) -->
+        <!-- DEMO ACCESS BUTTON -->
         <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
           <div class="flex items-center justify-between mb-1.5">
             <span class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
-              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> Instant Officer Demo Mode
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> <span data-i18n="demoOfficerTitle">त्वरित अधिकारी डेमो मोड</span>
             </span>
-            <span class="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">BYPASS IFRAME RESTRICTION</span>
+            <span class="text-[9px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold" data-i18n="demoOfficerBadge">सक्रिय परीक्षण</span>
           </div>
-          <p class="text-[10px] text-amber-800 leading-tight mb-2">
-            Test the live authenticated dashboard immediately without Firebase domain restrictions:
+          <p class="text-[10px] text-amber-800 leading-tight mb-2" data-i18n="demoOfficerLead">
+            बिना किसी बाहरी प्रमाणीकरण बाधा के तुरंत अधिकृत अधिकारी डैशबोर्ड का परीक्षण करें:
           </p>
           <button id="demo-officer-login-btn" type="button" class="w-full py-2 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold text-xs rounded-lg transition-all shadow-sm flex items-center justify-center gap-1.5">
             <i data-lucide="user-check" class="w-4 h-4"></i>
-            <span>Authenticate as Demo Officer</span>
+            <span data-i18n="demoOfficerBtn">डेमो अधिकारी के रूप में प्रवेश करें</span>
           </button>
         </div>
 
         <div class="flex items-center my-1">
           <div class="flex-grow border-t border-slate-200"></div>
-          <span class="px-2 text-[10px] text-slate-400 uppercase font-bold">Or Firebase Live Auth</span>
+          <span class="px-2 text-[10px] text-slate-400 uppercase font-bold" data-i18n="orFirebaseTitle">अथवा फायरबेस लाइव लॉगिन</span>
           <div class="flex-grow border-t border-slate-200"></div>
         </div>
 
@@ -1069,23 +1184,23 @@
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
-          <span>Continue with Google</span>
+          <span data-i18n="googleAuthBtn">गूगल खाते से जारी रखें</span>
         </button>
 
         <!-- Email & Password Form -->
         <form id="firebase-auth-form" class="space-y-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Official / Personal Email</label>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1" data-i18n="emailLabel">आधिकारिक / व्यक्तिगत ईमेल</label>
             <div class="relative">
-              <input type="email" id="auth-email-input" required class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="officer@bis.gov.in or citizen@domain.com">
+              <input type="email" id="auth-email-input" required class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="officer@bis.gov.in">
               <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             </div>
           </div>
 
           <div id="password-form-group">
             <div class="flex justify-between items-center mb-1">
-              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Access Password</label>
-              <button type="button" id="forgot-password-link" class="text-[11px] text-bis-royal hover:underline">Forgot password?</button>
+              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider" data-i18n="pwLabel">गोपनीय पासवर्ड</label>
+              <button type="button" id="forgot-password-link" class="text-[11px] text-bis-royal hover:underline" data-i18n="forgotPwLink">पासवर्ड भूल गए?</button>
             </div>
             <div class="relative">
               <input type="password" id="auth-password-input" class="w-full bg-slate-100 border border-slate-300 rounded-lg pl-9 pr-3 py-2 text-xs font-sans text-bis-navy focus:outline-none focus:ring-2 focus:ring-bis-royal" placeholder="••••••••••••">
@@ -1094,30 +1209,409 @@
           </div>
 
           <button type="submit" id="auth-submit-btn" class="w-full py-2.5 bg-bis-navy hover:bg-bis-royal text-white rounded-lg font-bold text-xs tracking-wide transition-all shadow-md flex items-center justify-center gap-2">
-            <span id="auth-submit-label">Authenticate Credentials</span>
+            <span id="auth-submit-label" data-i18n="authSubmitBtn">प्रमाणपत्र सत्यापित करें</span>
             <div id="auth-spinner" class="hidden w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           </button>
         </form>
 
         <div class="pt-2 text-center text-xs text-slate-600 border-t border-slate-200">
-          <span id="auth-toggle-hint">Don't have an e-BIS account yet?</span>
-          <button type="button" id="toggle-auth-mode-btn" class="font-bold text-bis-royal hover:underline ml-1">
-            Register New Account
+          <span id="auth-toggle-hint" data-i18n="authToggleHint">ई-बीआईएस पर नया खाता बनाना चाहते हैं?</span>
+          <button type="button" id="toggle-auth-mode-btn" class="font-bold text-bis-royal hover:underline ml-1" data-i18n="registerAccountLink">
+            नया खाता पंजीकृत करें
           </button>
         </div>
 
-        <p class="text-[10px] text-slate-400 text-center leading-tight">
-          Protected under Section 29 of the BIS Act, 2016 concerning digital integrity and non-repudiation.
+        <p class="text-[10px] text-slate-400 text-center leading-tight" data-i18n="actSecurityNote">
+          डिजिटल सुरक्षा एवं बीआईएस अधिनियम, 2016 की धारा 29 के तहत संरक्षित।
         </p>
 
       </div>
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- ================= JAVASCRIPT: BILINGUAL ENGINE, 3D, SIMULATOR & AUTH ================= -->
   <script>
     /* =========================================================================
-       1. FIREBASE AUTHENTICATION CONFIG & CONTROLLER
+       1. COMPREHENSIVE BILINGUAL TRANSLATION DICTIONARY (HINDI / ENGLISH)
+       ========================================================================= */
+
+    const translations = {
+      hi: {
+        govIndia: "भारत सरकार | Government of India",
+        deptConsumerAffairs: "उपभोक्ता मामले, खाद्य और सार्वजनिक वितरण मंत्रालय",
+        contrastLabel: "उच्च कंट्रास्ट",
+        langCodeText: "English",
+        brandTitle: "BIS",
+        statutoryBadge: "सांविधिक निकाय",
+        brandSubtitle: "भारतीय मानक ब्यूरो",
+        navHome: "गृह",
+        navMandate: "परिचय व अधिदेश",
+        navSchemes: "अनुरूपता योजनाएं",
+        navHallmarking: "स्वर्ण हॉलमार्किंग",
+        navLabs: "मानक व प्रयोगशालाएं",
+        navVerify: "कोड सत्यापित करें",
+        quickVerifyBtn: "त्वरित सत्यापन",
+        officerSignInBtn: "अधिकारी / नागरिक लॉगिन",
+        activeSessionBadge: "● सक्रिय सत्र",
+        authorizedOfficerTag: "अधिकृत अधिकारी",
+        sovereignRole: "ई-बीआईएस संप्रभु भूमिका",
+        dashComplianceTitle: "अनुपालन डैशबोर्ड",
+        signOutBtn: "पोर्टल से साइन आउट करें",
+        verifiedSealActive: "सत्यापित सील सक्रिय",
+        isoSovereignSec: "IS/ISO संप्रभु सुरक्षा",
+        heroActBadge: "भारतीय मानक ब्यूरो अधिनियम, 2016",
+        heroSovereignPill: "राष्ट्रीय गुणवत्ता पोर्टल",
+        heroTitlePart1: "राष्ट्र भर में गुणवत्ता,",
+        heroTitlePart2: "सुरक्षा और विश्वास",
+        heroTitlePart3: "सुनिश्चित करना।",
+        heroDescription: "उपभोक्ता मामले मंत्रालय के अधीन संचालित भारत का राष्ट्रीय मानक निकाय। तकनीकी मानक तय करना, औद्योगिक उत्पादों को प्रमाणित करना और 1.4 अरब नागरिकों को समझौताहीन गुणवत्ता प्रदान करना।",
+        metricIsCodes: "सक्रिय आईएस कोड",
+        metricLicences: "सक्रिय लाइसेंस",
+        metricHuidTrace: "एचयूआईडी ट्रेस करने योग्य",
+        verifyIsiBtn: "लाइसेंस / आईएसआई मार्क सत्यापित करें",
+        checkGoldBtn: "हॉलमार्क आभूषण जांचें",
+        orbitTip: "इंटरएक्टिव 3डी प्रतीक: रोटेट करने के लिए माउस ड्रैग या टच स्वाइप करें।",
+        goldFinishLabel: "क्रोम गोल्ड फिनिश",
+        steelFinishLabel: "ब्रश स्टील फिनिश",
+        dashBadge: "सुरक्षित सत्र सक्रिय | भारतीय मानक ब्यूरो",
+        dashHeading: "ई-बीआईएस अधिकारी एवं प्रमाणित नागरिक पोर्टल",
+        dashActiveId: "सक्रिय पहचान:",
+        exportTrailBtn: "ऑडिट रिपोर्ट डाउनलोड करें (.txt)",
+        metricSurveillance: "निगरानी जांच",
+        limsSynced: "केंद्रीय एलआईएमएस सिंक",
+        metricSavedCodes: "बुकमार्क मानक",
+        metricRole: "क्षेत्राधिकार पद",
+        authorizedRoleText: "अधिकृत",
+        metricRegistry: "रजिस्ट्री प्रोटोकॉल",
+        activeStatus: "सक्रिय",
+        recentAuditLogTitle: "हाल के अनुरूपता व हॉलमार्किंग सत्यापन रिकॉर्ड",
+        thTimestamp: "समय",
+        thCode: "पहचान / कोड",
+        thCategory: "मानक श्रेणी",
+        thStatus: "स्थिति",
+        thAction: "कार्रवाई",
+        timeToday: "आज, 18:30",
+        timeTodayEarlier: "आज, 14:15",
+        timeYesterday: "कल, 10:45",
+        auditWater: "IS 14543 (पैकेज्ड पेयजल)",
+        auditGold: "स्वर्ण आभूषण 22K916",
+        auditSteel: "IS 1786 (टीएमटी स्टील बार)",
+        badgeOperative: "वैध व सक्रिय",
+        badgeCertified: "प्रमाणित",
+        viewDetailsBtn: "विवरण देखें",
+        section1Tag: "खंड 1: सांविधिक ढांचा",
+        mandateHeading: "संस्थागत अधिदेश और विनियामक क्षेत्राधिकार",
+        mandateLead: "1947 में स्थापित भारतीय मानक संस्थान (ISI) के उत्तराधिकारी के रूप में, भारतीय मानक ब्यूरो संसद के अधिनियम (बीआईएस अधिनियम, 2016) के तहत भारत के राष्ट्रीय मानक निकाय के रूप में संचालित होता है।",
+        cardActTitle: "बीआईएस अधिनियम, 2016",
+        cardActSub: "सांविधिक आधार",
+        cardActDesc: "अनिवार्य भारतीय मानकों की घोषणा, औद्योगिक अनुरूपता प्रमाणन और अनधिकृत मानक चिह्नों पर दंडात्मक कार्रवाई का पूर्ण कानूनी अधिकार।",
+        cardMinistryTitle: "उपभोक्ता मामले मंत्रालय",
+        cardMinistrySub: "नोडल मंत्रालय",
+        cardMinistryDesc: "उपभोक्ता संरक्षण और अनिवार्य गुणवत्ता नियंत्रण आदेशों (QCO) के राष्ट्रीय क्रियान्वयन हेतु उपभोक्ता मामले विभाग के साथ एकीकृत समन्वय।",
+        cardIsoTitle: "आईएसओ एवं आईईसी सदस्य",
+        cardIsoSub: "वैश्विक प्रतिनिधित्व",
+        cardIsoDesc: "अंतर्राष्ट्रीय मानकीकरण संगठन (ISO) के संस्थापक सदस्य और अंतरराष्ट्रीय मंचों पर भारत का आधिकारिक तकनीकी प्रतिनिधित्व।",
+        cardEbisTitle: "ई-बीआईएस डिजिटल प्रणाली",
+        cardEbisSub: "पारदर्शी ई-गवर्नेंस",
+        cardEbisDesc: "डिजिटल लाइसेंसिंग, सर्विलांस ऑडिट, बीआईएस केयर मोबाइल ऐप स्कैनिंग और रियल-टाइम प्रयोगशाला सूचना प्रणाली (LIMS)।",
+        section2Tag: "खंड 2: गुणवत्ता रूपरेखा",
+        schemesHeading: "अनुरूपता मूल्यांकन एवं प्रमुख योजनाएं",
+        schemesLead: "औद्योगिक उत्पादों, इलेक्ट्रॉनिक्स, सीमा पार आयात और स्वर्ण आभूषणों की गुणवत्ता जांच हेतु वैधानिक रूप से स्थापित योजनाएं।",
+        liveSchemesPill: "योजनाएं पूर्णतः सक्रिय",
+        schemeIsiBadge: "अनिवार्य (QCO)",
+        schemeIsiTitle: "आईएसआई मार्क प्रमाणन",
+        schemeIsiSub: "घरेलू औद्योगिक विनिर्माण",
+        schemeIsiDesc: "सीमेंट, संरचनात्मक स्टील, एलपीजी सिलेंडर, पैकेज्ड पेयजल व हेलमेट। कड़े कारखाने निरीक्षण और लैब परीक्षण पर आधारित।",
+        exploreDossierBtn: "दस्तावेज़ देखें",
+        schemeCrsBadge: "इलेक्ट्रॉनिक्स अधिदेश",
+        schemeCrsTitle: "अनिवार्य पंजीकरण योजना",
+        schemeCrsSub: "आईटी व इलेक्ट्रॉनिक उपकरण",
+        schemeCrsDesc: "लैपटॉप, मोबाइल फोन, सर्वर, पावर एडेप्टर और एलईडी लाइट्स हेतु बीआईएस लैब परीक्षण पर आधारित अनुरूपता स्व-घोषणा।",
+        schemeFmcsBadge: "सीमा पार आयात",
+        schemeFmcsTitle: "विदेशी निर्माता प्रमाणन",
+        schemeFmcsSub: "अंतरराष्ट्रीय आयात अनुपालन",
+        schemeFmcsDesc: "भारत को निर्यात करने वाले विदेशी संयंत्रों का प्रत्यक्ष ऑडिट एवं अधिकृत भारतीय प्रतिनिधि (AIR) की अनिवार्य नियुक्ति।",
+        schemeHuidBadge: "उपभोक्ता विश्वास",
+        schemeHuidTitle: "स्वर्ण एवं रजत हॉलमार्किंग",
+        schemeHuidSub: "लेजर एसेइंग व प्रमाणन",
+        schemeHuidDesc: "प्रत्येक आभूषण पर 6-अंकों का विशिष्ट अल्फ़ान्यूमेरिक एचयूआईडी कोड, जो धातु की शत-प्रतिशत शुद्धता सुनिश्चित करता है।",
+        section3Tag: "खंड 3: राष्ट्रीय अवसंरचना",
+        pillarsHeading: "मानक निर्माण एवं प्रयोगशाला नेटवर्क",
+        pillarsLead: "भारतीय तकनीकी संप्रभुता के दो मुख्य आधार: भविष्योन्मुखी तकनीकी मानकों का निर्माण और अत्याधुनिक परीक्षण प्रयोगशालाएं।",
+        p1Title: "मानक निर्माण (Standards Formulation)",
+        p1Sub: "15 तकनीकी प्रभाग परिषदें एवं 400+ समितियां",
+        p1Desc: "सिविल, इलेक्ट्रॉनिक्स, रसायन, खाद्य, वस्त्र के साथ-साथ आर्टिफिशियल इंटेलिजेंस (AI), स्मार्ट ग्रिड, क्वांटम कंप्यूटिंग और IoT जैसे आधुनिक क्षेत्रों में राष्ट्रीय मानक निर्धारित करना।",
+        p1Box1Title: "15 प्रभाग परिषदें",
+        p1Box1Desc: "क्षेत्रवार तकनीकी विशेषज्ञता",
+        p1Box2Title: "WTO-TBT डेस्क",
+        p1Box2Desc: "वैश्विक व्यापार बाधा अनुपालन",
+        p2Title: "प्रयोगशाला नेटवर्क (LIMS)",
+        p2Sub: "केंद्रीय, क्षेत्रीय और एनएबीएल मान्यता प्राप्त लैब्स",
+        p2Desc: "साहिबाबाद, चेन्नई, कोलकाता आदि में स्थित 8 केंद्रीय व क्षेत्रीय प्रयोगशालाओं के साथ LIMS डिजिटल पोर्टल के माध्यम से पारदर्शी और सटीक नमूना परीक्षण।",
+        p2Box1Title: "8 केंद्रीय लैब्स",
+        p2Box1Desc: "साहिबाबाद, चेन्नई, कोलकाता...",
+        p2Box2Title: "LIMS से संबद्ध",
+        p2Box2Desc: "100% डिजिटल नमूना ट्रैकिंग",
+        simTag: "आधिकारिक नागरिक सत्यापन कंसोल",
+        simHeading: "त्वरित ऑनलाइन सत्यापन सिमुलेटर",
+        simLead: "केंद्रीय वैधानिक रजिस्ट्री से किसी भी आईएसआई मार्क, इलेक्ट्रॉनिक पंजीकरण या स्वर्ण हॉलमार्क की प्रामाणिकता की तुरंत पुष्टि करें।",
+        tabCml: "आईएसआई लाइसेंस (CM/L संख्या)",
+        tabHuid: "हॉलमार्किंग एचयूआईडी (6-अक्षर)",
+        cmlPlaceholder: "CM/L संख्या दर्ज करें (उदा. 8400192384 या 9200381920)",
+        huidPlaceholder: "6-अक्षर एचयूआईडी दर्ज करें (उदा. AB12C3 या 9K2X4M)",
+        btnValidateLicence: "लाइसेंस सत्यापित करें",
+        btnAuthenticateHuid: "एचयूआईडी प्रमाणित करें",
+        quickSamplesTag: "त्वरित परीक्षण कोड:",
+        resFieldManufacturer: "निर्माता / इकाई:",
+        resFieldProduct: "उत्पाद / श्रेणी:",
+        resFieldValidity: "वैधता / सर्विलांस:",
+        goldSectionPill: "बहुमूल्य धातु शुद्धता की गारंटी",
+        goldHeading: "स्वर्ण हॉलमार्किंग: प्रामाणिक पहचान के ३ चिह्न",
+        goldLead: "उपभोक्ताओं को मिलावट से बचाने और शत-प्रतिशत शुद्धता सुनिश्चित करने हेतु भारत सरकार द्वारा प्रमाणित ३ लेजर-उत्कीर्ण चिह्न।",
+        mark1Title: "बीआईएस त्रिकोणीय मानक चिह्न (BIS Logo)",
+        mark1Desc: "प्रमाणित करता है कि आभूषण का परीक्षण बीआईएस मान्यता प्राप्त एसेइंग एवं हॉलमार्किंग केंद्र (AHC) में IS 1417 के अनुरूप हुआ है।",
+        mark2Title: "कैरेट व शुद्धता ग्रेड (Purity Grade)",
+        mark2Desc: "स्पष्ट उत्कीर्णन: 22K916 (91.6% शुद्ध), 18K750 (75.0% शुद्ध), अथवा 14K585 (58.5% शुद्ध सोना)।",
+        mark3Title: "६-अंकीय विशिष्ट एचयूआईडी (6-Digit HUID)",
+        mark3Desc: "प्रत्येक आभूषण पर लेजर से खुदा अनूठा अल्फ़ान्यूमेरिक सीरियल नंबर (जैसे AB12C3) जो बीआईएस सर्वर में दर्ज रहता है।",
+        goldBuyTip: "आभूषण खरीदते समय हमेशा बीआईएस केयर ऐप में ६-अंकीय एचयूआईडी दर्ज कर पूर्ण विवरण जांचें।",
+        goldVisualTag: "लेजर उत्कीर्णन दृश्य मॉडल",
+        goldVisualTitle: "22K 916 स्वर्ण कंगन एवं सिल्लियां",
+        goldSimSuccess: "सत्यापन स्थिति: बीआईएस केंद्रीय डाटाबेस में पूर्णतः पंजीकृत",
+        footerAddress: "मानक भवन, 9 बहादुर शाह ज़फ़र मार्ग, नई दिल्ली 110002। उपभोक्ता सुरक्षा, औद्योगिक गुणवत्ता संवर्धन एवं तकनीकी मानकीकरण हेतु बीआईएस अधिनियम, 2016 के तहत संचालित।",
+        footerCol1: "प्रमुख योजनाएं",
+        footerCol2: "डिजिटल सेवाएं",
+        footerCol3: "सांविधिक व कानूनी",
+        footerCopyright: "© 2026 भारतीय मानक ब्यूरो (BIS)। सर्वाधिकार सुरक्षित। भारत सरकार।",
+        privacyPolicy: "सुरक्षा नीति",
+        termsOfUse: "उपयोग की शर्तें",
+        compliancePolicy: "अनुपालन",
+        modalDossierHeading: "योजना विवरण दस्तावेज़",
+        modalDossierSub: "भारतीय मानक ब्यूरो विनियामक ढांचा",
+        closeDossierBtn: "दस्तावेज़ बंद करें",
+        authModalTitle: "ई-बीआईएस पोर्टल साइन इन",
+        authModalSub: "सरकारी पहचान एवं प्रमाणीकरण सेवा",
+        demoOfficerTitle: "त्वरित अधिकारी डेमो मोड",
+        demoOfficerBadge: "सक्रिय परीक्षण",
+        demoOfficerLead: "बिना किसी बाहरी प्रमाणीकरण बाधा के तुरंत अधिकृत अधिकारी डैशबोर्ड का परीक्षण करें:",
+        demoOfficerBtn: "डेमो अधिकारी के रूप में प्रवेश करें",
+        orFirebaseTitle: "अथवा फायरबेस लाइव लॉगिन",
+        googleAuthBtn: "गूगल खाते से जारी रखें",
+        emailLabel: "आधिकारिक / व्यक्तिगत ईमेल",
+        pwLabel: "गोपनीय पासवर्ड",
+        forgotPwLink: "पासवर्ड भूल गए?",
+        authSubmitBtn: "प्रमाणपत्र सत्यापित करें",
+        authToggleHint: "ई-बीआईएस पर नया खाता बनाना चाहते हैं?",
+        registerAccountLink: "नया खाता पंजीकृत करें",
+        actSecurityNote: "डिजिटल सुरक्षा एवं बीआईएस अधिनियम, 2016 की धारा 29 के तहत संरक्षित।"
+      },
+      en: {
+        govIndia: "भारत सरकार | Government of India",
+        deptConsumerAffairs: "Ministry of Consumer Affairs, Food & Public Distribution",
+        contrastLabel: "High Contrast",
+        langCodeText: "हिन्दी",
+        brandTitle: "BIS",
+        statutoryBadge: "Statutory Body",
+        brandSubtitle: "Bureau of Indian Standards",
+        navHome: "Home",
+        navMandate: "Mandate & Act",
+        navSchemes: "Conformity Schemes",
+        navHallmarking: "Gold Hallmarking",
+        navLabs: "Standards & Labs",
+        navVerify: "Verify Code",
+        quickVerifyBtn: "Quick Verify",
+        officerSignInBtn: "Officer / Citizen Sign In",
+        activeSessionBadge: "● Active Session",
+        authorizedOfficerTag: "Authorized Officer",
+        sovereignRole: "e-BIS Sovereign Role",
+        dashComplianceTitle: "Compliance Dashboard",
+        signOutBtn: "Sign Out of Portal",
+        verifiedSealActive: "Verified Seal Active",
+        isoSovereignSec: "IS/ISO Sovereign Security",
+        heroActBadge: "The Bureau of Indian Standards Act, 2016",
+        heroSovereignPill: "SOVEREIGN QUALITY PORTAL",
+        heroTitlePart1: "Ensuring Quality,",
+        heroTitlePart2: "Safety & Trust",
+        heroTitlePart3: "Across the Nation.",
+        heroDescription: "The National Standards Body of India operating under the Department of Consumer Affairs. Establishing technical standards, certifying industrial products, and safeguarding 1.4 billion citizens through uncompromising quality benchmarks.",
+        metricIsCodes: "IS Codes Active",
+        metricLicences: "Active Licences",
+        metricHuidTrace: "HUID Traceable",
+        verifyIsiBtn: "Verify License / ISI Mark",
+        checkGoldBtn: "Check Hallmarked Jewellery",
+        orbitTip: "Interactive 3D ISI Mark: Drag with mouse or swipe on touch to rotate emblem.",
+        goldFinishLabel: "Chrome Gold Finish",
+        steelFinishLabel: "Brushed Steel Finish",
+        dashBadge: "Secure Session Active | Bureau of Indian Standards",
+        dashHeading: "e-BIS Officer & Certified Citizen Portal",
+        dashActiveId: "Active Identity:",
+        exportTrailBtn: "Export Audit Trail (.txt)",
+        metricSurveillance: "Surveillance Inquiries",
+        limsSynced: "Central LIMS Synced",
+        metricSavedCodes: "Bookmarked Standards",
+        metricRole: "Jurisdiction Role",
+        authorizedRoleText: "Authorized",
+        metricRegistry: "Registry Protocol",
+        activeStatus: "Active",
+        recentAuditLogTitle: "Recent Conformity & Hallmarking Records",
+        thTimestamp: "Timestamp",
+        thCode: "Identifier / Code",
+        thCategory: "Standard Category",
+        thStatus: "Status",
+        thAction: "Action",
+        timeToday: "Today, 18:30",
+        timeTodayEarlier: "Today, 14:15",
+        timeYesterday: "Yesterday, 10:45",
+        auditWater: "IS 14543 (Packaged Water)",
+        auditGold: "Gold Jewellery 22K916",
+        auditSteel: "IS 1786 (High Strength TMT Steel)",
+        badgeOperative: "OPERATIVE",
+        badgeCertified: "CERTIFIED",
+        viewDetailsBtn: "View Details",
+        section1Tag: "Section 1: Statutory Framework",
+        mandateHeading: "Institutional Mandate & Regulatory Jurisdiction",
+        mandateLead: "Succeeding the historic Indian Standards Institution (ISI, established 1947), the Bureau of Indian Standards operates under parliamentary mandate as the National Standards Body of India (BIS Act, 2016).",
+        cardActTitle: "BIS Act, 2016",
+        cardActSub: "Statutory Core",
+        cardActDesc: "Statutory authority to declare mandatory Indian Standards, certify industrial conformity, and penalize unauthorized use of standard marks.",
+        cardMinistryTitle: "Consumer Affairs",
+        cardMinistrySub: "Nodal Ministry",
+        cardMinistryDesc: "Operates under Department of Consumer Affairs, aligning statutory consumer protection frameworks with mandatory quality control regimes.",
+        cardIsoTitle: "ISO & IEC Member",
+        cardIsoSub: "Global Standing",
+        cardIsoDesc: "Founding member of ISO and official Indian National Committee for IEC, representing India in international standard harmonization.",
+        cardEbisTitle: "e-BIS Unified Digital",
+        cardEbisSub: "Digital Governance",
+        cardEbisDesc: "Complete digital lifecycle tracking: online licensing, surveillance audits, mobile scanning via BIS Care, and real-time laboratory workflows.",
+        section2Tag: "Section 2: Quality Frameworks",
+        schemesHeading: "Conformity Assessment & Schemes",
+        schemesLead: "Comprehensive conformity assessment frameworks tailored for core industries, electronic equipment, cross-border imports, and gold hallmarking.",
+        liveSchemesPill: "Live Schemes Active",
+        schemeIsiBadge: "Mandatory (QCO)",
+        schemeIsiTitle: "ISI Mark Certification",
+        schemeIsiSub: "Domestic Manufacturing",
+        schemeIsiDesc: "Covers cement, steel, LPG cylinders, packaged drinking water, and automotive tyres. Requires factory audits & laboratory validation.",
+        exploreDossierBtn: "Explore Dossier",
+        schemeCrsBadge: "MeitY Mandate",
+        schemeCrsTitle: "Compulsory Registration",
+        schemeCrsSub: "IT & Electronic Goods",
+        schemeCrsDesc: "Governs laptops, mobile phones, servers, power adapters, and LED lights under CRO orders with self-declaration testing.",
+        schemeFmcsBadge: "Cross-Border",
+        schemeFmcsTitle: "Foreign Manufacturers",
+        schemeFmcsSub: "Cross-Border Imports",
+        schemeFmcsDesc: "Mandatory overseas facility audits and appointment of Authorized Indian Representatives (AIR) for goods exported to India.",
+        schemeHuidBadge: "Consumer Trust",
+        schemeHuidTitle: "Gold & Silver Hallmarking",
+        schemeHuidSub: "Laser Assaying",
+        schemeHuidDesc: "Mandatory 6-character alphanumeric Hallmark Unique Identification (HUID) assigned to each jewelry article to guarantee precious metal fineness.",
+        section3Tag: "Section 3: National Infrastructure",
+        pillarsHeading: "Standards & Laboratory Pillars",
+        pillarsLead: "The dual engine of Indian technological sovereignty: forward-looking technical standards formulation and physical testing laboratories.",
+        p1Title: "Standards Formulation",
+        p1Sub: "15 Technical Councils & 400+ Committees",
+        p1Desc: "Technical Division Councils establish Indian Standards (IS), covering civil infrastructure, electronics, chemicals, food technology, textiles, and frontier disciplines including AI and IoT.",
+        p1Box1Title: "15 Division Councils",
+        p1Box1Desc: "Sectoral Technical Oversight",
+        p1Box2Title: "WTO-TBT Desk",
+        p1Box2Desc: "Global Trade Barrier Compliance",
+        p2Title: "Laboratory Network (LIMS)",
+        p2Sub: "Central, Regional & Recognized Labs",
+        p2Desc: "Operates Central, Regional, and Branch Testing Laboratories alongside an extensive network of NABL-accredited third-party laboratories managed through LIMS.",
+        p2Box1Title: "8 Central Labs",
+        p2Box1Desc: "Sahibabad, Chennai, Kolkata...",
+        p2Box2Title: "LIMS Connected",
+        p2Box2Desc: "100% Digital Sample Tracking",
+        simTag: "Official Citizen Verification Console",
+        simHeading: "Instant Verification Simulator",
+        simLead: "Verify the authenticity of any ISI Standard Mark, Electronic Registration, or Gold Hallmark code directly against the statutory registry.",
+        tabCml: "ISI License (CM/L Number)",
+        tabHuid: "Hallmarking HUID (6-Character)",
+        cmlPlaceholder: "Enter CM/L Number (e.g. 8400192384 or 9200381920)",
+        huidPlaceholder: "Enter 6-character HUID (e.g. AB12C3 or 9K2X4M)",
+        btnValidateLicence: "Validate Licence",
+        btnAuthenticateHuid: "Authenticate HUID",
+        quickSamplesTag: "Quick test codes:",
+        resFieldManufacturer: "Manufacturer / Entity:",
+        resFieldProduct: "Product / Category:",
+        resFieldValidity: "Validity / Surveillance:",
+        goldSectionPill: "Guaranteed Precious Metal Fineness",
+        goldHeading: "Gold Hallmarking: The 3 Mandatory Marks",
+        goldLead: "Under BIS statutory regulations, every piece of gold jewelry must carry three distinct laser-engraved identification marks to guarantee purity and protect consumers against adulteration.",
+        mark1Title: "BIS Triangular Standard Mark",
+        mark1Desc: "Confirms article testing at an Assaying & Hallmarking Centre according to IS 1417.",
+        mark2Title: "Purity in Carats & Fineness",
+        mark2Desc: "Explicitly stamped: 22K916 (91.6% pure), 18K750 (75.0% pure), or 14K585 (58.5% pure).",
+        mark3Title: "6-Digit Alphanumeric HUID",
+        mark3Desc: "Hallmark Unique Identification: A distinct serial laser-engraved code for absolute chain-of-custody.",
+        goldBuyTip: "When purchasing jewellery, always check the 6-digit HUID in the BIS Care App for complete verification.",
+        goldVisualTag: "Laser Engraving Anatomy Model",
+        goldVisualTitle: "22K 916 Gold Bangle & Ingot Showcase",
+        goldSimSuccess: "Verification Status: Fully Registered in BIS Central Registry",
+        footerAddress: "Manak Bhavan, 9 Bahadur Shah Zafar Marg, New Delhi 110002. Operating under the BIS Act, 2016 for consumer safety, industrial quality assurance, and technical standardization.",
+        footerCol1: "Core Schemes",
+        footerCol2: "Digital Portals",
+        footerCol3: "Statutory & Legal",
+        footerCopyright: "© 2026 Bureau of Indian Standards (BIS). All Rights Reserved. Government of India.",
+        privacyPolicy: "Security Policy",
+        termsOfUse: "Terms of Use",
+        compliancePolicy: "Compliance",
+        modalDossierHeading: "Scheme Regulatory Dossier",
+        modalDossierSub: "Bureau of Indian Standards Statutory Framework",
+        closeDossierBtn: "Close Dossier",
+        authModalTitle: "e-BIS Portal Sign In",
+        authModalSub: "Government Identity Service",
+        demoOfficerTitle: "Instant Officer Demo Mode",
+        demoOfficerBadge: "Active Test",
+        demoOfficerLead: "Test the live authenticated dashboard immediately without external auth roadblocks:",
+        demoOfficerBtn: "Authenticate as Demo Officer",
+        orFirebaseTitle: "Or Firebase Live Auth",
+        googleAuthBtn: "Continue with Google",
+        emailLabel: "Official / Personal Email",
+        pwLabel: "Access Password",
+        forgotPwLink: "Forgot password?",
+        authSubmitBtn: "Authenticate Credentials",
+        authToggleHint: "Don't have an e-BIS account yet?",
+        registerAccountLink: "Register New Account",
+        actSecurityNote: "Protected under Section 29 of the BIS Act, 2016 concerning digital integrity and non-repudiation."
+      }
+    };
+
+    let currentLang = 'hi'; // Default to official Hindi as requested
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang] || translations.hi;
+
+      // 1. Update text nodes with data-i18n attributes
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerText = dict[key];
+        }
+      });
+
+      // 2. Update inputs with dynamic placeholders
+      const cmlInput = document.getElementById('sim-cml-input');
+      if (cmlInput) cmlInput.placeholder = dict.cmlPlaceholder;
+
+      const huidInput = document.getElementById('sim-huid-input');
+      if (huidInput) huidInput.placeholder = dict.huidPlaceholder;
+
+      // 3. Update Language Switcher label to show the opposite language
+      const langCodeDisplay = document.getElementById('current-lang-code');
+      if (langCodeDisplay) {
+        langCodeDisplay.innerText = dict.langCodeText;
+      }
+
+      // 4. Update Finish toggle label
+      const finishLabel = document.getElementById('finish-mode-label');
+      if (finishLabel) {
+        finishLabel.innerText = isGoldFinish ? dict.goldFinishLabel : dict.steelFinishLabel;
+      }
+    }
+
+    /* =========================================================================
+       2. FIREBASE AUTHENTICATION CONFIG & CONTROLLER
        ========================================================================= */
 
     const firebaseConfig = {
@@ -1130,7 +1624,7 @@
     };
 
     let firebaseAuth = null;
-    let authMode = 'signin'; // 'signin' | 'signup' | 'reset'
+    let authMode = 'signin';
     let currentAuthUser = null;
 
     function initFirebase() {
@@ -1171,7 +1665,7 @@
 
       const mobileAuthBtn = document.getElementById('mobile-auth-btn');
       if (mobileAuthBtn) {
-        mobileAuthBtn.innerHTML = `<i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i> ${userData.displayName} (Signed In)`;
+        mobileAuthBtn.innerHTML = `<i data-lucide="user-check" class="w-4 h-4 text-emerald-600"></i> ${userData.displayName} (${currentLang === 'hi' ? 'सक्रिय' : 'Signed In'})`;
         lucide.createIcons();
       }
     }
@@ -1185,7 +1679,8 @@
 
       const mobileAuthBtn = document.getElementById('mobile-auth-btn');
       if (mobileAuthBtn) {
-        mobileAuthBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> Officer / Citizen Sign In`;
+        const text = translations[currentLang].officerSignInBtn;
+        mobileAuthBtn.innerHTML = `<i data-lucide="lock" class="w-4 h-4"></i> ${text}`;
         lucide.createIcons();
       }
     }
@@ -1228,32 +1723,34 @@
       const pwGroup = document.getElementById('password-form-group');
       const pwInput = document.getElementById('auth-password-input');
 
+      const isHi = currentLang === 'hi';
+
       if (mode === 'signin') {
-        title.innerText = 'e-BIS Portal Sign In';
-        submitLabel.innerText = 'Authenticate Credentials';
-        toggleHint.innerText = "Don't have an e-BIS account yet?";
-        toggleBtn.innerText = 'Register New Account';
+        title.innerText = isHi ? 'ई-बीआईएस पोर्टल साइन इन' : 'e-BIS Portal Sign In';
+        submitLabel.innerText = isHi ? 'प्रमाणपत्र सत्यापित करें' : 'Authenticate Credentials';
+        toggleHint.innerText = isHi ? 'ई-बीआईएस पर नया खाता बनाना चाहते हैं?' : "Don't have an e-BIS account yet?";
+        toggleBtn.innerText = isHi ? 'नया खाता पंजीकृत करें' : 'Register New Account';
         pwGroup.classList.remove('hidden');
         pwInput.required = true;
       } else if (mode === 'signup') {
-        title.innerText = 'Create Official e-BIS Account';
-        submitLabel.innerText = 'Create Verified Account';
-        toggleHint.innerText = 'Already registered?';
-        toggleBtn.innerText = 'Sign In Instead';
+        title.innerText = isHi ? 'नया ई-बीआईएस खाता बनाएं' : 'Create Official e-BIS Account';
+        submitLabel.innerText = isHi ? 'सत्यापित खाता बनाएं' : 'Create Verified Account';
+        toggleHint.innerText = isHi ? 'पहले से खाता है?' : 'Already registered?';
+        toggleBtn.innerText = isHi ? 'साइन इन करें' : 'Sign In Instead';
         pwGroup.classList.remove('hidden');
         pwInput.required = true;
       } else if (mode === 'reset') {
-        title.innerText = 'Reset Portal Password';
-        submitLabel.innerText = 'Send Reset Link';
-        toggleHint.innerText = 'Remembered credentials?';
-        toggleBtn.innerText = 'Return to Sign In';
+        title.innerText = isHi ? 'पासवर्ड रीसेट लिंक भेजें' : 'Reset Portal Password';
+        submitLabel.innerText = isHi ? 'रीसेट लिंक भेजें' : 'Send Reset Link';
+        toggleHint.innerText = isHi ? 'पासवर्ड याद आ गया?' : 'Remembered credentials?';
+        toggleBtn.innerText = isHi ? 'साइन इन पर लौटें' : 'Return to Sign In';
         pwGroup.classList.add('hidden');
         pwInput.required = false;
       }
     }
 
     /* =========================================================================
-       2. THREE.JS 3D SCENE: METALLIC ISI SEAL & GLOBAL QUALITY MESH
+       3. THREE.JS 3D SCENE: METALLIC ISI SEAL & GLOBAL QUALITY MESH
        ========================================================================= */
 
     let scene, camera, renderer;
@@ -1285,7 +1782,7 @@
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // Lighting with warm key + cool fill for realistic metal sheen
+      // Lighting with warm key + cool fill
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
       scene.add(ambientLight);
 
@@ -1318,15 +1815,10 @@
         emissiveIntensity: 0.15
       });
 
-      // Construct the 3D ISI Mark
       buildEmblemMesh();
-
-      // Background mesh grid
       buildBackgroundMesh();
-
       updateLayoutForScreen();
 
-      // Drag and interaction listeners
       window.addEventListener('resize', handleWindowResize);
       window.addEventListener('scroll', handleWindowScroll, { passive: true });
       setup3DDragInteractions();
@@ -1336,7 +1828,7 @@
       emblemGroup = new THREE.Group();
       const currentMat = isGoldFinish ? chromeGoldMaterial : chromeSteelMaterial;
 
-      // Outer Thick Beveled Shield Ring
+      // Outer Torus Ring
       const ringGeo = new THREE.TorusGeometry(1.65, 0.11, 16, 64);
       const ringMesh = new THREE.Mesh(ringGeo, currentMat);
       emblemGroup.add(ringMesh);
@@ -1401,7 +1893,7 @@
       hub.position.set(0, 0, 0.18);
       emblemGroup.add(hub);
 
-      // Satellite Studs representing 12 Regional Divisions
+      // Studs
       for (let i = 0; i < 12; i++) {
         const angle = (i / 12) * Math.PI * 2;
         const studGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.08, 12);
@@ -1476,19 +1968,20 @@
       }, { passive: true });
       window.addEventListener('touchend', onEnd);
 
-      // Reset camera
       document.getElementById('reset-3d-cam-btn')?.addEventListener('click', () => {
         targetRotX = 0;
         targetRotY = 0;
         if (emblemGroup) emblemGroup.rotation.set(0, 0, 0);
       });
 
-      // Finish toggle
       document.getElementById('toggle-finish-btn')?.addEventListener('click', () => {
         isGoldFinish = !isGoldFinish;
         const targetMat = isGoldFinish ? chromeGoldMaterial : chromeSteelMaterial;
         const label = document.getElementById('finish-mode-label');
-        if (label) label.innerText = isGoldFinish ? 'Chrome Gold' : 'Brushed Steel';
+        if (label) {
+          const dict = translations[currentLang];
+          label.innerText = isGoldFinish ? dict.goldFinishLabel : dict.steelFinishLabel;
+        }
 
         emblemGroup.traverse((child) => {
           if (child.isMesh && child.material !== chromeGoldMaterial && child.material !== chromeSteelMaterial) {
@@ -1553,40 +2046,60 @@
     }
 
     /* =========================================================================
-       3. VERIFICATION ENGINE & DATA REGISTRY
+       4. VERIFICATION ENGINE & DATA REGISTRY
        ========================================================================= */
 
     const mockRegistry = {
       cml: {
         '8400192384': {
-          title: 'GENUINE BIS LICENCE ACTIVE (SCHEME-I)',
-          subtitle: 'IS 14543:2016 Conformity Confirmed | CM/L-8400192384',
-          field1: 'Himalayan Aqua Springs Pvt Ltd, Dehradun',
-          field2: 'Packaged Drinking Water (Other than Mineral)',
-          field3: '31-Dec-2027 (Surveillance Normal)'
+          title_hi: 'प्रामाणिक बीआईएस लाइसेंस सक्रिय (योजना-I)',
+          title_en: 'GENUINE BIS LICENCE ACTIVE (SCHEME-I)',
+          subtitle_hi: 'IS 14543:2016 अनुरूपता पुष्टि | CM/L-8400192384',
+          subtitle_en: 'IS 14543:2016 Conformity Confirmed | CM/L-8400192384',
+          field1_hi: 'हिमालयन एक्वा स्प्रिंग्स प्राइवेट लिमिटेड, देहरादून',
+          field1_en: 'Himalayan Aqua Springs Pvt Ltd, Dehradun',
+          field2_hi: 'पैकेज्ड पेयजल (खनिज जल के अतिरिक्त)',
+          field2_en: 'Packaged Drinking Water (Other than Mineral)',
+          field3_hi: '31-दिसंबर-2027 (सर्विलांस सामान्य)',
+          field3_en: '31-Dec-2027 (Surveillance Normal)'
         },
         '9200381920': {
-          title: 'GENUINE BIS LICENCE ACTIVE (SCHEME-I)',
-          subtitle: 'IS 1786:2008 Conformity Confirmed | CM/L-9200381920',
-          field1: 'National TMT Steels Ltd, Jamshedpur',
-          field2: 'High Strength Deformed Steel Bars (Fe 550D)',
-          field3: '14-Aug-2028 (QCO Mandate Compliant)'
+          title_hi: 'प्रामाणिक बीआईएस लाइसेंस सक्रिय (योजना-I)',
+          title_en: 'GENUINE BIS LICENCE ACTIVE (SCHEME-I)',
+          subtitle_hi: 'IS 1786:2008 अनुरूपता पुष्टि | CM/L-9200381920',
+          subtitle_en: 'IS 1786:2008 Conformity Confirmed | CM/L-9200381920',
+          field1_hi: 'नेशनल टीएमटी स्टील्स लिमिटेड, जमशेदपुर',
+          field1_en: 'National TMT Steels Ltd, Jamshedpur',
+          field2_hi: 'उच्च शक्ति विकृत स्टील बार (Fe 550D)',
+          field2_en: 'High Strength Deformed Steel Bars (Fe 550D)',
+          field3_hi: '14-अगस्त-2028 (QCO अधिदेश अनुपालित)',
+          field3_en: '14-Aug-2028 (QCO Mandate Compliant)'
         }
       },
       huid: {
         'AB12C3': {
-          title: 'CERTIFIED 22-CARAT GOLD HALLMARK (HUID)',
-          subtitle: 'AHC Code: DL-402 | Laser Serial: AB12C3',
-          field1: 'Tanishq Jewellers (Retailer Lic: HM/C-771829)',
-          field2: '22K916 Traditional Gold Kada / Bangle (24.82g)',
-          field3: 'Assayed: 12-Feb-2026 at Central Bullion Labs'
+          title_hi: 'प्रमाणित 22-कैरेट स्वर्ण हॉलमार्क (HUID)',
+          title_en: 'CERTIFIED 22-CARAT GOLD HALLMARK (HUID)',
+          subtitle_hi: 'AHC कोड: DL-402 | लेजर सीरियल: AB12C3',
+          subtitle_en: 'AHC Code: DL-402 | Laser Serial: AB12C3',
+          field1_hi: 'तनिष्क ज्वेलर्स (खुदरा विक्रेता लाइसेंस: HM/C-771829)',
+          field1_en: 'Tanishq Jewellers (Retailer Lic: HM/C-771829)',
+          field2_hi: '22K916 पारंपरिक स्वर्ण कंगन / कड़ा (24.82 ग्राम)',
+          field2_en: '22K916 Traditional Gold Kada / Bangle (24.82g)',
+          field3_hi: 'परीक्षण: 12-फरवरी-2026, केंद्रीय बुलियन प्रयोगशाला',
+          field3_en: 'Assayed: 12-Feb-2026 at Central Bullion Labs'
         },
         '9K2X4M': {
-          title: 'CERTIFIED 18-CARAT GOLD HALLMARK (HUID)',
-          subtitle: 'AHC Code: MH-118 | Laser Serial: 9K2X4M',
-          field1: 'Kalyan Jewellers (Retailer Lic: HM/C-552109)',
-          field2: '18K750 Diamond Mount Ring Base (6.45g)',
-          field3: 'Assayed: 04-Jan-2026 at Regional Hallmark Centre'
+          title_hi: 'प्रमाणित 18-कैरेट स्वर्ण हॉलमार्क (HUID)',
+          title_en: 'CERTIFIED 18-CARAT GOLD HALLMARK (HUID)',
+          subtitle_hi: 'AHC कोड: MH-118 | लेजर सीरियल: 9K2X4M',
+          subtitle_en: 'AHC Code: MH-118 | Laser Serial: 9K2X4M',
+          field1_hi: 'कल्याण ज्वेलर्स (खुदरा विक्रेता लाइसेंस: HM/C-552109)',
+          field1_en: 'Kalyan Jewellers (Retailer Lic: HM/C-552109)',
+          field2_hi: '18K750 डायमंड रिंग बेस (6.45 ग्राम)',
+          field2_en: '18K750 Diamond Mount Ring Base (6.45g)',
+          field3_hi: 'परीक्षण: 04-जनवरी-2026, क्षेत्रीय हॉलमार्क केंद्र',
+          field3_en: 'Assayed: 04-Jan-2026 at Regional Hallmark Centre'
         }
       }
     };
@@ -1608,21 +2121,23 @@
 
       resultCard.classList.remove('hidden');
 
+      const isHi = currentLang === 'hi';
+
       if (hit) {
-        title.innerText = hit.title;
-        sub.innerText = hit.subtitle;
-        f1.innerText = hit.field1;
-        f2.innerText = hit.field2;
-        f3.innerText = hit.field3;
-        badge.innerText = 'OPERATIVE';
+        title.innerText = isHi ? hit.title_hi : hit.title_en;
+        sub.innerText = isHi ? hit.subtitle_hi : hit.subtitle_en;
+        f1.innerText = isHi ? hit.field1_hi : hit.field1_en;
+        f2.innerText = isHi ? hit.field2_hi : hit.field2_en;
+        f3.innerText = isHi ? hit.field3_hi : hit.field3_en;
+        badge.innerText = isHi ? 'वैध एवं सक्रिय' : 'OPERATIVE';
         badge.className = 'self-start sm:self-auto px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase';
       } else {
-        title.innerText = 'PROVISIONAL / MANUAL AUDIT RECORD';
-        sub.innerText = `Record for '${normalizedCode}' routed to Verification Queue`;
-        f1.innerText = 'Central Regulatory Directory (e-BIS Portal)';
-        f2.innerText = 'Awaiting Physical Lab / AHC Batch Sync';
-        f3.innerText = 'Notice: Verify directly with regional branch office';
-        badge.innerText = 'PENDING SYNC';
+        title.innerText = isHi ? 'अस्थायी / मैनुअल ऑडिट रिकॉर्ड' : 'PROVISIONAL / MANUAL AUDIT RECORD';
+        sub.innerText = isHi ? `'${normalizedCode}' का रिकॉर्ड सत्यापन कतार में भेजा गया` : `Record for '${normalizedCode}' routed to Verification Queue`;
+        f1.innerText = isHi ? 'केंद्रीय विनियामक निर्देशिका (ई-बीआईएस)' : 'Central Regulatory Directory (e-BIS Portal)';
+        f2.innerText = isHi ? 'प्रतीक्षारत भौतिक लैब / AHC बैच सिंक' : 'Awaiting Physical Lab / AHC Batch Sync';
+        f3.innerText = isHi ? 'सूचना: सीधे क्षेत्रीय शाखा से पुष्टि करें' : 'Notice: Verify directly with regional branch office';
+        badge.innerText = isHi ? 'सिंक प्रतीक्षित' : 'PENDING SYNC';
         badge.className = 'self-start sm:self-auto px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold uppercase';
       }
 
@@ -1631,61 +2146,107 @@
     }
 
     /* =========================================================================
-       4. SCHEME DOSSIER MODAL CONTENT
+       5. SCHEME DOSSIER MODAL CONTENT (BILINGUAL)
        ========================================================================= */
 
     const schemeDossiers = {
       isi: {
-        title: 'Scheme I: Product Certification (ISI Mark)',
-        body: `
+        title_hi: 'योजना I: उत्पाद प्रमाणन (आईएसआई मार्क)',
+        title_en: 'Scheme I: Product Certification (ISI Mark)',
+        body_hi: `
+          <div class="space-y-3">
+            <div class="p-3 bg-red-50 text-red-900 rounded-xl border border-red-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">अनिवार्य गुणवत्ता नियंत्रण आदेश (QCO)</span>
+              जनस्वास्थ्य, संरचनात्मक सुरक्षा और उपभोक्ता कल्याण हेतु बीआईएस अधिनियम, 2016 के तहत अनिवार्य।
+            </div>
+            <p><strong>शामिल उत्पाद:</strong> सीमेंट, टीएमटी स्टील बार, एलपीजी सिलेंडर, पैकेज्ड पेयजल, सुरक्षा कांच और विद्युत केबल।</p>
+            <p><strong>अनुरूपता प्रक्रिया:</strong> कड़े कारखाने निरीक्षण, उत्पादन नमूनों का परीक्षण और बाज़ार से औचक नमूनों की जांच।</p>
+            <p><strong>पहचान संख्या:</strong> लाइसेंस हेतु CM/L के साथ 7 से 8 अंकों का अनूठा कोड उत्पाद पर आईएसआई मार्क के साथ अंकित होता है।</p>
+          </div>
+        `,
+        body_en: `
           <div class="space-y-3">
             <div class="p-3 bg-red-50 text-red-900 rounded-xl border border-red-200">
               <span class="font-bold text-[11px] uppercase tracking-wider block">Mandatory Quality Control Orders (QCO)</span>
               Statutorily enforced under the BIS Act, 2016 for products impacting public health, structural safety, and mass consumer welfare.
             </div>
             <p><strong>Covered Products:</strong> Cement, high-strength TMT steel bars, LPG cylinders, packaged drinking water, safety glass, and electrical cables.</p>
-            <p><strong>Conformity Assessment:</strong> Involves comprehensive initial factory evaluation, rigorous testing of preliminary production samples in BIS-recognized laboratories, and random surveillance market auditing.</p>
-            <p><strong>Identifier Format:</strong> CM/L followed by a 7 or 8-digit unique alphanumeric license serial printed directly beside the ISI mark on all retail packaging.</p>
+            <p><strong>Conformity Assessment:</strong> Involves comprehensive initial factory evaluation, rigorous testing of production samples in BIS laboratories, and market surveillance.</p>
+            <p><strong>Identifier Format:</strong> CM/L followed by a unique numeric license serial printed beside the ISI mark on all retail packaging.</p>
           </div>
         `
       },
       crs: {
-        title: 'Scheme II: Compulsory Registration Scheme (CRS)',
-        body: `
+        title_hi: 'योजना II: अनिवार्य पंजीकरण योजना (CRS)',
+        title_en: 'Scheme II: Compulsory Registration Scheme (CRS)',
+        body_hi: `
+          <div class="space-y-3">
+            <div class="p-3 bg-blue-50 text-blue-900 rounded-xl border border-blue-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">इलेक्ट्रॉनिक्स एवं आईटी वस्तु आदेश (MeitY)</span>
+              मान्यता प्राप्त प्रयोगशालाओं में परीक्षण और अनुरूपता की स्व-घोषणा पर आधारित त्वरित प्रमाणन।
+            </div>
+            <p><strong>शामिल उत्पाद:</strong> मोबाइल, लैपटॉप, सर्वर, स्मार्ट टीवी, लिथियम-आयन पावर बैंक और एलईडी लाइट।</p>
+            <p><strong>अनुरूपता प्रक्रिया:</strong> भारतीय मानकों (उदा. IS 13252) के तहत परीक्षण उत्तीर्ण करने पर सीआरएस लोगो का उपयोग अनुमत।</p>
+            <p><strong>पहचान संख्या:</strong> R-XXXXXXXX प्रारूप का पंजीकरण कोड।</p>
+          </div>
+        `,
+        body_en: `
           <div class="space-y-3">
             <div class="p-3 bg-blue-50 text-blue-900 rounded-xl border border-blue-200">
               <span class="font-bold text-[11px] uppercase tracking-wider block">Electronics & IT Goods Order (MeitY)</span>
-              A modern, streamlined conformity assessment scheme based on self-declaration of conformity and testing in accredited laboratories.
+              A modern conformity assessment scheme based on self-declaration of conformity and testing in accredited laboratories.
             </div>
             <p><strong>Covered Products:</strong> Mobile devices, laptop computers, server chassis, smart TVs, lithium-ion power banks, and LED fixtures.</p>
-            <p><strong>Conformity Assessment:</strong> Product designs must pass testing in NABL-accredited BIS laboratories under applicable Indian Standards (e.g. IS 13252). Registered models are permitted to carry the CRS Standard Logo.</p>
+            <p><strong>Conformity Assessment:</strong> Products must pass testing in NABL-accredited BIS laboratories under applicable Indian Standards.</p>
             <p><strong>Identifier Format:</strong> R-XXXXXXXX registration code accompanied by the designated Indian Standard number.</p>
           </div>
         `
       },
       fmcs: {
-        title: 'Foreign Manufacturers Certification Scheme (FMCS)',
-        body: `
+        title_hi: 'विदेशी निर्माता प्रमाणन योजना (FMCS)',
+        title_en: 'Foreign Manufacturers Certification Scheme (FMCS)',
+        body_hi: `
+          <div class="space-y-3">
+            <div class="p-3 bg-purple-50 text-purple-900 rounded-xl border border-purple-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">सीमा पार आयात एवं संप्रभुता</span>
+              विदेशी निर्माताओं को भारतीय बाज़ार में उत्पाद बेचने हेतु मानक चिह्न का कानूनी अधिकार।
+            </div>
+            <p><strong>शर्तें:</strong> विदेशी कारखानों का प्रत्यक्ष भौतिक निरीक्षण और अधिकृत भारतीय प्रतिनिधि (AIR) की अनिवार्य नियुक्ति।</p>
+            <p><strong>सुरक्षा गारंटी:</strong> बैंक गारंटी के साथ भारतीय मानकों के पूर्ण अनुपालन की विधिक प्रतिबद्धता।</p>
+          </div>
+        `,
+        body_en: `
           <div class="space-y-3">
             <div class="p-3 bg-purple-50 text-purple-900 rounded-xl border border-purple-200">
               <span class="font-bold text-[11px] uppercase tracking-wider block">Cross-Border Imports & Sovereignty</span>
               Empowers overseas manufacturers to use the official ISI mark for goods entering Indian territorial jurisdiction.
             </div>
-            <p><strong>Requirements:</strong> Physical audit of foreign manufacturing facilities by accredited BIS inspecting officers, verification of testing infrastructure, and legal nomination of an Authorized Indian Representative (AIR).</p>
-            <p><strong>Performance Bond:</strong> Overseas licensees submit performance bank guarantees ensuring compliance with Indian Standard specifications and swift resolution of consumer grievances.</p>
+            <p><strong>Requirements:</strong> Physical audit of foreign manufacturing facilities and legal nomination of an Authorized Indian Representative (AIR).</p>
+            <p><strong>Performance Bond:</strong> Overseas licensees submit performance bank guarantees ensuring compliance with Indian Standard specifications.</p>
           </div>
         `
       },
       huid: {
-        title: 'Hallmarking & 6-Digit HUID Traceability',
-        body: `
+        title_hi: 'स्वर्ण हॉलमार्किंग एवं ६-अंकीय एचयूआईडी',
+        title_en: 'Hallmarking & 6-Digit HUID Traceability',
+        body_hi: `
+          <div class="space-y-3">
+            <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200">
+              <span class="font-bold text-[11px] uppercase tracking-wider block">उपभोक्ता स्वर्ण शुद्धता विश्वास</span>
+              बहुमूल्य धातुओं की शुद्धता और नकली आभूषणों की रोकथाम हेतु ३-चिह्न लेजर उत्कीर्णन।
+            </div>
+            <p><strong>३ अनिवार्य चिह्न:</strong> (१) बीआईएस त्रिकोणीय लोगो, (२) शुद्धता कैरेट (22K916 आदि), और (३) ६-अंकीय अल्फ़ान्यूमेरिक एचयूआईडी कोड।</p>
+            <p><strong>एसेइंग केंद्र (AHC):</strong> आभूषणों का अग्नि परीक्षण कर केंद्रीय सर्वर में डेटा दर्ज करने के बाद ही बिक्री अनुमत।</p>
+          </div>
+        `,
+        body_en: `
           <div class="space-y-3">
             <div class="p-3 bg-amber-50 text-amber-900 rounded-xl border border-amber-200">
               <span class="font-bold text-[11px] uppercase tracking-wider block">Consumer Bullion & Jewellery Trust</span>
               Statutory 3-mark laser engraving guaranteeing fineness and anti-counterfeiting for precious metals.
             </div>
-            <p><strong>The Three Hallmarks:</strong> (1) Triangular BIS Standard Logo, (2) Carat & Fineness mark (22K916, 18K750, 14K585), and (3) 6-character laser-engraved HUID.</p>
-            <p><strong>Assaying & Hallmarking Centres (AHC):</strong> Articles are physically sampled, fire-assayed, and registered in the national central e-BIS HUID cryptographic database before entering retail trade.</p>
+            <p><strong>The Three Hallmarks:</strong> (1) Triangular BIS Standard Logo, (2) Carat & Fineness mark (22K916, 18K750), and (3) 6-character laser-engraved HUID.</p>
+            <p><strong>Assaying & Hallmarking Centres (AHC):</strong> Articles are sampled, fire-assayed, and registered in the central e-BIS HUID database.</p>
           </div>
         `
       }
@@ -1698,8 +2259,9 @@
       const dossier = schemeDossiers[schemeKey];
 
       if (dossier) {
-        title.innerText = dossier.title;
-        content.innerHTML = dossier.body;
+        const isHi = currentLang === 'hi';
+        title.innerText = isHi ? dossier.title_hi : dossier.title_en;
+        content.innerHTML = isHi ? dossier.body_hi : dossier.body_en;
         modal.classList.remove('hidden');
         lucide.createIcons();
       }
@@ -1710,11 +2272,17 @@
     }
 
     /* =========================================================================
-       5. WIRE UP ALL BUTTONS AND EVENT LISTENERS
+       6. WIRE UP ALL BUTTONS & INITIALIZATION
        ========================================================================= */
 
     function setupAllEventHandlers() {
-      // 1. Navigation & Mobile Drawer
+      // Language Switcher Toggle
+      document.getElementById('lang-toggle-btn')?.addEventListener('click', () => {
+        const nextLang = currentLang === 'hi' ? 'en' : 'hi';
+        applyLanguage(nextLang);
+      });
+
+      // Mobile Drawer Toggle
       const mobileBtn = document.getElementById('mobile-menu-toggle-btn');
       const mobileDrawer = document.getElementById('mobile-nav-drawer');
       mobileBtn?.addEventListener('click', () => {
@@ -1727,18 +2295,18 @@
         });
       });
 
-      // 2. High Contrast Accessibility Toggle
+      // High Contrast Accessibility Toggle
       const contrastBtn = document.getElementById('contrast-toggle-btn');
       const contrastLabel = document.getElementById('contrast-label');
       contrastBtn?.addEventListener('click', () => {
         document.body.classList.toggle('high-contrast');
         const isActive = document.body.classList.contains('high-contrast');
         if (contrastLabel) {
-          contrastLabel.innerText = isActive ? 'Normal View' : 'High Contrast';
+          contrastLabel.innerText = isActive ? (currentLang === 'hi' ? 'सामान्य दृश्य' : 'Normal View') : (currentLang === 'hi' ? 'उच्च कंट्रास्ट' : 'High Contrast');
         }
       });
 
-      // 3. User Profile Dropdown Toggle
+      // User Profile Dropdown
       const userBtn = document.getElementById('user-profile-menu-btn');
       const userDropdown = document.getElementById('user-profile-dropdown');
       userBtn?.addEventListener('click', (e) => {
@@ -1751,12 +2319,12 @@
         }
       });
 
-      // 4. Quick Verify Navigation Button
+      // Quick Verify Navigation Button
       document.getElementById('nav-quick-verify-btn')?.addEventListener('click', () => {
         document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
       });
 
-      // 5. Auth Modal Open Triggers
+      // Auth Modal Open Triggers
       const openModalHandler = () => openAuthModal('signin');
       document.getElementById('open-signin-modal-btn')?.addEventListener('click', openModalHandler);
       document.getElementById('mobile-auth-btn')?.addEventListener('click', openModalHandler);
@@ -1765,7 +2333,6 @@
       document.getElementById('close-scheme-modal-btn')?.addEventListener('click', closeSchemeDossier);
       document.getElementById('dismiss-scheme-modal-btn')?.addEventListener('click', closeSchemeDossier);
 
-      // Close modals on outside backdrop click
       window.addEventListener('click', (e) => {
         const authModal = document.getElementById('auth-modal');
         const schemeModal = document.getElementById('scheme-details-modal');
@@ -1773,7 +2340,7 @@
         if (e.target === schemeModal) closeSchemeDossier();
       });
 
-      // 6. Auth Toggle Mode
+      // Auth Mode Toggles
       document.getElementById('toggle-auth-mode-btn')?.addEventListener('click', () => {
         setAuthMode(authMode === 'signin' ? 'signup' : 'signin');
       });
@@ -1782,18 +2349,18 @@
         setAuthMode('reset');
       });
 
-      // 7. Instant Demo Officer Login
+      // Instant Demo Officer Login
       document.getElementById('demo-officer-login-btn')?.addEventListener('click', () => {
         setSessionUser({
           email: 'officer.auditor@bis.gov.in',
-          displayName: 'Director K. Sharma (BIS)',
+          displayName: currentLang === 'hi' ? 'निदेशक के. शर्मा (बीआईएस)' : 'Director K. Sharma (BIS)',
           isDemo: true
         });
         closeAuthModal();
         document.getElementById('authenticated-dashboard')?.scrollIntoView({ behavior: 'smooth' });
       });
 
-      // 8. Sign Out Handlers
+      // Sign Out Handlers
       const logoutHandler = async () => {
         if (firebaseAuth && currentAuthUser && !currentAuthUser.isDemo) {
           try {
@@ -1807,7 +2374,7 @@
       document.getElementById('dropdown-signout-btn')?.addEventListener('click', logoutHandler);
       document.getElementById('dash-logout-btn')?.addEventListener('click', logoutHandler);
 
-      // 9. Firebase Form Submission (Email/Password & Password Reset)
+      // Firebase Form Submission
       document.getElementById('firebase-auth-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearAuthAlert();
@@ -1818,7 +2385,10 @@
         const submitBtn = document.getElementById('auth-submit-btn');
 
         if (!firebaseAuth) {
-          showAuthAlert("Firebase SDK not reachable in this environment. Please click 'Authenticate as Demo Officer' above to test immediately!", "error");
+          const fallbackMsg = currentLang === 'hi' 
+            ? "फायरबेस सेवा इस समय उपलब्ध नहीं है। कृपया तुरंत परीक्षण हेतु 'डेमो अधिकारी के रूप में प्रवेश करें' पर क्लिक करें!" 
+            : "Firebase SDK not reachable in this environment. Please click 'Authenticate as Demo Officer' above to test immediately!";
+          showAuthAlert(fallbackMsg, "error");
           return;
         }
 
@@ -1841,19 +2411,19 @@
               displayName: email.split('@')[0],
               isDemo: false
             });
-            showAuthAlert("Account registered and authenticated!", "success");
+            showAuthAlert(currentLang === 'hi' ? "खाता पंजीकृत और प्रमाणित हुआ!" : "Account registered and authenticated!", "success");
             setTimeout(closeAuthModal, 1000);
           } else if (authMode === 'reset') {
             await firebaseAuth.sendPasswordResetEmail(email);
-            showAuthAlert("Password reset instructions dispatched to your email address.", "success");
+            showAuthAlert(currentLang === 'hi' ? "पासवर्ड रीसेट लिंक आपके ईमेल पर भेज दिया गया है।" : "Password reset link sent to your email.", "success");
           }
         } catch (err) {
           console.error("Auth error:", err);
-          let userMsg = err.message || "An authentication error occurred.";
-          if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
-            userMsg = "Invalid email or password combination. Try 'Authenticate as Demo Officer' for fast testing.";
-          } else if (err.code === 'auth/unauthorized-domain') {
-            userMsg = "Domain unauthorized in Firebase console. Please click 'Authenticate as Demo Officer' above to bypass iframe domain restrictions.";
+          let userMsg = err.message || (currentLang === 'hi' ? "प्रमाणीकरण में त्रुटि हुई।" : "An authentication error occurred.");
+          if (err.code === 'auth/unauthorized-domain') {
+            userMsg = currentLang === 'hi' 
+              ? "यह डोमेन फायरबेस में अधिकृत नहीं है। कृपया ऊपर 'डेमो अधिकारी के रूप में प्रवेश करें' बटन का उपयोग करें!"
+              : "Domain unauthorized in Firebase console. Please click 'Authenticate as Demo Officer' above to bypass sandbox domain restrictions.";
           }
           showAuthAlert(userMsg, "error");
         } finally {
@@ -1862,11 +2432,11 @@
         }
       });
 
-      // 10. Google Auth Button
+      // Google Auth Button
       document.getElementById('google-auth-btn')?.addEventListener('click', async () => {
         clearAuthAlert();
         if (!firebaseAuth) {
-          showAuthAlert("Firebase Auth offline. Use 'Authenticate as Demo Officer' above to test all features!", "error");
+          showAuthAlert(currentLang === 'hi' ? "फायरबेस ऑफलाइन है। डेमो अधिकारी बटन का उपयोग करें!" : "Firebase Auth offline. Use Demo Officer mode!", "error");
           return;
         }
         try {
@@ -1882,13 +2452,15 @@
           console.error("Google signin error:", err);
           let msg = err.message || "Google sign-in could not be completed.";
           if (err.code === 'auth/unauthorized-domain') {
-            msg = "This preview domain is not whitelisted in Firebase Auth. Click 'Authenticate as Demo Officer' above to test immediately!";
+            msg = currentLang === 'hi' 
+              ? "यह पूर्वावलोकन डोमेन फायरबेस में अनुमत नहीं है। कृपया 'डेमो अधिकारी के रूप में प्रवेश करें' का उपयोग करें!"
+              : "This preview domain is not whitelisted in Firebase Auth. Click 'Authenticate as Demo Officer' above to test immediately!";
           }
           showAuthAlert(msg, "error");
         }
       });
 
-      // 11. Hero Action Buttons
+      // Hero Buttons Scroll
       document.getElementById('hero-verify-isi-btn')?.addEventListener('click', () => {
         switchSimTab('cml');
         document.getElementById('simulator')?.scrollIntoView({ behavior: 'smooth' });
@@ -1901,13 +2473,13 @@
         document.getElementById('sim-huid-input')?.focus();
       });
 
-      // 12. Simulator Tabs
+      // Simulator Tabs
       const cmlTabBtn = document.getElementById('sim-tab-cml-btn');
       const huidTabBtn = document.getElementById('sim-tab-huid-btn');
       cmlTabBtn?.addEventListener('click', () => switchSimTab('cml'));
       huidTabBtn?.addEventListener('click', () => switchSimTab('huid'));
 
-      // 13. Simulator Execute Actions
+      // Simulator Execute Actions
       document.getElementById('execute-cml-btn')?.addEventListener('click', () => {
         const val = document.getElementById('sim-cml-input').value;
         runVerification('cml', val);
@@ -1947,7 +2519,7 @@
         });
       });
 
-      // 14. Scheme Dossier Modal Openers
+      // Scheme Dossier Modal Openers
       document.querySelectorAll('.open-scheme-modal-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
           const key = btn.getAttribute('data-scheme');
@@ -1955,25 +2527,26 @@
         });
       });
 
-      // 15. Export Audit Report (.txt file download)
+      // Export Audit Report (.txt)
       document.getElementById('dash-export-report-btn')?.addEventListener('click', () => {
         const email = currentAuthUser ? currentAuthUser.email : 'officer@bis.gov.in';
         const dateStr = new Date().toISOString();
         const content = 
 `===================================================================
 BUREAU OF INDIAN STANDARDS - OFFICIAL COMPLIANCE AUDIT EXPORT
+भारतीय मानक ब्यूरो - आधिकारिक अनुपालन ऑडिट रिपोर्ट
 ===================================================================
-Generated By: ${email}
-Timestamp:    ${dateStr}
-Portal:       e-BIS Sovereign Technical Framework
-BIS Act:      The Bureau of Indian Standards Act, 2016 (Mandatory)
+Generated By / द्वारा: ${email}
+Timestamp / समय:       ${dateStr}
+Portal / पोर्टल:       e-BIS Sovereign Technical Framework
+Statute / अधिनियम:    The Bureau of Indian Standards Act, 2016
 
-AUDIT SUMMARY LOG:
-- Record #1: CM/L-8400192384 | IS 14543 (Packaged Water) -> OPERATIVE
-- Record #2: HUID-AB12C3      | 22K916 Traditional Gold Kada -> CERTIFIED
-- Record #3: CM/L-9200381920 | IS 1786 (High Strength TMT Steel) -> OPERATIVE
+AUDIT SUMMARY LOG / ऑडिट सारांश लॉग:
+- Record #1: CM/L-8400192384 | IS 14543 (Packaged Water) -> OPERATIVE (वैध)
+- Record #2: HUID-AB12C3      | 22K916 Gold Kada          -> CERTIFIED (प्रमाणित)
+- Record #3: CM/L-9200381920 | IS 1786 (High Strength TMT)-> OPERATIVE (वैध)
 
-Statutory Status: All listed licenses conform with published Indian Standards.
+Statutory Status: All verified licenses conform with published Indian Standards.
 ===================================================================`;
 
         const blob = new Blob([content], { type: 'text/plain' });
@@ -1987,7 +2560,6 @@ Statutory Status: All listed licenses conform with published Indian Standards.
         URL.revokeObjectURL(url);
       });
 
-      // 16. Card 3D Mouse Parallax Tilt
       setupCardParallax();
     }
 
@@ -2031,12 +2603,12 @@ Statutory Status: All listed licenses conform with published Indian Standards.
       });
     }
 
-    // Window Load Bootstrap
     window.addEventListener('load', () => {
       initThreeScene();
       animate3DLoop();
       initFirebase();
       setupAllEventHandlers();
+      applyLanguage('hi'); // Default loaded in Hindi
       lucide.createIcons();
     });
   </script>
